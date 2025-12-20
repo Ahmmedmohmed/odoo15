@@ -1,5 +1,6 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import float_is_zero
 
 
 class AccountBankStatement(models.Model):
@@ -97,10 +98,6 @@ class AccountBankStatementLine(models.Model):
         new_aml_dicts = new_aml_dicts or []
 
         aml_obj = self.env["account.move.line"]
-
-        company_currency = self.journal_id.company_id.currency_id
-        statement_currency = self.journal_id.currency_id or company_currency
-
         counterpart_moves = self.env["account.move"]
 
         # Check and prepare received data
@@ -129,34 +126,22 @@ class AccountBankStatementLine(models.Model):
                 and user_type_id not in account_types
             ):
                 account_types |= user_type_id
-        # Fully reconciled moves are just linked to the bank statement
-        total = self.amount
-        currency = self.currency_id or statement_currency
+        # Fully reconciled moves are just linked to the bank statement (blue lines),
+        # but the generated move on statement post should be removed and link the
+        # payment one for not having double entry
+        # TODO: To mix already done payments with new ones. Not sure if possible.
+        old_move = self.move_id.with_context(force_delete=True)
         for aml_rec in payment_aml_rec:
-            balance = (
-                aml_rec.amount_currency if aml_rec.currency_id else aml_rec.balance
-            )
-            aml_currency = aml_rec.currency_id or aml_rec.company_currency_id
-            total -= aml_currency._convert(
-                balance, currency, aml_rec.company_id, aml_rec.date
-            )
             aml_rec.with_context(check_move_validity=False).write(
                 {"statement_line_id": self.id}
             )
-            counterpart_moves = counterpart_moves | aml_rec.move_id
-            # Update
-            if aml_rec.payment_id and aml_rec.move_id.state == "draft":
-                # In case the journal is set to only post payments when
-                # performing bank reconciliation, we modify its date and post
-                # it.
-                aml_rec.move_id.date = self.date
-                aml_rec.payment_id.payment_date = self.date
-                aml_rec.move_id.action_post()
-                # We check the paid status of the invoices reconciled with this
-                # payment
-                for invoice in aml_rec.payment_id.reconciled_invoice_ids:
-                    self._check_invoice_state(invoice)
-
+            # This overwrites the value on each loop, so only one will be linked, but
+            # there's no better solution in this case
+            self.move_id = aml_rec.move_id.id
+            counterpart_moves |= aml_rec.move_id
+        if payment_aml_rec:
+            old_move.button_draft()
+            old_move.unlink()
         # Create move line(s). Either matching an existing journal entry
         # (eg. invoice), in which case we reconcile the existing and the
         # new move lines together, or being a write-off.
@@ -178,7 +163,7 @@ class AccountBankStatementLine(models.Model):
             )
 
         # create the res.partner.bank if needed
-        if self.account_number and self.partner_id and not self.bank_account_id:
+        if self.account_number and self.partner_id and not self.partner_bank_id:
             # Search bank account without partner to handle the case the res.partner.bank
             # already exists but is set on a different partner.
             self.partner_bank_id = self._find_or_create_bank_account()
@@ -200,6 +185,7 @@ class AccountBankStatementLine(models.Model):
         aml_obj.with_context(check_move_validity=False).create(liquidity_aml_dict)
 
         self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
+        self.move_id.ref = self._get_move_ref(self.statement_id.name)
         counterpart_moves = counterpart_moves | self.move_id
 
         # Complete dicts to create both counterpart move lines and write-offs
@@ -210,16 +196,37 @@ class AccountBankStatementLine(models.Model):
             aml_dict["partner_id"] = self.partner_id.id
             aml_dict["statement_line_id"] = self.id
             self._prepare_move_line_for_currency(aml_dict, date)
-
+        # Adjust latest counterpart move debit/credit if currency amount is balanced
+        # but company amount is not
+        if self.currency_id != self.company_currency_id:
+            all_amls = to_create + [liquidity_aml_dict]
+            balance_currency = sum(x["amount_currency"] for x in all_amls)
+            balance = sum(x["debit"] - x["credit"] for x in all_amls)
+            if float_is_zero(
+                balance_currency, precision_rounding=self.currency_id.rounding
+            ) and not float_is_zero(
+                balance, precision_rounding=self.company_currency_id.rounding
+            ):
+                aml_dict = to_create[-1]
+                if aml_dict["debit"]:
+                    aml_dict["debit"] = self.company_currency_id.round(
+                        aml_dict["debit"] - balance
+                    )
+                else:
+                    aml_dict["credit"] = self.company_currency_id.round(
+                        aml_dict["credit"] + balance
+                    )
         # Create write-offs
+        wo_aml = self.env["account.move.line"]
         for aml_dict in new_aml_dicts:
-            aml_obj.with_context(check_move_validity=False).create(aml_dict)
+            wo_aml |= aml_obj.with_context(check_move_validity=False).create(aml_dict)
+        analytic_wo_aml = wo_aml.filtered(
+            lambda l: l.analytic_account_id or l.analytic_tag_ids
+        )
 
         # Create counterpart move lines and reconcile them
         aml_to_reconcile = []
         for aml_dict in counterpart_aml_dicts:
-            if not aml_dict["move_line"].statement_line_id:
-                aml_dict["move_line"].write({"statement_line_id": self.id})
             if aml_dict["move_line"].partner_id.id:
                 aml_dict["partner_id"] = aml_dict["move_line"].partner_id.id
             aml_dict["account_id"] = aml_dict["move_line"].account_id.id
@@ -234,6 +241,9 @@ class AccountBankStatementLine(models.Model):
             self.move_id.with_context(
                 skip_account_move_synchronization=True
             ).action_post()
+        elif analytic_wo_aml:
+            # if already posted the analytic entry has to be created
+            analytic_wo_aml.create_analytic_lines()
 
         # Reconcile new lines with counterpart
         for new_aml, counterpart_move_line in aml_to_reconcile:
@@ -251,6 +261,12 @@ class AccountBankStatementLine(models.Model):
         self.write({"move_name": self.move_id.name})
 
         return counterpart_moves
+
+    def _get_move_ref(self, move_ref):
+        ref = move_ref or ""
+        if self.ref:
+            ref = move_ref + " - " + self.ref if move_ref else self.ref
+        return ref
 
     def _prepare_move_line_for_currency(self, aml_dict, date):
         self.ensure_one()
@@ -311,3 +327,39 @@ class AccountBankStatementLine(models.Model):
     def _check_invoice_state(self, invoice):
         if invoice.is_invoice(include_receipts=True):
             invoice._compute_amount()
+
+    def button_undo_reconciliation(self):
+        """Handle the case when the reconciliation was done against a direct payment
+        with the bank account as counterpart. This may be the case for payments made
+        in previous versions of Odoo.
+        """
+        handled = self.env[self._name]
+        for record in self:
+            if record.move_id.payment_id:
+                # The reconciliation was done against a blue line (existing move)
+                # We remove the link on the current existing move, preserving it,
+                # and recreate a new move as if the statement line was new
+                record.move_id.line_ids.statement_line_id = False
+                statement = record.statement_id
+                journal = statement.journal_id
+                line_vals_list = record._prepare_move_line_default_vals()
+                new_move = self.env["account.move"].create(
+                    {
+                        "move_type": "entry",
+                        "statement_line_id": record.id,
+                        "ref": statement.name,
+                        "date": record.date,
+                        "journal_id": journal.id,
+                        "partner_id": record.partner_id.id,
+                        "currency_id": (
+                            journal.currency_id or journal.company_id.currency_id
+                        ).id,
+                        "line_ids": [(0, 0, line_vals) for line_vals in line_vals_list],
+                    }
+                )
+                new_move.action_post()
+                record.move_id = new_move.id
+                handled += record
+        return super(
+            AccountBankStatementLine, self - handled
+        ).button_undo_reconciliation()
