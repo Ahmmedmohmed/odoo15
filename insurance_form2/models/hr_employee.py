@@ -43,8 +43,6 @@ class HrEmployee(models.Model):
     account_number_2 = fields.Char(
         string='Account Number 2'
     )
-    arabic_name = fields.Char()
-    job_position_arabic = fields.Char()
     expiration_date = fields.Date()
 
     @api.depends('birth_date')
