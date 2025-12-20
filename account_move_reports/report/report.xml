@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+<!--    <record id="report_account_move_excel" model="ir.actions.report">-->
+<!--        <field name="name">Account Move Excel Report</field>-->
+<!--        <field name="model">account.move</field>-->
+<!--        <field name="report_type">xlsx</field>-->
+<!--        <field name="report_name">account_move_reports.account_move_excel_report</field>-->
+<!--        <field name="report_file">account_move_reports.account_move_excel_report</field>-->
+<!--        <field name="binding_model_id" ref="model_account_move"/>-->
+<!--        <field name="binding_type">report</field>-->
+<!--    </record>-->
+
+
+</odoo>

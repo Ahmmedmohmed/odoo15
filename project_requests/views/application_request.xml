@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+
+        <!--        <record id="accommodation_type_form" model="ir.ui.view">-->
+        <!--            <field name="name">accommodation type</field>-->
+        <!--            <field name="model">accommodation.type</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <form>-->
+        <!--                    <sheet>-->
+        <!--                        <group>-->
+        <!--                            <field name="name"/>-->
+        <!--                        </group>-->
+        <!--                    </sheet>-->
+        <!--                </form>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="application_request_tree" model="ir.ui.view">
+            <field name="name">application request tree</field>
+            <field name="model">application.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="job_id" options="{'no_create': True}"/>
+                    <field name="employee_id" />
+                    <field name="subsistence"/>
+                    <field name="subsistence_quantity"/>
+                    <field name="nature_substitute" widget="percentage"/>
+                    <field name="quantity"/>
+                    <field name="description"/>
+                    <field name="qty"/>
+                    <field name="daily_amount" invisible="1"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="nature_substitute_total" sum=" nature substitute total"/>
+                    <field name="subsistence_total" sum=" subsistence"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="note"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="application_request_action" model="ir.actions.act_window">
+            <field name="name">application request action</field>
+            <field name="res_model">application.request</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem name=" Employee To Project "
+                  id="menu_application_request"
+                  parent="project_requests.menu_employee_request_parent"
+                  action="application_request_action"
+                  sequence="15"/>
+
+    </data>
+</odoo>

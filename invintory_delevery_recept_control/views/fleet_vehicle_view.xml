@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <!-- Recept Tree View -->
+        <record id="fleet_vehicle_smart_button_tree_view" model="ir.ui.view">
+            <field name="name">fleet.vehicle.smart.button.tree.view</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="priority">20</field>  <!-- Higher than default (16) -->
+
+            <field name="arch" type="xml">
+                <tree multi_edit="1">
+                    <header>
+                        <button name="action_create_bill_from_vehicle"
+                                string="Create Bill"
+                                type="object"
+                                class="btn-primary"
+                                />
+
+
+                    </header>
+                    <field name="billed_vehicle" invisible="1"/>
+
+                    <field name="date_and_time" string="التاريخ والوقت"/>
+                    <field name="model_id" string=" المعدة "/>
+                    <field name="vehicle_owner" string="المورد"/>
+                    <field name="driver_id" string="السائق"/>
+                    <field name="uom_id" string="الوحدة"/>
+                    <field name="quantity" string="الكمية"/>
+
+
+                    <field name="type_of_work" string="طبيعة العمل"/>
+                    <field name="place" string="المكان"/>
+                    <field name="notes" string="ملاحظات"/>
+                    <field name="employee_id" string="المشرف"/>
+                    <field name="reviewed" string="تم المراجعة"/>
+<!--                      <field name="record_bill_state"-->
+<!--                           widget="badge"-->
+<!--                           decoration-success="record_bill_state == 'billed'"-->
+<!--                           decoration-danger="record_bill_state == 'not_billed'"/>-->
+
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+
+        <record id="battery_type_form" model="ir.ui.view">
+            <field name="name">Battery Type</field>
+            <field name="model">battery.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="battery_type_tree" model="ir.ui.view">
+            <field name="name">Battery Type</field>
+            <field name="model">battery.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="battery_type_action" model="ir.actions.act_window">
+            <field name="name">Battery Type</field>
+            <field name="res_model">battery.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Battery Type"
+                  id="menu_battery_type_parent"
+                  parent="fleet.fleet_configuration"
+                  action="battery_type_action"
+                  sequence="120"/>
+
+    </data>
+</odoo>

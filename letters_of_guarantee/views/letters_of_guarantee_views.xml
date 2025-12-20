@@ -1,0 +1,127 @@
+<odoo>
+    <record id="view_letters_of_guarantee_tree" model="ir.ui.view">
+        <field name="name">letters.of.guarantee.tree</field>
+        <field name="model">letters.of.guarantee</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="bank"/>
+                <field name="letter_type"/>
+                <field name="beneficiary"/>
+                <field name="letter_number"/>
+                <field name="release_date"/>
+                <field name="expiry_date"/>
+                <field name="project_id"/>
+                <field name="letter_value"/>
+                <field name="insurance_value"/>
+                <field name="letter_state"/>
+                <field name="bank_response_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_letters_of_guarantee_form" model="ir.ui.view">
+        <field name="name">letters.of.guarantee.form</field>
+        <field name="model">letters.of.guarantee</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Approve CFO" type="object" name="action_approve_cfo" class="btn-primary"
+                            groups="letters_of_guarantee.group_approve_cfo"
+                            attrs="{'invisible': [('is_appear_return', '=', True)]}"/>
+                    <button string="تعليه" type="object" name="action_extend" class="btn-primary"
+                            groups="letters_of_guarantee.group_extend"
+                            attrs="{'invisible': ['|',('is_appear_return', '=', False),('state', '!=', False)]}"/>
+                    <button string="رد" type="object" name="action_return" class="btn-primary"
+                            groups="letters_of_guarantee.group_return"
+                            attrs="{'invisible': ['|',('is_appear_return', '=', False),('state', '=', 'returned')]}"/>
+                    <field name="state" widget="statusbar"/>
+                    <field name="is_appear_return" invisible="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_journal_entry" type="object" icon="fa-pencil-square-o"
+                                string="Journal Entry"
+                                class="oe_stat_button" attrs="{'invisible': [('account_move_count', '=', 0)]}">
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="account_move_count" invisible="1"/>
+<!--                            <field name="bank" attrs="{'readonly': [('state', '=', 'returned')]}"/>-->
+                            <field name="bank_letters_of_guarantee_id" options="{'no_create': True}"
+                                   attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="letter_type" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="beneficiary" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="customer_id" />
+                            <field name="letter_number" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="release_date" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+<!--                            <field name="letter_length" attrs="{'readonly': [('state', '=', 'returned')]}"/>-->
+<!--                            <field name="extend" attrs="{'invisible': [('state', '!=', 'extended')], 'readonly': [('state', '=', 'returned')]}"/>-->
+                            <field name="old_expiry_date"/>
+                            <field name="expiry_date"/>
+                        </group>
+                        <group>
+                            <field name="purpose" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="project_id" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="letter_value" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="percentage" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="insurance_value" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="percentage_more" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="insurance_value_more" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="letter_state" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="bank_response_date" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="bank_response" attrs="{'readonly': [('state', '=', 'returned')]}"/>
+                            <field name="total_letter_of_guarantee_value" />
+                            <field name="height_insurance_value" />
+                            <field name="total_insurance_value_after_increase" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="end_date_extension_line" string="End Date Expiry Line">
+                            <field name="end_date_extension_line">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                    <field name="new_extension_date"/>
+                                    <field name="check"/>
+                                    <field name="guarantee_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_letters_of_guarantee" model="ir.actions.act_window">
+        <field name="name">Letters of Guarantee</field>
+        <field name="res_model">letters.of.guarantee</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_project_form_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box">
+                <button string="Letters of Guarantee" type="object"
+                        name="action_open_letters_of_guarantee" icon="fa-envelope"/>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_letters_of_guarantee" model="ir.actions.act_window">
+        <field name="name">Letters of Guarantee</field>
+        <field name="res_model">letters.of.guarantee</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_letters_of_guarantee" name="Letters of Guarantee"/>
+    <menuitem id="menu_letters_of_guarantee_main" name="Letters of Guarantee" parent="menu_letters_of_guarantee"
+              action="action_letters_of_guarantee"/>
+</odoo>

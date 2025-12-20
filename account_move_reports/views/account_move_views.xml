@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_excel_reports_buttons_id" model="ir.ui.view">
+        <field name="name">account.move.excel_reports.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="action_print_excel_report" string="Excel reports" type="object" class="oe_highlight"/>
+
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="account_move_bill_excel_reports_buttons_id" model="ir.ui.view">
+        <field name="name">account.move.bill.excel_reports.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="action_print_excel_bill_report" string="Excel reports" type="object" class="oe_highlight"/>
+
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,22 @@
+<odoo noupdate="1">
+    <data noupdate="1">
+        <record id="project_follow_sequence" model="ir.sequence">
+            <field name="name">Project Follow</field>
+            <field name="code">project.follow</field>
+            <field name="prefix"/>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+     <record id="seq_work_request" model="ir.sequence">
+        <field name="name">Work Request Sequence</field>
+        <field name="code">work.request</field>
+        <field name="prefix">WO</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    </data>
+</odoo>

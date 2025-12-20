@@ -1,0 +1,92 @@
+<odoo>
+    <data>
+
+        <record id="vehicle_request_form" model="ir.ui.view">
+            <field name="name">Vehicle Request</field>
+            <field name="model">vehicle.request</field>
+
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                                states="draft"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="partner_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="tag_ids" widget="many2many_tags"
+                                       attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                            </group>
+                            <group>
+                                <field name="user_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="date" attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                                <field name="company_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'confirmed')]}"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="vehicle_request" string="طلب معدة">
+                                <field name="vehicle_request_lines" attrs="{'readonly': [('state', '=', 'confirmed')]}">
+                                    <tree editable="bottom">
+                                        <field name="vehicle_type_id"/>
+                                        <field name="fleet_id" options="{'no_create': True}"/>
+<!--                                               domain="[('parent.state', '!=', 'in_progress')]"/>-->
+                                        <field name="fleet_model_id" options="{'no_create': True}"/>
+                                        <field name="qty"/>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="supplier_id" options="{'no_create': True}"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="vehicle_request_tree" model="ir.ui.view">
+            <field name="name">Vehicle Request</field>
+            <field name="model">vehicle.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="vehicle_request_action" model="ir.actions.act_window">
+            <field name="name">طلب معدة</field>
+            <field name="res_model">vehicle.request</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="طلب معدة"
+                  id="menu_vehicle_request_parent"
+                  parent="fleet.menu_root"
+                  sequence="10"/>
+
+        <menuitem name="طلب معدة"
+                  id="menu_vehicle_request_child"
+                  parent="project_requests.menu_vehicle_request_parent"
+                  action="vehicle_request_action"
+                  sequence="5"/>
+
+    </data>
+</odoo>

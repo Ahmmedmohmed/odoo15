@@ -1,0 +1,94 @@
+<odoo>
+    <data>
+
+
+
+        <record id="car_tree" model="ir.ui.view">
+            <field name="name">car.tree</field>
+            <field name="model">car.car</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="action_create_bill_from_cars"
+                                string="Create Bill"
+                                type="object"
+                                class="btn-primary"
+                        />
+
+                    </header>
+
+                    <field name="name"/>
+                    <field name="date_and_time"/>
+                    <field name="car_type"/>
+                    <field name="vendor_id"/>
+                    <field name="driver"/>
+                    <field name="uom_id"/>
+                    <field name="quantity"/>
+                    <field name="meter_reading_start"/>
+                    <field name="meter_reading_end"/>
+                    <field name="total_meter_reading_km"/>
+                    <field name="payload_type"/>
+                    <field name="move_from"/>
+                    <field name="move_to"/>
+                    <field name="billed_cars" invisible="1"/>
+                    <field name="record_bill_state"
+                           widget="badge"
+                           decoration-success="record_bill_state == 'billed'"
+                           decoration-danger="record_bill_state == 'not_billed'"/>
+
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="car_form" model="ir.ui.view">
+            <field name="name">car.form</field>
+            <field name="model">car.car</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date_and_time"/>
+                                <field name="car_type"/>
+                                <field name="vendor_id"/>
+                                <field name="driver"/>
+                            </group>
+                            <group>
+                                <field name="uom_id"/>
+                                <field name="quantity"/>
+                                <field name="meter_reading_start"/>
+                                <field name="meter_reading_end"/>
+                                <field name="total_meter_reading_km"/>
+                                <field name="payload_type"/>
+                                <field name="move_from"/>
+                                <field name="move_to"/>
+                                <field name="billed_cars"/>
+                                <field name="record_bill_state"
+                                       widget="badge"
+                                       decoration-success="record_bill_state == 'billed'"
+                                       decoration-danger="record_bill_state == 'not_billed'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="car_action" model="ir.actions.act_window">
+            <field name="name">السيارة</field>
+            <field name="res_model">car.car</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="car_menu"
+                  name="السيارة"
+                  sequence="55"
+                  action="car_action"
+                  parent="project.menu_project_config"
+        />
+
+    </data>
+</odoo>

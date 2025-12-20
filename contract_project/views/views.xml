@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+
+        <record id="add_button_to_show_contract" model="ir.ui.view">
+            <field name="name">add.button.to.show.contract</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box">
+                    <button string="Contract" type="object"
+                            name="action_open_contract" icon="fa-envelope"/>
+                    <button string="Open Tender" type="object"
+                            name="action_open_tender" icon="fa-envelope"/>
+                </div>
+            </field>
+        </record>
+
+         <record id="add_button_to_show_insurance_policy" model="ir.ui.view">
+            <field name="name">add.button.to.show.insurance.policy</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box">
+                    <button string="Insurance Policy" type="object"
+                            name="action_open_insurance_policy" icon="fa-envelope"/>
+                </div>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

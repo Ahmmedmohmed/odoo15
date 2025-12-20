@@ -1,0 +1,205 @@
+<data>
+
+    <template id="union_bill_template_id">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                    <t t-if="o.move_type == 'in_invoice'">
+                        <div class="page">
+                            <table style="border: 1px solid;" class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 21%">
+                                            <span t-esc="o.payment_reference"/>
+                                        </th>
+                                        <th class="text-right"
+                                            style="border: 1px solid white; border-right: 1px solid black; width: 9%">
+                                            عملية
+                                        </th>
+                                        <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 23%">
+                                            <span t-esc="o.project_id.name"/>
+                                        </th>
+                                        <th class="text-right"
+                                            style="border: 1px solid white; border-right: 1px solid black; width: 12%">
+                                            عن أعمال
+                                        </th>
+                                        <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 19%">
+                                            <span t-esc="o.name"/>
+                                        </th>
+                                        <th class="text-right" style="border: 1px solid white; width: 16%">
+                                            مستخلص رقم
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table style="border: 1px solid;" class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th class="text-left"
+                                            style="border: 1px solid white; border-right: 1px solid black; width: 5%">
+                                            WO.NO
+                                        </th>
+
+                                        <th t-esc="o.wo_no" style="background-color:rgb(233,232,233); border: 1px solid black; width: 12%"/>
+                                        <th class="text-left"
+                                            style="border: 1px solid white; border-right: 1px solid black; width: 5%">
+                                            PO.NO
+                                        </th>
+                                        <th t-esc="o.po_no" style="background-color:rgb(233,232,233); border: 1px solid black; width: 12%"/>
+                                        <th style="border: 1px solid white; width: 66%"/>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table style="border: 1px solid;" class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 21%">
+                                            <span t-esc="o.invoice_date"/>
+                                        </th>
+                                        <th class="text-right"
+                                            style="border: 1px solid white; border-right: 1px solid black; width: 9%">
+                                            التاريخ
+                                        </th>
+                                        <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 54%">
+                                            <span t-esc="o.partner_id.name"/>
+                                        </th>
+                                        <th class="text-right" style="border: 1px solid white; width: 16%">
+                                            اسم المقاول
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table table-bordered" style="page-break-inside: avoid;">
+                                <thead>
+                                    <tr style="background-color:rgb(233,232,233);" class="text-center">
+                                        <th style="border: 1px solid black;">القيمة</th>
+                                        <th style="border: 1px solid black;">السعر</th>
+                                        <th style="border: 1px solid black;">الكمية</th>
+                                        <th style="border: 1px solid black;">الوحدة</th>
+                                        <th style="border: 1px solid black;">بيان اﻷعمال</th>
+                                        <th style="border: 1px solid black;">م</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="lines" t-value="o._count_with_hold()"/>
+                                    <t t-foreach="o.invoice_line_ids" t-as="line">
+                                        <t t-if="line.product_id">
+                                            <tr>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.price_subtotal"
+                                                       t-options='{"widget": "float", "precision": 2}'/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.price_unit"
+                                                       t-options='{"widget": "float", "precision": 2}'/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.quantity"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.product_uom_id.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.product_id.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <span t-esc="line_index + 1"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr>
+                                                <td style="border: 1px solid black;" colspan="5" class="text-left">
+                                                    <strong t-esc="line.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <span t-esc="line_index + 1"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="1" class="text-center">
+                                            <span t-esc="o.amount_untaxed"
+                                                  t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="5" class="text-center">
+                                            <strong>إجمالي قيمة اﻷعمال</strong>
+                                        </td>
+                                    </tr>
+                                    <t t-if="lines">
+                                        <tr>
+                                            <td style="border: 1px solid black;" colspan="1"/>
+                                            <td style="border: 1px solid black;" colspan="5" class="text-right">
+                                                <strong>يخصم منها</strong>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="lines" t-as="li">
+                                            <tr>
+                                                <td style="border: 1px solid black;" colspan="1"/>
+                                                <td style="border: 1px solid black;" colspan="1" class="text-center">
+                                                    <span t-esc="li[1]"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" colspan="4" class="text-center">
+                                                    <span t-esc="li[0]"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="1" class="text-center">
+                                            <span t-esc="o.amount_untaxed - o.amount_residual"
+                                                  t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="5" class="text-center">
+                                            <strong>إجمالي قيمة الخصومات</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="1" class="text-center">
+                                            <span t-esc="o.amount_residual"
+                                                  t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="5" class="text-center">
+                                            <strong>صافي قيمة اﻷعمال</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table style="border: 1px solid; page-break-inside: avoid;" class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="border: 1px solid black; height: 5rem; width:50%;"/>
+                                        <th style="vertical-align: top; border: 1px solid black; width:25%;">
+                                            <strong>ختم المقاول</strong>
+                                        </th>
+                                        <th style="vertical-align: top; border: 1px solid black; width:25%;">
+                                            <strong>توقيع المقاول</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="union_bill_report_id"
+            model="account.move"
+            string="طباعة المستخلص"
+            report_type="qweb-pdf"
+            name="project_reports.union_bill_template_id"
+            file="project_reports.union_bill_template_id"/>
+
+</data>

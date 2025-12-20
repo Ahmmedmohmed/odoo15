@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+customer_payment_line_id,customer_payment_line_name,model_customer_payment_line,,1,1,1,1
+customer_payment_id,customer_payment_name,model_customer_payment,,1,1,1,1
+vendor_payment_id,vendor_payment_name,model_vendor_payment,,1,1,1,1
+journal_entry_line_id,journal_entry_line_name,model_journal_entry_line,,1,1,1,1
+journal_account_payment_id,journal_account_payment_name,model_journal_account_payment,,1,1,1,1
+petty_cash_line_id,petty_cash_line_name,model_petty_cash_line,,1,1,1,1
+petty_cash_request_id,petty_cash_request_name,model_petty_cash_request,,1,1,1,1

@@ -1,0 +1,21 @@
+<odoo>
+    <record id="seq_fleet_equipment" model="ir.sequence">
+        <field name="name">Fleet Equipment Sequence</field>
+        <field name="code">fleet.equipment</field>
+        <field name="prefix">EQU</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+     <record id="seq_car" model="ir.sequence">
+        <field name="name">Car Sequence</field>
+        <field name="code">car.car</field>
+        <field name="prefix">CAR</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

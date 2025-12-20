@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+
+
+        <record id="tree_view_allowance_deduction" model="ir.ui.view">
+            <field name="name">name.allowance.deduction.tree</field>
+            <field name="model">allowance.deduction</field>
+            <field name="arch" type="xml">
+                <tree string="Other Input" editable="bottom">
+                    <field name="badge"/>
+                                        <field name="employee_id"/>
+
+                    <field name="input_id"/>
+                    <field name="quantity"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+<!--        <record id="form_view_allowance_deduction_model" model="ir.ui.view">-->
+<!--            <field name="name">name.allowance.deduction.form</field>-->
+<!--            <field name="model">allowance.deduction</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Other Input">-->
+<!--                    <sheet>-->
+<!--                        <group col="4">-->
+<!--                            <field name="date"/>-->
+<!--&lt;!&ndash;                            <field name="type" widget="radio" options="{'horizontal': true}"/>&ndash;&gt;-->
+<!--                        </group>-->
+<!--                        <notebook>-->
+<!--                            <page string="Rules">-->
+<!--                                <field name="allowence_deduction_ids">-->
+<!--                                    <tree editable="bottom">-->
+<!--                                        <field name="employee_id"/>-->
+<!--                                        <field name="badge"/>-->
+<!--                                        <field name="quantity"/>-->
+<!--                                        <field name="rule_id"/>-->
+<!--                                        <field name="description"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+
+
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="action_menu_allowance_deduction" model="ir.actions.act_window">
+            <field name="name">Other Input</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">allowance.deduction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK -->
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_allowance_deduction"
+                  name="Other Input"
+                  parent="hr_payroll_community.menu_hr_payroll_community_root"
+                  action="action_menu_allowance_deduction"
+                  sequence="33"/>
+    </data>
+</odoo>

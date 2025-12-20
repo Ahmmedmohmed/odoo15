@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_letters_of_guarantee,access_letters_of_guarantee,model_letters_of_guarantee,,1,1,1,1
+access_letters_of_guarantee_request,access_letters_of_guarantee_request,model_letters_of_guarantee_request,,1,1,1,1
+guarantee_extension_line_id,guarantee_extension_line_name,model_guarantee_extension_line,,1,1,1,1
+bank_letters_of_guarantee_id,bank_letters_of_guarantee_name,model_bank_letters_of_guarantee,,1,1,1,1
+account_letters_of_guarantee_id,account_letters_of_guarantee_name,model_account_letters_of_guarantee,,1,1,1,1

@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+
+        <record id="therapeutic_reason_form" model="ir.ui.view">
+            <field name="name">Therapeutic Reason</field>
+            <field name="model">therapeutic.reason</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="reason"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="therapeutic_reason_tree" model="ir.ui.view">
+            <field name="name">Therapeutic Reason</field>
+            <field name="model">therapeutic.reason</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="reason"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="therapeutic_reason_action" model="ir.actions.act_window">
+            <field name="name">Reason</field>
+            <field name="res_model">therapeutic.reason</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Reason"
+                  id="menu_therapeutic_reason_id"
+                  parent="fleet.fleet_configuration"
+                  action="therapeutic_reason_action"
+                  sequence="130"/>
+
+    </data>
+</odoo>

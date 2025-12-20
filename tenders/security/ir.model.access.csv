@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tender_request_user,access_tender_request_user,model_tender_request,group_tenders_user,1,1,1,0
+access_tender_request_manager,access_tender_request_manager,model_tender_request,group_tenders_manager,1,1,1,1
+access_payment_receipt_wizard,access_payment_receipt_wizard,model_payment_receipt_wizard,,1,1,1,1
+wizard_not_a_word_id,wizard_not_a_word_name,model_wizard_not_a_word,,1,1,1,1
+wizard_cancel_id,wizard_cancel_name,model_wizard_cancel,,1,1,1,1
+wizard_apologize_id,wizard_apologize_name,model_wizard_apologize,,1,1,1,1

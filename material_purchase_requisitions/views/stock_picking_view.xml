@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="stock_picking_tree_view" model="ir.ui.view">
+            <field name="name">stock.picking.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="project_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="internal_requisition_stock_form_view" model="ir.ui.view">
+            <field name="name">stock.picking.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='picking_type_id']" position="after">
+                    <field optional="show" name="work_shift"/>
+                    <field optional="show" name="quarry_number" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                    <field optional="show" name="water_number" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                    <field optional="show" name="transaction_from"/>
+                    <field optional="show" name="distance"/>
+                    <field optional="show" name="payload" invisible="1"/>
+                    <field optional="show" name="vehicle_number"/>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field optional="show" name="cube"/>
+                    <field optional="show" name="aging_in"/>
+                    <field optional="show" name="transfer_numbers" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field optional="show" name="quality_and_quantity"/>
+                    <field optional="show" name="employee_id"  />
+                    <field optional="show" name="under_cube"/>
+                </xpath>
+
+                <xpath expr="//field[@name='priority']" position="after">
+                    <field name="custom_requisition_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="project_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='quantity_done']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

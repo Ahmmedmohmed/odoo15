@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_wizard_apologize_form" model="ir.ui.view">
+        <field name="name">wizard.apologize.form</field>
+        <field name="model">wizard.apologize</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason_of_apologize"/>
+                </group>
+                <footer>
+                    <button string="Send" type="object" name="button_send" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_apologize" model="ir.actions.act_window">
+        <field name="name">Reason of apologize</field>
+        <field name="res_model">wizard.apologize</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

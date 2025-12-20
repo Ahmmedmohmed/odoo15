@@ -1,0 +1,101 @@
+<odoo>
+    <data>
+
+        <record id="journal_account_payment_form" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">journal.account.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_post" string="Confirm CEO" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="v"/>
+                        <button name="action_draft" string="Reset To Draft" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}" data-hotkey="w"/>
+                        <button name="action_cancel" string="Cancel" type="object" class="btn btn-secondary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="z"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_journal_entry" type="object" icon="fa-pencil-square-o"
+                                    string="Journal Entry"
+                                    class="oe_stat_button" attrs="{'invisible': [('account_move_records', '=', 0)]}">
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="ref" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="account_move_records" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="journal_id"/>
+                                <div name="journal_div" class="d-flex">
+                                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]"
+                                       options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <span class="oe_inline o_form_label mx-3 oe_read_only">in</span>
+                                    <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only">in</span>
+                                    <field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="Journal Item Lines" string="Journal Item Lines">
+                                <field name="journal_entry_line_ids"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree editable="button">
+                                        <field name="account_id" options="{'no_create': True}"/>
+                                        <field name="partner_id" options="{'no_create': True}"/>
+                                        <field name="name" optional="show"/>
+                                        <field name="currency_id"/>
+                                        <field name="amount"/>
+                                        <field name="tax_tag_ids" options="{'no_create': True}" optional="show"/>
+                                        <field name="amount_currency" optional="hide"/>
+                                        <field name="tax_ids" widget="many2many_tags"
+                                               optional="hide" options="{'no_create': True}"/>
+                                        <field name="tax_tag_invert" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="journal_account_payment_tree" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">journal.account.payment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="ref"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="journal_account_payment_search" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">journal.account.payment</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ref"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="journal_account_payment_action" model="ir.actions.act_window">
+            <field name="name">Journal Entry Payment</field>
+            <field name="res_model">journal.account.payment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Request Payments"
+                  id="menu_journal_account_payment"
+                  parent="account.menu_finance_entries_accounting_miscellaneous"
+                  action="request_payment.journal_account_payment_action"
+                  sequence="15"/>
+
+    </data>
+</odoo>

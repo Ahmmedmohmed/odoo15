@@ -1,0 +1,171 @@
+<data>
+
+    <template id="union_payment_template_id">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                    <div class="page">
+                        <br/>
+                        <table style="border: 1px solid;" class="table table-bordered">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="background-color:rgb(233,232,233); border: 1px solid black;">
+                                        <h5 class="text-center">
+                                            <strong>إيصال إستلام</strong>
+                                        </h5>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table style="border: 2px solid black;width:30%; margin-left:auto; margin-right:auto"
+                               class="table table-bordered">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="border: 2px solid black; background-color:rgb(233,232,233);">
+                                        <strong>شيك</strong>
+                                    </th>
+                                    <th style="border: 2px solid black; background-color:rgb(233,232,233);">
+                                        <strong>نقدي</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="row">
+                            <div class="col-3 text-left">
+                                <strong>
+                                    (<span t-field="o.name"/>)
+                                </strong>
+                            </div>
+                        </div>
+                        <br/>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="border: 2px solid black;" class="text-right">
+                                        <br/>
+                                        <strong>
+                                            <span>تحريراً في&#160; / &#160;</span>
+                                            <span t-field="o.date"/>
+                                        </strong>
+                                        <br/>
+                                        <br/>
+                                        <strong>
+                                            <span t-field="o.partner_id.name"/>
+                                            <span>&#160; / &#160; استلمت أنا الموقع أدناه</span>
+                                        </strong>
+                                        <br/>
+                                        <br/>
+                                        <table style="border: 1px solid;" class="table table-bordered">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 17%">
+                                                        <span t-esc="o.amount"/>
+                                                    </th>
+                                                    <th class="text-right"
+                                                        style="border: 1px solid white; border-left: 1px solid black; width: 7%">
+                                                        مبلغ
+                                                    </th>
+                                                    <th class="text-right" style="border: 1px solid white; width: 76%">
+                                                        من الشركة اﻹتحادية للخدمات البترولية والمقاولات
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <table style="border: 1px solid;" class="table table-bordered">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 85%">
+                                                        <span t-esc="o.word_num"/>
+                                                    </th>
+                                                    <th class="text-right" style="border: 1px solid white; width: 15%; border-left: 1px solid black;">
+                                                        فقط وقدره
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <table style="border: 1px solid;" class="table table-bordered">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 30%">
+                                                        <span t-esc="o.journal_id.name"/>
+                                                    </th>
+                                                    <th class="text-left"
+                                                        style="border: 1px solid white; width: 25%; border-left: 1px solid black; border-right: 1px solid black;">
+                                                        البنك المسحوب عليه
+                                                    </th>
+                                                    <th style="background-color:rgb(233,232,233); border: 1px solid black; width: 30%">
+                                                        <span t-esc="o.check_number"/>
+                                                    </th>
+                                                    <th class="text-right" style="border: 1px solid white; width: 15%; border-left: 1px solid black;">
+                                                        رقم الشيك
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-6"/>
+                                            <div class="col-4">
+                                                <span t-field="o.ref"/>
+                                            </div>
+                                            <div class="col-2">
+                                                <span>/ وذلك نظير</span>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <span>المستلم</span>
+                                            </div>
+                                            <div class="col-8">
+                                                <span>أمين الخزينة</span>
+                                            </div>
+                                            <div class="col-1"/>
+                                        </div>
+                                        <div class="row" style="page-break-inside: avoid;">
+                                            <div class="col-5">
+                                                <br/>
+                                                <span>..........................................................</span>
+                                                <span>/ الاسم</span>
+                                                <br/>
+                                                <br/>
+                                                <span>........................................................</span>
+                                                <span>/ التوقيع</span>
+                                                <br/>
+                                                <br/>
+                                                <span>.................................................</span>
+                                                <span>/ رقم قومي</span>
+                                                <br/>
+                                                <br/>
+                                                <span>........................................................</span>
+                                                <span>/ العنوان</span>
+                                                <br/>
+                                            </div>
+                                            <div class="col-7">
+                                                <br/>
+                                                <span>.........................................................</span>
+                                                <span>/ محاسب</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="union_payment_report_id"
+            model="account.payment"
+            string="Union Payment"
+            report_type="qweb-pdf"
+            name="project_reports.union_payment_template_id"
+            file="project_reports.union_payment_template_id"/>
+
+</data>

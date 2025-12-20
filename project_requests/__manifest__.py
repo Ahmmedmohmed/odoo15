@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Project Requests",
+    'summary': "Project Requests",
+    'author': "Abdelrahman Ragab",
+    'version': '15.0.0.1.0',
+    'category': 'others',
+    'license': 'AGPL-3',
+    'sequence': 1,
+    'depends': [
+        'base',
+        'mail',
+        'project',
+        'fleet',
+        'material_purchase_requisitions',
+        'hr_timesheet',
+        'hr',
+        'hr_employee_enhancement',
+    ],
+
+    'data': [
+        'security/ir.model.access.csv',
+        'views/project_view.xml',
+        'views/material_purchase_requisition.xml',
+        'views/project_task_view.xml',
+        'views/project_follow.xml',
+        'views/item_view.xml',
+        'views/accommodation_type_view.xml',
+        'views/fleet_vehicle_odometer.xml',
+        'views/vehicle_request.xml',
+        'views/work_request.xml',
+        'views/employee_request.xml',
+        'views/hr_work_request.xml',
+        'views/application_request.xml',
+        'data/data.xml',
+    ],
+    'demo': [
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

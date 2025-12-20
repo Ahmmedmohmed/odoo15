@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+
+        <record id="customer_request_payment_form" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">customer.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_post" string="Confirm CEO" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="v"/>
+                        <button name="action_draft" string="Reset To Draft" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}" data-hotkey="w"/>
+                        <button name="action_cancel" string="Cancel" type="object" class="btn btn-secondary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="z"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_payments" type="object" icon="fa-pencil-square-o"
+                                    string="Payments"
+                                    class="oe_stat_button" attrs="{'invisible': [('account_payment_records', '=', 0)]}">
+                                <field name="account_payment_records" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="reference" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="account_payment_records" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page name="Request Payment Lines" string="Request Payment Lines">
+                                <field name="customer_payment_line_ids"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree editable="button">
+                                        <field name="customer_id" options="{'no_create': True}"/>
+                                        <field name="account_id"/>
+                                        <field name="balance"/>
+                                        <field name="amount" string="Amount"/>
+                                        <field name="journal_id"
+                                               domain="[('type', 'in', ('bank', 'cash'))]"
+                                               options="{'no_create': True}"/>
+                                        <field name="memo"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_request_payment_tree" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">customer.payment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="reference"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_request_payment_search" model="ir.ui.view">
+            <field name="name">Request Payment</field>
+            <field name="model">customer.payment</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="reference"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="customer_request_payment_action" model="ir.actions.act_window">
+            <field name="name">Customer Request Payment</field>
+            <field name="res_model">customer.payment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Request Payments"
+                  id="menu_customer_request_payment"
+                  parent="account.menu_finance_receivables"
+                  action="request_payment.customer_request_payment_action"
+                  sequence="10"/>
+
+    </data>
+</odoo>

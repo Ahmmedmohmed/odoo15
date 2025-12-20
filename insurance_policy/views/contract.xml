@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+
+
+<!--        <record id="create_insurance_policy_button" model="ir.ui.view">-->
+<!--            <field name="name">create.insurance.policy.button</field>-->
+<!--            <field name="model">contract.contract</field>-->
+<!--            <field name="inherit_id" ref="contract.contract_contract_form_view"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//header" position="inside">-->
+<!--                    <button name="create_insurance_policy" type="object" string="Create Insurance Policy"-->
+<!--                            class="oe_highlight"/>-->
+<!--                </xpath>-->
+
+<!--&lt;!&ndash;                <xpath expr="//button[@name='action_show_invoices']" position="after">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button&ndash;&gt;-->
+<!--&lt;!&ndash;                            name="action_show_insurance_policy"&ndash;&gt;-->
+<!--&lt;!&ndash;                            type="object"&ndash;&gt;-->
+<!--&lt;!&ndash;                            icon="fa-list"&ndash;&gt;-->
+<!--&lt;!&ndash;                            class="oe_stat_button"&ndash;&gt;-->
+<!--&lt;!&ndash;                    />&ndash;&gt;-->
+<!--&lt;!&ndash;                </xpath>&ndash;&gt;-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+    </data>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_project_form_inherit_stock_buttons" model="ir.ui.view">
+            <field name="name">project.project.form.stock.buttons</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+
+
+                    <button name="action_open_custom_receipts"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-download">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">خارجي</span>
+                        </div>
+                    </button>
+                    <button name="action_open_custom_delivery"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-truck">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">داخلي</span>
+                        </div>
+                    </button>
+                    <button name="action_open_custom_car"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-car">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">السيارات</span>
+                        </div>
+                    </button>
+                    <button name="action_open_custom_fleet_equipment"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-truck">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">المعدات</span>
+                        </div>
+                    </button>
+
+                    <button name="action_open_all_bills"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-credit-card">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">الفواتير </span>
+                        </div>
+                    </button>
+                    <button name="action_open_project_employee"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-users">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">الحضور </span>
+                        </div>
+                    </button>
+
+
+                </xpath>
+
+                <xpath expr="//page[@name='settings']/group" position="inside">
+                    <group>
+                        <field name="warehouse_id"/>
+                    </group>
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

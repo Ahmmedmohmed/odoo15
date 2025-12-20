@@ -1,0 +1,176 @@
+<data>
+
+    <template id="union_invoice_template_id">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+
+                    <t t-if="o.move_type == 'out_invoice'">
+                        <div class="page">
+                            <br/>
+                            <h2 class="text-center">
+                                <span>INVOICE ( No. &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                    &#160; /
+                                    <span t-field="o.current_year"/>
+                                    )
+                                </span>
+                                <span>فاتورة</span>
+                            </h2>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-6 text-left">
+                                    <strong>Date &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                        &#160; &#160; &#160; &#160; &#160; &#160; : &#160;
+                                    </strong>
+                                    <span t-field="o.invoice_date"/>
+                                    <br/>
+                                    <strong>Required From &#160; &#160; &#160; &#160; :</strong>
+                                    <span t-field="o.partner_id.name"/>
+                                    <br/>
+                                    <strong>Tax Card No &#160; &#160; &#160; &#160; &#160; &#160; &#160; :</strong>
+                                    <span t-field="o.partner_id.vat"/>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <strong>Contract No :</strong>
+                                    <span t-field="o.contract_id.display_name"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr style="background-color:rgb(233,232,233);" class="text-center">
+                                        <th style="border: 1px solid black;">Description</th>
+                                        <th style="border: 1px solid black;">Unit</th>
+                                        <th style="border: 1px solid black;">Qty.</th>
+                                        <th style="border: 1px solid black;">Price (EGP)</th>
+                                        <th style="border: 1px solid black;">Total (EGP)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.invoice_line_ids" t-as="line">
+                                        <t t-if="line.product_id">
+                                            <tr>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.product_id.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.product_uom_id.name"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.quantity"/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.price_unit"
+                                                       t-options='{"widget": "float", "precision": 2}'/>
+                                                </td>
+                                                <td style="border: 1px solid black;" class="text-center">
+                                                    <t t-esc="line.price_subtotal"
+                                                       t-options='{"widget": "float", "precision": 2}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr>
+                                                <td style="border: 1px solid black;"
+                                                    colspan="5" class="text-left">
+                                                    <strong t-esc="line.name"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="4" class="text-center">
+                                            <strong>Only :</strong>
+                                            <span t-field="o.word_num"/>
+                                        </td>
+                                        <td style="background-color:rgb(233,232,233); border: 1px solid black;"
+                                            colspan="1" class="text-center">
+                                            <span t-esc="o.amount_residual"
+                                                  t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <div class="row" style="page-break-inside: avoid;">
+                                <div class="col-2 text-left">
+                                    <strong>Written :</strong>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <strong>Revised :</strong>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                </div>
+                                <div class="col-2 text-left">
+                                    <strong>Approved :</strong>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <strong>Stamp :</strong>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                    <br/>
+                                    <span>............................................</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_union_invoice_report_id" model="report.paperformat">
+        <field name="name">A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">65</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="union_invoice_report_id"
+            model="account.move"
+            string="Union Invoice"
+            report_type="qweb-pdf"
+            name="project_reports.union_invoice_template_id"
+            file="project_reports.union_invoice_template_id"
+            paperformat="paperformat_union_invoice_report_id"/>
+
+</data>

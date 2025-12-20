@@ -1,0 +1,91 @@
+<odoo>
+    <data>
+
+
+        <record id="fleet_equipment_tree" model="ir.ui.view">
+            <field name="name">fleet_equipment_tree</field>
+            <field name="model">fleet.equipment</field>
+            <field name="arch" type="xml">
+                <tree multi_edit="1">
+                                        <header>
+                                            <button name="action_create_bill_from_fleet_equipment"
+                                                    string="Create Bill"
+                                                    type="object"
+                                                    class="btn-primary"
+                                                    />
+
+
+                                        </header>
+                    <field name="billed_equipment" invisible="1"/>
+
+                    <field name="name"/>
+                    <field name="date_and_time" string="التاريخ والوقت"/>
+                    <field name="fleet_id" string=" المعدة "/>
+                    <field name="vehicle_owner" string="المورد" attrs="{'readonly': [('fleet_id', '=', False)]}"/>
+                    <field name="driver_id" string="السائق" attrs="{'readonly': [('fleet_id', '=', False)]}"/>
+                    <field name="uom_id" string="الوحدة"/>
+                    <field name="quantity" string="الكمية"/>
+
+
+                    <field name="type_of_work" string="طبيعة العمل"/>
+                    <field name="place" string="المكان"/>
+                    <field name="notes" string="ملاحظات"/>
+                    <field name="employee_id" string="المشرف"/>
+                    <field name="reviewed" string="تم المراجعة"/>
+                      <field name="record_bill_state"
+                           widget="badge"
+                           decoration-success="record_bill_state == 'billed'"
+                           decoration-danger="record_bill_state == 'not_billed'"/>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="fleet_equipment_form" model="ir.ui.view">
+            <field name="name">fleet_equipment.form</field>
+            <field name="model">fleet.equipment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date_and_time"/>
+                                <field name="fleet_id"/>
+                                <field name="vehicle_owner" attrs="{'readonly': [('fleet_id', '=', False)]}"/>
+                                <field name="driver_id" attrs="{'readonly': [('fleet_id', '=', False)]}"/>
+<!--                                <field name="billed_equipment"/>-->
+
+                            </group>
+                            <group>
+                                <field name="uom_id"/>
+                                <field name="quantity"/>
+                                <field name="type_of_work"/>
+                                <field name="place"/>
+                                <field name="notes"/>
+                                <field name="employee_id"/>
+                                <field name="reviewed"/>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="fleet_equipment_action" model="ir.actions.act_window">
+            <field name="name">المعدات</field>
+            <field name="res_model">fleet.equipment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="fleet_equipment_menu"
+                  name="المعدات"
+                  sequence="55"
+                  action="fleet_equipment_action"
+                  parent="project.menu_project_config"
+        />
+
+    </data>
+</odoo>

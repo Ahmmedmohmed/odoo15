@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_appraisal_group_user" model="res.groups">
+        <field name="name">Officer Appraisal Group</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="group_appraisal_group_manager" model="res.groups">
+        <field name="name">Manager Appraisal Group</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    
+    <record id="appraisal_appraisal_rule_officer" model="ir.rule">
+        <field name="name">Officer Appraisal Access</field>
+        <field name="model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), ('employee_id.department_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('nile_air_appraisal.group_appraisal_group_user'))]"/>
+    </record>
+    <record id="appraisal_appraisal_rule_manager" model="ir.rule">
+        <field name="name">Manager Appraisal Access</field>
+        <field name="model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
+        <field name="domain_force">['|','|', ('user_id', '=', user.id), ('employee_id.department_id', '=', False), ('department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('nile_air_appraisal.group_appraisal_group_manager'))]"/>
+    </record>
+
+</odoo>

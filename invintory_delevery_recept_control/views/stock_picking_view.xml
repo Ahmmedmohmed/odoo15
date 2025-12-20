@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <!-- Recept Tree View -->
+        <record id="stock_picking_recept_tree_view" model="ir.ui.view">
+            <field name="name">stock.picking.recept.tree.view</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">20</field>  <!-- Higher than default (16) -->
+
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="action_create_bill_from_picking"
+                                string="Create Bill"
+                                type="object"
+                                class="btn-primary"
+                        />
+
+
+                    </header>
+                    <field name="state" invisible="1"/>
+                    <field name="picking_type_code" invisible="1"/>
+                    <field name="billed_picking" invisible="1"/>
+
+                    <field name="scheduled_date" string="التاريخ والوقت"/>
+                    <field name="site_number" string="رقم بون الموقع"/>
+                    <field name="quarry_number" string="رقم بون المحجر"/>
+                    <field name="water_number" string="رقم البون المائي"/>
+                    <field name="vehicle_number" string="رقم السيارة"/>
+                    <field name="cube" string="تكعيب"/>
+                    <field name="partner_id" string="المورد"/>
+                    <field name="product_id" string="نوع الحمولة"/>
+                    <field name="transaction_from" string="مكان التحميل"/>
+                    <field name="aging_in" string="مكات التعتيق"/>
+                    <field name="distance" string="مسافة النقل"/>
+                    <field name="quantity" string="الكمية"/>
+                    <field name="deduct_quantity" string="الخصم"/>
+                    <field name="net_quantity" string="صافي الكمية"/>
+                    <field name="quality_and_quantity" string="المزان"/>
+                    <field name="deduction_reason" string="سبب الخصم "/>
+                    <field name="employee_id" string="المشرف"/>
+                    <field name="notes" string="ملاحظات"/>
+                    <field name="reviewed" string="تم المراجعة "/>
+                      <field name="record_bill_state"
+                           widget="badge"
+                           decoration-success="record_bill_state == 'billed'"
+                           decoration-danger="record_bill_state == 'not_billed'"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--  Delivery Tree View -->
+        <record id="stock_picking_delivery_tree_view" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.tree.view</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">20</field>  <!-- Higher than default (16) -->
+
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="action_create_bill_from_picking"
+                                string="Create Bill"
+                                type="object"
+                                class="btn-primary"
+                        />
+                    </header>
+                    <field name="state" invisible="1"/>
+                    <field name="picking_type_code" invisible="1"/>
+                    <field name="billed_picking" invisible="1"/>
+
+                    <field name="scheduled_date" string="التاريخ والوقت"/>
+                    <field name="product_id" string="نوع الحمولة"/>
+                    <field name="vehicle_number" string="رقم السيارة"/>
+                    <field name="cube" string="تكعيب"/>
+                    <field name="partner_id" string="المورد" required="1"/>
+                    <field name="transaction_from" string="مكان التحميل"/>
+                    <field name="aging_in" string="مكات التعتيق"/>
+                    <field name="distance" string="مسافة النقل"/>
+                    <field name="transfer_numbers" string="عدد النقلات"/>
+                    <field name="quantity" string="الكمية"/>
+                    <field name="deduct_quantity" string="الخصم"/>
+                    <field name="net_quantity" string="صافي الكمية"/>
+                    <field name="loader_type" />
+                    <field name="loader_owner" />
+                    <field name="deduction_reason" string="سبب الخصم "/>
+                    <field name="employee_id" string="المشرف"/>
+                    <field name="notes" string="ملاحظات"/>
+                    <field name="reviewed" string="تم المراجعة "/>
+                      <field name="record_bill_state"
+                           widget="badge"
+                           decoration-success="record_bill_state == 'billed'"
+                           decoration-danger="record_bill_state == 'not_billed'"/>
+
+
+                    <!--                    <field name="site_number" string="رقم بون الموقع"/>-->
+                    <!--                    <field name="quarry_number" string="رقم بون المحجر"/>-->
+                    <!--                    <field name="water_number" string="رقم البون المائي"/>-->
+
+
+                    <!--                    <field name="quality_and_quantity" string="المزان"/>-->
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- modify form View -->
+
+
+        <record id="stock_picking_recept_form_view" model="ir.ui.view">
+            <field name="name">stock_picking_recept.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="0"/>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='picking_type_id']" position="after">
+                    <field name="picking_type_code" invisible="1"/>
+
+                    <field name="site_number" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+<!--                    <field name="transfer_numbers" />-->
+
+                </xpath>
+
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="deduct_quantity"/>
+                    <field name="net_quantity"/>
+                     <field name="loader_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="loader_owner" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                    <field name="deduction_reason"/>
+                    <field name="notes"/>
+                    <field name="reviewed"/>
+<!--                    <field name="billed_picking" />-->
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

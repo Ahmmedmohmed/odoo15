@@ -1,0 +1,138 @@
+<odoo>
+    <data>
+
+        <record id="project_follow_form" model="ir.ui.view">
+            <field name="name">Project Follow</field>
+            <field name="model">project.follow</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <header>
+                        <button name="action_lock_report_form" type="object" string="Project Report Confirm" class="oe_highlight"
+                               attrs="{'invisible': [('is_locked', '=', True)]}" />
+                        <field name="state" widget="statusbar" />
+
+                    </header>
+                    <sheet>
+                        <group attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <group attrs="{'readonly': [('is_locked', '=', True)]}">
+                                <field name="is_locked" invisible="1"/>
+                                <field name="sequence" invisible="1"/>
+                                <field name="new_sequence"/>
+                                <field name="partner_id" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                                <field name="date" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                            </group>
+                            <group >
+                                <field name="project_id" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                                <field name="user_id" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                                <field name="site_engineer" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                                <field name="manager_id" attrs="{'readonly': [('is_locked', '=', True)]}"/>
+                                <field name="exchange_quantity" invisible="1"/>
+                                <field name="cumulative_exchange_quantity" invisible="1"/>
+                            </group>
+                        </group>
+                        <separator string="التوريدات اليومية والتراكمية"/>
+                        <field name="daily_supplies_id" attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <tree editable="button" >
+                                <field name="product_id" invisible="1"/>
+                                <field name="basic_quantity" invisible="1"/>
+                                <field name="related_product_id"/>
+                                <field name="related_basic_quantity"/>
+                                <field name="assay_quantity"/>
+                                <field name="current_quantity"/>
+                                <field name="cumulative_quantity"/>
+                                <field name="exchange_quantity"/>
+                                <field name="cumulative_exchange_quantity"/>
+                                <field name="remaining_quantity"/>
+                                <field name="note"/>
+                                <field name="daily_project_follow_id" default="{'default_id': parent.id}"
+                                       invisible="1"/>
+                            </tree>
+                        </field>
+                        <separator string="اﻷعمال المنفذة"/>
+                        <field name="executed_works_id" attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <tree editable="button">
+                                <field name="product_id" invisible="1"/>
+                                <field name="uom" invisible="1"/>
+                                <field name="basic_quantity" invisible="1"/>
+                                <field name="related_product_id"/>
+                                <field name="related_uom"/>
+                                <field name="related_basic_quantity"/>
+                                <field name="executed_quantity"/>
+                                <!--                                <field name="ratio"/>-->
+                                <field name="current_quantity"/>
+                                <field name="cumulative_executed_quantity"/>
+                                <field name="cumulative_quantity"/>
+                                <field name="rate"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                        <separator string="المعدات"/>
+                        <field name="heavy_equipment_id" attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <tree editable="button">
+                                <field name="fleet_id" invisible="1"/>
+                                <field name="related_fleet_id"/>
+                                <field name="partner_id" options="{'no_create': True}"/>
+                                <field name="work_hours"/>
+                                <field name="waiting_time"/>
+                                <field name="total_work_hours"/>
+                                <!--                                <field name="unit" options="{'no_create': True}"/>-->
+                                <field name="unit"/>
+                                <field name="rosary"/>
+                                <field name="work"/>
+                                <field name="reason"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                        <separator string="المشكلات والعوائق"/>
+                        <field name="problems_equipment_id" attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <tree editable="button">
+                                <field name="problem"/>
+                                <field name="reason"/>
+                                <field name="solution"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_follow_tree" model="ir.ui.view">
+            <field name="name">Project Follow</field>
+            <field name="model">project.follow</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <field name="manager_id"/>
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_follow_action" model="ir.actions.act_window">
+            <field name="name">متابعة المشروع</field>
+            <field name="res_model">project.follow</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="متابعة المشروع"
+                  id="menu_project_follow_parent"
+                  parent="project.menu_main_pm"
+                  sequence="110"/>
+
+        <menuitem name="متابعة المشروع"
+                  id="menu_project_follow"
+                  parent="project_requests.menu_project_follow_parent"
+                  action="project_follow_action"/>
+
+    </data>
+</odoo>

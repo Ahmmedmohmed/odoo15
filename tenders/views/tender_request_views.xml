@@ -1,0 +1,114 @@
+<odoo>
+    <record id="view_tender_request_form" model="ir.ui.view">
+        <field name="name">tender.request.form</field>
+        <field name="model">tender.request</field>
+        <field name="arch" type="xml">
+            <form string="Tender Request">
+                <header>
+                    <button string="Submit" type="object" name="action_submit" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button string="Approve (CEO)" type="object" name="action_approve_ceo" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'submitted')]}"
+                            groups="tenders.group_tenders_manager"/>
+                    <button string="Reject" type="object" name="action_reject" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'submitted')]}"
+                            groups="tenders.group_tenders_manager"/>
+
+                    <button string="A Word" type="object" name="action_a_word" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
+                            groups="tenders.group_tenders_manager"/>
+                    <button string="Not a Word" type="object" name="action_not_a_word" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
+                            groups="tenders.group_tenders_manager"/>
+                    <button string="Cancel" type="object" name="action_cancel" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
+                            groups="tenders.group_tenders_manager"/>
+                    <button string="Apologize" type="object" name="action_apologize" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
+                            groups="tenders.group_tenders_manager"/>
+
+                    <field name="state" widget="statusbar" force_save="1"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_contract" type="object" icon="fa-book" class="oe_stat_button"
+                                attrs="{'invisible': [('state', '!=', 'a_word')]}" string="Contract">
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="customer"/>
+                            <field name="tender_purpose"/>
+                            <field name="date"/>
+                            <field name="tender_number"/>
+                            <field name="tender_amount"/>
+                        </group>
+                        <group>
+                            <field name="bid_from"/>
+                            <field name="bid_to"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible': [('state', '!=', 'not_a_word')]}">
+                        <page name="Reason of not a word" string="Reason of not a word">
+                            <field name="reason_of_not_a_word"
+                                   attrs="{'invisible': [('state', '!=', 'not_a_word')]}"/>
+                        </page>
+                    </notebook>
+                    <notebook attrs="{'invisible': [('state', '!=', 'cancel')]}">
+                        <page name="Reason of cancel" string="Reason of cancel">
+                            <field name="reason_of_cancel" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                        </page>
+                    </notebook>
+                    <notebook attrs="{'invisible': [('state', '!=', 'apologize')]}">
+                        <page name="Reason of apologize" string="Reason of apologize">
+                            <field name="reason_of_apologize"
+                                   attrs="{'invisible': [('state', '!=', 'apologize')]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tender_request_tree" model="ir.ui.view">
+        <field name="name">tender.request.tree</field>
+        <field name="model">tender.request</field>
+        <field name="arch" type="xml">
+            <tree string="Tender Requests">
+                <field name="code"/>
+                <field name="customer"/>
+                <field name="tender_purpose"/>
+                <field name="date"/>
+                <field name="tender_number"/>
+                <field name="tender_amount"/>
+                <field name="bid_from"/>
+                <field name="bid_to"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_tender_request" model="ir.actions.act_window">
+        <field name="name">Tender Requests</field>
+        <field name="res_model">tender.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new Tender Request.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="tenders_root" name="Tenders"/>
+
+    <menuitem id="menu_tender_request"
+              name="Tender Requests"
+              action="action_tender_request"
+              parent="tenders_root"/>
+</odoo>

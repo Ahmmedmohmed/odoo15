@@ -1,0 +1,22 @@
+<odoo>
+
+    <record id="category_letters_of_guarantee" model="ir.module.category">
+        <field name="name">Letters Of Guarantee</field>
+    </record>
+
+    <record id="group_approve_cfo" model="res.groups">
+        <field name="name">Approve CFO Manager</field>
+        <field name="category_id" ref="category_letters_of_guarantee"/>
+    </record>
+
+    <record id="group_extend" model="res.groups">
+        <field name="name">Extend Manager</field>
+        <field name="category_id" ref="category_letters_of_guarantee"/>
+    </record>
+
+    <record id="group_return" model="res.groups">
+        <field name="name">Return Manager</field>
+        <field name="category_id" ref="category_letters_of_guarantee"/>
+    </record>
+
+</odoo>

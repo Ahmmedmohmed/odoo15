@@ -1,0 +1,14 @@
+<odoo>
+    <record id="module_category_tenders" model="ir.module.category">
+        <field name="name">Tenders</field>
+    </record>
+    <record id="group_tenders_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_tenders"/>
+    </record>
+    <record id="group_tenders_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_tenders"/>
+        <field name="implied_ids" eval="[(4, ref('group_tenders_user'))]"/>
+    </record>
+</odoo>

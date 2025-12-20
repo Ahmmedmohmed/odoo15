@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_payment_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">payment.receipt.wizard.form</field>
+        <field name="model">payment.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Payment Receipt">
+                <group>
+                    <field name="payment_receipt" widget='binary'/>
+                </group>
+                <footer>
+                    <button string="Approve" type="object" name="button_approve" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payment_receipt_wizard" model="ir.actions.act_window">
+        <field name="name">Payment Receipt</field>
+        <field name="res_model">payment.receipt.wizard</field>
+        <field name="view_id" ref="tenders.view_payment_receipt_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

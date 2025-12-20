@@ -1,0 +1,181 @@
+<odoo>
+
+    <record id="view_project_tree_inherited_id" model="ir.ui.view">
+        <field name="name">project.project.tree.inherited.id</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="planned_days" widget="timesheet_uom_no_toggle" sum="Initially Planned Days"
+                       optional="hide"/>
+                <field name="effective_days" widget="timesheet_uom" sum="Effective Days" optional="show"/>
+                <field name="remaining_days" widget="timesheet_uom" sum="Remaining Days" optional="hide"
+                       decoration-danger="timesheet_progress &gt;= 100"
+                       decoration-warning="timesheet_progress &gt;= 80 and timesheet_progress &lt; 100"/>
+                <field name="timesheet_progress" widget="progressbar" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_form_inherit_id" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.id</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_show_delivery" type="object" icon="fa-truck" class="oe_stat_button"
+                        string="Delivery">
+
+                </button>
+                <button name="action_view_vehicle_requests" type="object" icon="fa-truck" class="oe_stat_button"
+                        string="Vehicle Requests">
+                </button>
+                <button name="action_show_requisition" type="object" icon="fa-book" class="oe_stat_button"
+                        string="Requisitions">
+                </button>
+                <button name="action_show_reports" type="object" icon="fa-list-ol" class="oe_stat_button"
+                        string="Reports">
+                </button>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button string="Create Requisition" name="action_create_requisition" type="object"
+                        class="oe_highlight"/>
+                <button string="Create Report" name="action_create_report" type="object"
+                        class="oe_highlight"/>
+                <button string="إرسال طلب المعدات" name="action_create_lines_in_fleet" type="object"
+                        class="oe_highlight"/>
+                <button string="انشاء طلب التعيين" name="action_create_lines_in_employee_request" type="object"
+                        class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="subsistence"/>
+                <!--                            <field name="nature_substitute"/>-->
+            </xpath>
+
+            <xpath expr="//sheet/notebook" position="inside">
+                <page name="create_request_id" string="طلب مشتريات خامات">
+                    <field name="create_request_id">
+                        <tree editable="button">
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="qty_on_hand"/>
+                            <field name="uom"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="note"/>
+                            <field name="check"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="business_items_id" string="بنود اﻷعمال">
+                    <field name="business_items_id">
+                        <tree editable="button">
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="uom"/>
+                            <field name="price"/>
+                            <field name="total_price"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="application_request_id" string="طلب تعيين">
+                    <field name="application_request_id">
+                        <tree editable="button">
+                            <field name="job_id" options="{'no_create': True}"/>
+                            <field name="employee_id" domin="[('iob_id','in',job_id.name]"/>
+                            <field name="subsistence"/>
+                            <field name="subsistence_quantity"/>
+                            <field name="nature_substitute" widget="percentage"/>
+                            <field name="quantity"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="daily_amount" invisible="1"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="nature_substitute_total"/>
+                            <field name="subsistence_total"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="equipment_request_id" string="طلب معدة">
+                    <field name="equipment_request_id">
+                        <tree editable="button">
+                            <field name="description" invisible="1"/>
+                            <field name="vehicle_type_id" options="{'no_create': True}"/>
+
+                            <field name="fleet_id" options="{'no_create': True}"/>
+                            <field name="fleet_model_id" options="{'no_create': True}"/>
+                            <field name="qty"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="supplier_id" options="{'no_create': True}"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="housing_request_id" string="طلب سكن">
+                    <field name="housing_request_id">
+                        <tree editable="button">
+                            <field name="housing"/>
+                            <field name="qty"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="Project_Timesheet" string="Project Timesheet ">
+                    <group>
+                        <group>
+                            <field name="planned_days"/>
+                        </group>
+                        <group>
+                            <field name="timesheet_progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <field name="timesheet_ids">
+                        <tree editable="button">
+                            <field name="date"/>
+                            <field name="employee_id" options="{'no_create': True}"/>
+                            <field name="name"/>
+                            <field name="days_spent" decoration-danger="days_spent &gt; 30"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" name="project_days">
+                            <field name="effective_days"/>
+                            <field name="remaining_days" attrs="{'invisible' : [('planned_days', '=', 0)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_hr_timesheet_inherit_id" model="ir.ui.view">
+        <field name="name">hr_timesheet.form.inherit.id</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='unit_amount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="days_spent" optional="show" sum="Total" decoration-danger="days_spent &gt; 24"/>
+            </xpath>
+
+
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,540 @@
+<odoo>
+    <data>
+        <report
+                id="appraisal_report_id"
+                model="appraisal.appraisal"
+                report_type="qweb-pdf"
+                string="Appraisal Report"
+                name="nile_air_appraisal.appraisal_report"
+                file="abs_hr_management.appraisal_report"
+        />
+
+        <template id="appraisal_report">
+            <t t-call='web.html_container'>
+                <t t-foreach='docs' t-as='o'>
+                    <t t-call='web.external_layout'>
+                        <div class="page">
+
+                            <center>
+                                <h2>
+                                    <strong style="border-bottom: 2px solid black;">Performance Appraisal Form</strong>
+                                </h2>
+                            </center>
+                            <br/>
+
+                            <div>
+                                <div style="float:left;width:50%">
+                                    <strong>Employee Name :</strong>
+                                    <span t-esc="o.employee_id.name"/>
+                                    <br/>
+                                    <strong>Title :</strong>
+                                    <span t-esc="o.title"/>
+                                    <br/>
+                                    <strong>Department :</strong>
+                                    <span t-esc="o.department_id.name"/>
+                                    <br/>
+                                    <strong>Last Performance Date :</strong>
+                                    <span t-esc="o.last_performance_date"/>
+                                    <br/>
+                                </div>
+                                <div style="float:right;width:50%">
+                                    <strong>Employee Id :</strong>
+                                    <span t-esc="o.employee_id.barcode"/>
+                                    <br/>
+                                    <strong>Hiring Date :</strong>
+                                    <span t-esc="o.hiring_date"/>
+                                    <br/>
+                                    <strong>Manager/Supervisor Name :</strong>
+                                    <span t-esc="o.manager_id.name"/>
+                                    <br/>
+                                    <strong>Appraisal Submission Date :</strong>
+                                    <span t-esc="o.appraisal_date"/>
+                                    <br/>
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div style="border-bottom: 2px solid black;"></div>
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">Guidance to Rating Scale:
+                                        </strong>
+                                    </h3>
+                                    <br/>
+                                    <strong style="padding-left:50px">* For each scale completed the rate should be:
+                                    </strong>
+                                </p>
+                                <table style="width:100%;float:left;border-width:2px;border-color:black"
+                                       class="table table-sm table-bordered oe_inline">
+                                    <thead>
+                                        <tr style="border-width:2px;border-color:black">
+
+                                            <t t-if="o.total_performance=='Unsatisfactory'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>1</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance !='Unsatisfactory'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>1</center>
+                                                </td>
+                                            </t>
+
+                                            <t t-if="o.total_performance=='Needs Improvement'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>2</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance !='Needs Improvement'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>2</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance=='Meets Expectations'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>3</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance !='Meets Expectations'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>3</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance=='Exceeds Expectations'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>4</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance !='Exceeds Expectations'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>4</center>
+                                                </td>
+                                            </t>
+
+                                            <t t-if="o.total_performance=='Exceptional'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>5</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.total_performance !='Exceptional'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>5</center>
+                                                </td>
+                                            </t>
+
+
+                                        </tr>
+                                        <tr style="border-width:2px;border-color:black">
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>Unsatisfactory</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Needs Improvement</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Meets Expectations</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Exceeds Expectations</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Exceptional</center>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div style="border-bottom: 2px solid black;"></div>
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">
+                                            To Be Submitted by the Direct Manager:
+                                        </strong>
+                                    </h3>
+                                    <br/>
+
+                                    <t t-foreach='o.rating_scale_ids' t-as='rate'>
+                                        <strong style="font-size:13px">
+                                            <span t-esc="rate.questions"/>
+                                            <br/>
+                                        </strong>
+
+                                        <table style="width:100%;float:left;border-width:2px;border-color:black"
+                                               class="table table-sm table-bordered oe_inline">
+                                            <thead>
+                                                <tr style="border-width:2px;border-color:black">
+
+
+                                                    <t t-if="rate.evaluation=='1'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>1</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='1'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>1</center>
+                                                        </td>
+                                                    </t>
+
+                                                    <t t-if="rate.evaluation=='2'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>2</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='2'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>2</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                    <t t-if="rate.evaluation=='3'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>3</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='3'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>3</center>
+                                                        </td>
+                                                    </t>
+
+                                                    <t t-if="rate.evaluation=='4'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>4</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='4'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>4</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                    <t t-if="rate.evaluation=='5'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>5</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='5'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>5</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </t>
+                                </p>
+                                <br/>
+                                <br/>
+<!--                                <br/>-->
+                                <div style="border-bottom: 2px solid black;"></div>
+
+<!--                                -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+                                <br/>
+                                 <table style="width:100%;float:left;border-width:2px;border-color:black"
+                                       class="table table-sm table-bordered oe_inline">
+                                    <thead>
+                                        <tr style="border-width:2px;border-color:black">
+
+                                            <t t-if="o.hr_total_performance=='Unsatisfactory'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>1</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance !='Unsatisfactory'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>1</center>
+                                                </td>
+                                            </t>
+
+                                            <t t-if="o.hr_total_performance=='Needs Improvement'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>2</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance !='Needs Improvement'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>2</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance=='Meets Expectations'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>3</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance !='Meets Expectations'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>3</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance=='Exceeds Expectations'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>4</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance !='Exceeds Expectations'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>4</center>
+                                                </td>
+                                            </t>
+
+                                            <t t-if="o.hr_total_performance=='Exceptional'">
+                                                <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                    <center>5</center>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.hr_total_performance !='Exceptional'">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>5</center>
+                                                </td>
+                                            </t>
+
+
+                                        </tr>
+                                        <tr style="border-width:2px;border-color:black">
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>Unsatisfactory</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Needs Improvement</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Meets Expectations</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Exceeds Expectations</center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black">
+                                                <center>Exceptional</center>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <br/>
+                                <br/>
+<!--                                <br/>-->
+<!--                                <br/>-->
+<!--                                <br/>-->
+<!--                                <div style="border-bottom: 2px solid black;"></div>-->
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">
+                                            To Be Submitted by HR:
+                                        </strong>
+                                    </h3>
+                                    <br/>
+
+                                    <t t-foreach='o.hr_rating_scale_ids' t-as='rate'>
+                                        <strong style="font-size:13px">
+                                            <span t-esc="rate.questions"/>
+                                            <br/>
+                                        </strong>
+
+                                        <table style="width:100%;float:left;border-width:2px;border-color:black"
+                                               class="table table-sm table-bordered oe_inline">
+                                            <thead>
+                                                <tr style="border-width:2px;border-color:black">
+
+
+                                                    <t t-if="rate.evaluation=='1'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>1</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='1'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>1</center>
+                                                        </td>
+                                                    </t>
+
+                                                    <t t-if="rate.evaluation=='2'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>2</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='2'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>2</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                    <t t-if="rate.evaluation=='3'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>3</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='3'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>3</center>
+                                                        </td>
+                                                    </t>
+
+                                                    <t t-if="rate.evaluation=='4'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>4</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='4'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>4</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                    <t t-if="rate.evaluation=='5'">
+                                                        <td style="border-width:1px;border-color:black;background-color:#5c8a8a;">
+                                                            <center>5</center>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="rate.evaluation !='5'">
+                                                        <td style="border-width:1px;border-color:black;">
+                                                            <center>5</center>
+                                                        </td>
+                                                    </t>
+
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </t>
+                                </p>
+                                <br/>
+                                <br/>
+                                <div style="border-bottom: 2px solid black;"></div>
+
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">
+                                            Recommended Trainings or Courses:
+                                        </strong>
+                                    </h3>
+                                    <br/>
+                                </p>
+                                <table style="width:100%;float:left;border-width:2px;border-color:black"
+                                       class="table table-sm table-bordered oe_inline">
+                                    <thead>
+                                        <tr style="border-width:2px;border-color:black">
+
+
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>
+                                                    <strong>Course Name</strong>
+                                                </center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>
+                                                    <strong>Suggested Provider</strong>
+                                                </center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>
+                                                    <strong>Estimated Cost</strong>
+                                                </center>
+                                            </td>
+                                            <td style="border-width:1px;border-color:black;">
+                                                <center>
+                                                    <strong>Preferred Date/Quarter</strong>
+                                                </center>
+                                            </td>
+
+                                        </tr>
+                                    </thead>
+                                    <thead>
+                                        <t t-foreach="o.trainings_courses_ids" t-as="course">
+                                            <tr style="border-width:2px;border-color:black">
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>
+                                                        <span t-esc="course.courses_id.name"/>
+                                                    </center>
+                                                </td>
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>
+                                                        <span t-esc="course.suggested_provider"/>
+                                                    </center>
+                                                </td>
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>
+                                                        <span t-esc="course.estimated_cost"/>
+                                                    </center>
+                                                </td>
+                                                <td style="border-width:1px;border-color:black;">
+                                                    <center>
+                                                        <span t-esc="course.date"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </thead>
+
+
+                                </table>
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">
+                                            Comments:
+                                        </strong>
+                                    </h3>
+                                    <span t-field="o.notes"/>
+                                    <br/>
+                                </p>
+                                <p styl="float:left">
+                                    <h3>
+                                        <strong style="border-bottom: 2px solid black;">
+                                            Signatures:
+                                        </strong>
+                                    </h3>
+                                    <strong style="padding-left:50px">
+                                        <b>* Appraised Employee:</b>
+                                        I have read and contribute to this evaluation.
+                                    </strong>
+                                    <br/>
+                                    <h6 style="padding-left:60px">Signature :
+                                        ...............................................................................................&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;Date :
+                                        ...................................................................
+                                    </h6>
+                                    <br/>
+                                    <strong style="padding-left:50px">
+                                        <b>* Direct Supervisor / Manager:</b>This is my evaluation for my subordinate
+                                        during the reviewed period.
+                                    </strong>
+                                    <h6 style="padding-left:60px">Signature :
+                                        ...............................................................................................&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;Date :
+                                        ...................................................................
+                                    </h6>
+                                    <br/>
+                                    <strong style="padding-left:50px">
+                                        <b>Human Resources:</b>
+                                    </strong>
+                                    <h6 style="padding-left:60px">Signature :
+                                        ...............................................................................................&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;Date :
+                                        ...................................................................
+                                    </h6>
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

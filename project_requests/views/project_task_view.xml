@@ -1,0 +1,138 @@
+<odoo>
+
+    <record id="view_task_tree2_inherited_id" model="ir.ui.view">
+        <field name="name">project.task.tree.inherited.id</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//field[@name='planned_hours']" position='replace'>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='effective_hours']" position='replace'>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='subtask_effective_hours']" position='replace'>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='total_hours_spent']" position='replace'>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='remaining_hours']" position='replace'>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='progress']" position='replace'>-->
+<!--            </xpath>-->
+            <field name="company_id" position="after">
+                <field name="planned_days" widget="timesheet_uom_no_toggle" sum="Initially Planned Days"
+                       optional="hide"/>
+                <field name="effective_days" widget="timesheet_uom" sum="Effective Days" optional="show"/>
+                <field name="remaining_days" widget="timesheet_uom" sum="Remaining Days" optional="hide"
+                       decoration-danger="timesheet_progress &gt;= 100"
+                       decoration-warning="timesheet_progress &gt;= 80 and timesheet_progress &lt; 100"/>
+                <field name="timesheet_progress" widget="progressbar" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_task_form_inherit_id" model="ir.ui.view">
+        <field name="name">project.project.task.form.inherit.id</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_show_requisition" type="object" icon="fa-book" class="oe_stat_button"
+                        string="Requisitions">
+                </button>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button string="Create Requisition" name="action_create_requisition" type="object"
+                        class="oe_highlight"/>
+                <button string="Create Report" name="action_create_report" type="object"
+                        class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//sheet/notebook" position="inside">
+                <page name="create_request_id" string="طلب مشتريات خامات">
+                    <field name="create_request_id">
+                        <tree editable="button">
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="qty_on_hand"/>
+                            <field name="uom"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="note"/>
+                            <field name="check"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="business_items_id" string="بنود اﻷعمال">
+                    <field name="business_items_id">
+                        <tree editable="button">
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="uom"/>
+                            <field name="price"/>
+                            <field name="total_price"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="application_request_id" string="طلب تعيين">
+                    <field name="application_request_id">
+                        <tree editable="button">
+                            <field name="job_id"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="equipment_request_id" string="طلب معدة">
+                    <field name="equipment_request_id">
+                        <tree editable="button">
+                            <field name="fleet_id"/>
+                            <field name="fleet_model_id"/>
+                            <field name="qty"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="supplier_id" options="{'no_create': True}"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="housing_request_id" string="طلب سكن">
+                    <field name="housing_request_id">
+                        <tree editable="button">
+                            <field name="housing_type"/>
+                            <field name="qty"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="Task Timesheet" string="Task Timesheet">
+                    <group>
+                        <group>
+                            <field name="planned_days"/>
+                        </group>
+                        <group>
+                            <field name="timesheet_progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <field name="timesheet_id">
+                        <tree editable="button">
+                            <field name="date"/>
+                            <field name="employee_id" options="{'no_create': True}"/>
+                            <field name="name"/>
+                            <field name="unit_amount" decoration-danger="unit_amount &gt; 30"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" name="project_days">
+                            <field name="effective_days"/>
+                            <field name="remaining_days" attrs="{'invisible' : [('planned_days', '=', 0)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

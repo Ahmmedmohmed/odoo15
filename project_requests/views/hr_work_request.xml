@@ -1,0 +1,107 @@
+<odoo>
+    <data>
+
+        <record id="hr_work_request_form" model="ir.ui.view">
+            <field name="name">Hr Work Request</field>
+            <field name="model">hr.work.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_open" string="Open" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_close" string="Close" type="object" class="oe_highlight"
+                                states="draft,open"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <!--                                <field name="vehicle_request_id" options="{'no_create': True}"-->
+                                <!--                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>-->
+                                <field name="project_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="partner_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="tag_ids" widget="many2many_tags"
+                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="open_date" widget="date"/>
+                                <field name="close_date" widget="date"/>
+                                <field name="duration"/>
+                            </group>
+                            <group>
+                                <field name="user_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="date" attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                                <field name="company_id" options="{'no_create': True}"
+                                       attrs="{'readonly': [('state', '=', 'closed')]}"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="hr_work_request_lines" string="امر شغل موظفين">
+                                <field name="hr_work_request_lines" attrs="{'readonly': [('state', '=', 'closed')]}">
+                                    <tree editable="bottom">
+                                        <field name="job_id"/>
+                                        <field name="employee_id"/>
+                                        <field name="description"/>
+
+                                        <!--                                        <field name="fleet_model_id" options="{'no_create': True}"/>-->
+                                        <field name="qty"/>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="closed"/>
+                                        <field name="opened"/>
+                                        <!--                                                                                <field name="opened" invisible="1"/>-->
+                                        <field name="note"/>
+                                        <button name="action_open_from_lines" string="Open" type="object"
+                                                class="oe_highlight"
+                                                attrs="{'invisible': ['|',
+                                                                  '&amp;', ('parent.state', '=', 'draft'), ('opened', '=', False),
+                                                                  '&amp;', ('parent.state', '=', 'open'), ('opened', '=', True)
+                                                                 ]}"/>
+
+
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_work_request_tree" model="ir.ui.view">
+            <field name="name">Hr Work Request</field>
+            <field name="model">hr.work.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <!--                    <field name="vehicle_request_id"/>-->
+                    <field name="project_id"/>
+                    <field name="partner_id"/>
+                    <field name="open_date" widget="date"/>
+                    <field name="close_date" widget="date"/>
+                    <field name="duration"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_work_request_action" model="ir.actions.act_window">
+            <field name="name">أمر شغل موظفين</field>
+            <field name="res_model">hr.work.request</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="أمر شغل موظفين"
+                  id="menu_hr_work_request_child"
+                  parent="project_requests.menu_employee_request_parent"
+                  action="hr_work_request_action"
+                  sequence="10"/>
+
+    </data>
+</odoo>
