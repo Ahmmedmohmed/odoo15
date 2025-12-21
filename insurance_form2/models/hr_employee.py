@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 
 
 class HrEmployee(models.Model):
-    _inherit = 'unio2026'
+    _inherit = 'hr.employee'
 
     employee_rank = fields.Char(string=" Employee Rank")
 
