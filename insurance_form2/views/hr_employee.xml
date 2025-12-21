@@ -16,9 +16,17 @@
                     <field name="expiration_date"/>
                 </field>
 
+           <xpath expr="//page[@name='hr_settings']" position="inside">
+             <group string="بيانات الرتبة">
+             <field name="employee_rank"/>
+            </group>
+         </xpath>
 
-
-
+               <xpath expr="//page[@name='TAB_NAME']" position="inside">
+                <group>
+                    <field name="employee_rank"/>
+                </group>
+              </xpath>
 
 
                 <xpath expr="//notebook/page[@name='personal_information']" position="inside">
@@ -39,6 +47,7 @@
                         <group>
                             <group>
                                 <field name="insurance_number"/>
+                                <field name="social_insurance_code"/>
                                 <field name="national_id"/>
                                 <field name="joining_date"/>
                                 <field name="birth_date"/>
@@ -46,6 +55,7 @@
                             <group>
                                 <field name="insurance_subscription_fee"/>
                                 <field name="comprehensive_wage"/>
+                                <field name="Actual_wage"/>
                                 <field name="age"/>
                             </group>
                         </group>

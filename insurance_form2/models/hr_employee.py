@@ -6,9 +6,16 @@ from odoo import models, fields, api, _
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    employee_rank = fields.Char(string=" Employee Rank")
+
+
+    social_insurance_code = fields.Char(string="الكود التأميني")
+
     insurance_number = fields.Char(
         string='الرقم التأميني'
     )
+
+
     national_id = fields.Char(
         string='الرقم القومي'
     )
@@ -21,6 +28,12 @@ class HrEmployee(models.Model):
     comprehensive_wage = fields.Float(
         string='الأجر الشامل'
     )
+
+    Actual_wage= fields.Float(
+        string='الأجر الفعلى'
+    )
+
+
     birth_date = fields.Date(
         string='تاريخ الميلاد'
     )
