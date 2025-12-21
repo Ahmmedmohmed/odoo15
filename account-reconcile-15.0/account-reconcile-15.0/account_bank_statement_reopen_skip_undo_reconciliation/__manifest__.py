@@ -13,7 +13,10 @@
     "website": "https://github.com/OCA/account-reconcile",
     "category": "Finance",
     "depends": ["account"],
-    "data": ["views/account_bank_statement_views.xml"],
+    "data": [
+        # "views/account_bank_statement_views.xml"
+        #
+        ],
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,

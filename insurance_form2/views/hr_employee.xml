@@ -22,11 +22,6 @@
             </group>
          </xpath>
 
-               <xpath expr="//page[@name='TAB_NAME']" position="inside">
-                <group>
-                    <field name="employee_rank"/>
-                </group>
-              </xpath>
 
 
                 <xpath expr="//notebook/page[@name='personal_information']" position="inside">
