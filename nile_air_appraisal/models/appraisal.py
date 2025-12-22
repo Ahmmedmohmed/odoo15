@@ -170,16 +170,33 @@ class AppraisalAppraisal(models.Model):
                 if max(performance_total)==total5:
                     rec.total_performance='Exceptional'
 
-
     @api.onchange('employee_id')
     def manager_filter_employee(self):
-        lines=[]
-        employee_record=self.env['hr.employee'].search([])
-        for empl in employee_record:
-            if self.env.user.id==empl.parent_id.user_id.id:
-                lines.append(empl.id)
-            if self.env.user.has_group('nile_air_appraisal.group_hr_manager_employee'):
-                lines.append(empl.id)
+        user = self.env.user
+        lines = []
+
+        # الحالة 1: لو المستخدم واخد صلاحية "مدير HR" أو "أدمن النظام"
+        # خليه يشوف كل الموظفين بلا استثناء
+        if user.has_group('nile_air_appraisal.group_hr_manager_employee') or user.has_group('base.group_system'):
+            lines = self.env['hr.employee'].search([]).ids
+
+        else:
+            # الحالة 2: لو مدير عادي، خليه يشوف الناس اللي تخصه بس
+
+            # أ. الموظفين اللي هو مديرهم المباشر (Parent)
+            direct_subordinates = self.env['hr.employee'].search([('parent_id.user_id', '=', user.id)])
+            lines.extend(direct_subordinates.ids)
+
+            # ب. الموظفين اللي في القسم اللي هو مديره (حتى لو مش مديرهم المباشر)
+            dept_subordinates = self.env['hr.employee'].search([('department_id.manager_id.user_id', '=', user.id)])
+            lines.extend(dept_subordinates.ids)
+
+            # ج. يشوف نفسه (عشان يقدر يعمل تقييم لنفسه)
+            myself = self.env['hr.employee'].search([('user_id', '=', user.id)])
+            lines.extend(myself.ids)
+
+        # إزالة التكرار (عشان لو هو مدير القسم ومدير مباشر في نفس الوقت)
+        lines = list(set(lines))
 
         return {
             'domain': {'employee_id': [('id', 'in', lines)]}
