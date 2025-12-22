@@ -5,7 +5,7 @@ class AppraisalAppraisal(models.Model):
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
     appraisal_wage = fields.Float(
-        string='الأجر الفعلي ',
+        string='Actual wage',
         related='employee_id.actual_wage',
         store=True,
         readonly=True
