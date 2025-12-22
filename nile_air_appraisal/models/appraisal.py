@@ -27,7 +27,7 @@ class AppraisalAppraisal(models.Model):
     state = fields.Selection(string="", selection=[('draft', 'Draft'), ('confirm', 'Confirm'), ],default='draft' )
     total_performance = fields.Char(string="Total Performance",compute='calculate_total_performance',)
     # غيرناه من Char إلى Float
-    total_performance_percentage = fields.Float(
+    final_percentage = fields.Float(
         string="Total Performance",
         compute='calculate_total_performance_percentage',
         store=False  # يفضل تخزينه للبحث والتقارير
@@ -126,7 +126,7 @@ class AppraisalAppraisal(models.Model):
                     if line.evaluation == '5':
                         total_values += 5
                 if total_lines > 0:
-                    rec.total_performance_percentage = total_values / total_lines
+                    rec.final_percentage = total_values / total_lines
 
     @api.depends('rating_scale_ids')
     def calculate_total_performance(self):

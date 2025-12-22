@@ -92,7 +92,7 @@
 <!--                                            <field name="total_performance" force_save="1"/>-->
 <!--                                        </group>-->
                                         <group>
-                                            <field name="total_performance_percentage" widget="percentage" force_save="1"/>
+                                            <field name="final_percentage" widget="percentage" force_save="1"/>
                                         </group>
                                     </div>
                                 </group>
