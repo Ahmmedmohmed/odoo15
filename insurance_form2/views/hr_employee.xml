@@ -17,8 +17,10 @@
                 </field>
 
            <xpath expr="//page[@name='hr_settings']" position="inside">
+             <group string="Rank data">
              <field name="employee_rank"/>
-          </xpath>
+            </group>
+         </xpath>
 
 
 
