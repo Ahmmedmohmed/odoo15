@@ -110,7 +110,7 @@ class AppraisalAppraisal(models.Model):
     @api.depends('rating_scale_ids')
     def calculate_total_performance_percentage(self):
         for rec in self:
-            rec.total_performance_percentage = False
+            rec.final_percentage  = False
             if rec.rating_scale_ids:
                 total_lines = len(rec.rating_scale_ids) * 5
                 total_values = 0
