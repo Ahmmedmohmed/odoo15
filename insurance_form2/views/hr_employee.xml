@@ -12,20 +12,21 @@
                            options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;avatar_128&quot;, 'size': [150, 150]}"/>
                 </xpath>
 
-                <field name="coach_id" position="after">
-                    <field name="expiration_date"/>
-                </field>
+                <xpath expr="//page[@name='public']" position="inside">
+                    <group string="Employment Dates &amp; Contract">
+                        <group>
+                            <field name="joining_date"/>
+                            <field name="company_entry_date"/>
+                        </group>
+                        <group>
+                            <field name="company_exit_date"/>
+                            <field name="expiration_date"/>
+                        </group>
+                    </group>
+                </xpath>
 
-           <xpath expr="//page[@name='hr_settings']" position="inside">
-             <group string="Rank data">
-             <field name="employee_rank"/>
-            </group>
-         </xpath>
-
-
-
-                <xpath expr="//notebook/page[@name='personal_information']" position="inside">
-                    <group string="Bank Information">
+                <xpath expr="//page[@name='personal_information']" position="inside">
+                    <group string="Bank Accounts">
                         <group>
                             <field name="bank_1" options="{'no_create': True}"/>
                             <field name="account_number_1"/>
@@ -35,27 +36,58 @@
                             <field name="account_number_2"/>
                         </group>
                     </group>
+
+                    <group string="Official Documents &amp; License">
+                        <group>
+                            <field name="national_id"/>
+                            <field name="driving_license_number"/>
+                            <field name="driving_license_issue_date"/>
+                            <field name="driving_license_end_date"/>
+                        </group>
+                        <group>
+                            <field name="age"/>
+                        </group>
+                    </group>
+                </xpath>
+
+                <xpath expr="//page[@name='hr_settings']" position="inside">
+                    <group string="Rank &amp; Grading">
+                        <field name="employee_rank"/>
+                    </group>
                 </xpath>
 
                 <xpath expr="//notebook/page[last()]" position="after">
-                    <page name="social_insurance" string="Social Insurance">
+
+                    <page name="social_insurance" string="Insurance &amp; Wages">
                         <group>
-                            <group>
+                            <group string="Insurance Details">
                                 <field name="insurance_number"/>
                                 <field name="social_insurance_code"/>
-                                <field name="national_id"/>
-                                <field name="joining_date"/>
-                                <field name="birth_date"/>
+                                <field name="insurance_job_title"/>
+                                <label for="insurance_entry_date" string="Insurance Period"/>
+                                <div class="o_row">
+                                    <field name="insurance_entry_date" placeholder="Start Date"/> -
+                                    <field name="insurance_exit_date" placeholder="End Date"/>
+                                </div>
                             </group>
-                            <group>
+                            <group string="Financial Info">
                                 <field name="insurance_subscription_fee"/>
+                                <field name="medical_insurance_fee"/>
+                                <separator string="Salary Structure"/>
                                 <field name="comprehensive_wage"/>
                                 <field name="actual_wage"/>
-                                <field name="age"/>
                             </group>
                         </group>
                     </page>
+
+                    <page name="training_courses" string="Training &amp; Courses">
+                        <group>
+                            <field name="course_names" placeholder="Add course names here (e.g., Odoo Technical, PMP, Soft Skills...)"/>
+                        </group>
+                    </page>
+
                 </xpath>
+
             </field>
         </record>
     </data>
