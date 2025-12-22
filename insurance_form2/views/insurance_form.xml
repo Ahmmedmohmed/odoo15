@@ -1,0 +1,118 @@
+<odoo>
+    <record id="view_insurance_form_form" model="ir.ui.view">
+        <field name="name">insurance.form.form</field>
+        <field name="model">insurance.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group><h1>نموذج رقم ( 2 )</h1></group>
+                        <group><h1 class="text-right">الهيئة القومية للتأمين الإجتماعى</h1></group>
+                    </group>
+                    <group col="3">
+                        <group><field name="facility_number"/></group>
+                        <group/>
+                        <group><field name="office"/></group>
+                    </group>
+                    <group>
+                        <h1 class="text-center">طلب إشتراك منشاة</h1>
+                    </group>
+                    <group>
+                        <h3 class="text-center"><field name="start_date"/></h3>
+                        <h2 class="text-center">أو إخطار تعديل بيانات المؤمن عليهم وأجورهم في</h2>
+                    </group>
+                    <group col="3">
+                        <group>
+                            <field name="establishment"/>
+                            <field name="village"/>
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <field name="manager"/>
+                            <field name="street"/>
+                            <br/>
+                            <field name="percentage_start_date"/>
+                            <field name="second_percentage_start_date"/>
+                            <field name="stop_reason"/>
+                            <field name="tax"/>
+                        </group>
+                        <group>
+                            <field name="facility_name"/>
+                            <field name="address"/>
+                            <field name="department"/>
+                            <field name="patient_insurance_percentage" widget="percentage"/>
+                            <field name="injury_insurance_percentage" widget="percentage"/>
+                            <field name="stop_date"/>
+                            <field name="activity_start"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="insurance_form_line_id">
+                            <tree editable="bottom">
+                                <field name="employee_id" options="{'no_create': True}"/>
+                                <field name="insurance_number"/>
+                                <field name="national_id"/>
+                                <field name="joining_date"/>
+                                <field name="insurance_subscription_fee"/>
+                                <field name="comprehensive_wage"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <group><field name="total_insurance_subscription_fee"/></group>
+                        <group><field name="total_comprehensive_wage"/></group>
+                    </group>
+                    <group col="3">
+                        <group><field name="employees_number"/></group>
+                        <group><field name="manager_reported_name"/></group>
+                        <group><field name="reported_name"/></group>
+                    </group>
+                    <group>
+                        <h3 class="text-center">وأن جميع البيانات الواردة بهذه الإستمارة وملحقاتها صحيحة (الاجر الشامل لحساب اشتراكات التامين الصحى)</h3>
+                    </group>
+                    <group>
+                        <h4 class="text-center">روجعت بيانات هذا النموذج على طابات إشتراك المؤمن عليهم ووجدت صحيحة</h4>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="manager_signature"/>
+                            <field name="same_signature"/>
+                            <field name="register"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="current_money"/>
+                            <br/>
+                            <field name="receiver"/>
+                            <field name="specialist"/>
+                            <field name="review"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_insurance_form_tree" model="ir.ui.view">
+        <field name="name">insurance.form.tree</field>
+        <field name="model">insurance.form</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="office"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_insurance_form" model="ir.actions.act_window">
+        <field name="name">نموذج 2</field>
+        <field name="res_model">insurance.form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_insurance_form"
+              name="Social Insurance"
+              parent="hr.menu_hr_root"
+              sequence="105"
+              action="insurance_form2.action_insurance_form"/>
+
+</odoo>
