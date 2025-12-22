@@ -30,7 +30,7 @@ class AppraisalAppraisal(models.Model):
     total_performance_percentage = fields.Float(
         string="Total Performance",
         compute='calculate_total_performance_percentage',
-        store=True  # يفضل تخزينه للبحث والتقارير
+        store=False  # يفضل تخزينه للبحث والتقارير
     )
     hr_total_performance = fields.Char(string="Hr Total Performance",compute='calculate_hr_total_performance',)
 
