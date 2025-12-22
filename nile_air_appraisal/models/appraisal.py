@@ -31,16 +31,28 @@ class AppraisalAppraisal(models.Model):
 
     employee_wage = fields.Float(string="Wage",  required=False, )
     is_need_course = fields.Boolean(string="Need Courses",  )
-    rank = fields.Char()
     estimate_salary = fields.Float()
 
+    rank = fields.Char(
+        string="Rank",
+        compute='_compute_rank',
+        store=True,
+        readonly=False  # هذا يسمح لك بالتعديل اليدوي
+    )
 
-    @api.onchange('employee_id')
-    def get_last_performance_date(self):
-        appraisal_record=self.search([('id','!=',self._origin.id),('employee_id','=',self.employee_id.id),
-                                      ('state','=','confirm')],order='id desc',limit=1)
-        if appraisal_record:
-            self.last_performance_date=appraisal_record.appraisal_date
+    # 2. دالة الحساب (تراقب تغيرات الموظف وتحدث الحقل)
+    @api.depends('employee_id.employee_rank')
+    def _compute_rank(self):
+        for rec in self:
+            # لو الموظف عنده رتبة، هاتها
+            if rec.employee_id.employee_rank:
+                rec.rank = rec.employee_id.employee_rank
+            # لو مفيش، سيب الحقل زي ما هو (عشان لو أنت كاتبه يدوياً)
+            elif not rec.rank:
+                rec.rank = False
+
+
+
 
     @api.depends('hr_rating_scale_ids')
     def calculate_hr_total_performance(self):
@@ -173,18 +185,75 @@ class AppraisalAppraisal(models.Model):
     def set_to_draft(self):
         self.state='draft'
 
-
     @api.onchange('employee_id')
-    def calculate_employee_data(self):
-        self.employee_barcode=self.employee_id.barcode
-        self.title=self.employee_id.job_title
-        self.department_id=self.employee_id.department_id.id
-        self.manager_id=self.employee_id.parent_id.id
-        contract_record=self.env['hr.contract'].search([('employee_id','=',self.employee_id.id)],
-                                                       order='id desc',limit=1)
-        self.employee_wage=contract_record.wage
+    def get_employee_last_data(self):
+        """
+        دالة شاملة لجلب البيانات:
+        - الرتبة والباركود وتاريخ التعيين: دائماً من الموظف.
+        - باقي البيانات: من آخر تقييم مؤكد (لو وجد)، أو تترك فارغة.
+        """
+        if not self.employee_id:
+            # تصفير كل الحقول عند مسح الموظف
+            self.employee_barcode = False
+            self.rank = False
+            self.hiring_date = False
+            self.title = False
+            self.department_id = False
+            self.manager_id = False
+            self.employee_wage = 0.0
+            self.estimate_salary = 0.0
+            self.is_need_course = False
+            self.notes = False
+            self.last_performance_date = False
+            return
 
+        # ---------------------------------------------------------
+        # 1. حقول ثابتة تأتي دائماً من الموظف (البيانات الحية)
+        # ---------------------------------------------------------
+        self.employee_barcode = self.employee_id.barcode
+        self.rank = getattr(self.employee_id, 'employee_rank', False)
 
+        # تاريخ التعيين غالباً ثابت فبنجيبه من الموظف مباشرة
+        # (لو الحقل اسمه في الموظف 'first_contract_date' أو 'join_date' عدل الاسم هنا)
+        # لكن لو عايز تجيبه من التقييم القديم انقله تحت في الـ if
+        self.hiring_date = self.employee_id.first_contract_date or self.employee_id.create_date.date()
+
+        # ---------------------------------------------------------
+        # 2. البحث عن آخر تقييم
+        # ---------------------------------------------------------
+        last_appraisal = self.search([
+            ('id', '!=', self._origin.id),
+            ('employee_id', '=', self.employee_id.id),
+            ('state', '=', 'confirm')
+        ], order='id desc', limit=1)
+
+        if last_appraisal:
+            # --- (أ) يوجد تقييم سابق: انسخ البيانات منه ---
+
+            # تاريخ آخر تقييم = تاريخ تقديم التقييم السابق
+            self.last_performance_date = last_appraisal.appraisal_date
+
+            # نسخ البيانات النصية والرقمية
+            self.title = last_appraisal.title
+            self.department_id = last_appraisal.department_id
+            self.manager_id = last_appraisal.manager_id
+            self.employee_wage = last_appraisal.employee_wage
+            self.estimate_salary = last_appraisal.estimate_salary
+            self.is_need_course = last_appraisal.is_need_course
+            self.notes = last_appraisal.notes
+
+        else:
+            # --- (ب) لا يوجد تقييم سابق: اترك الحقول فارغة ---
+
+            self.last_performance_date = False
+            self.title = False
+            self.department_id = False
+            self.manager_id = False
+            self.employee_wage = 0.0
+            self.estimate_salary = 0.0
+            self.is_need_course = False
+            self.notes = False
+            
     def get_questions(self):
         lines=[(5,0,0)]
         for rec in self.env['rate.scale'].search([('is_hr_question','=',False)]):
