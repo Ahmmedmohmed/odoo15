@@ -26,7 +26,12 @@ class AppraisalAppraisal(models.Model):
     trainings_courses_ids = fields.One2many(comodel_name="trainings.courses", inverse_name="appraisal_id", string="",)
     state = fields.Selection(string="", selection=[('draft', 'Draft'), ('confirm', 'Confirm'), ],default='draft' )
     total_performance = fields.Char(string="Total Performance",compute='calculate_total_performance',)
-    total_performance_percentage = fields.Char(string="Total Performance",compute='calculate_total_performance_percentage',)
+    # غيرناه من Char إلى Float
+    total_performance_percentage = fields.Float(
+        string="Total Performance",
+        compute='calculate_total_performance_percentage',
+        store=True  # يفضل تخزينه للبحث والتقارير
+    )
     hr_total_performance = fields.Char(string="Hr Total Performance",compute='calculate_hr_total_performance',)
 
     employee_wage = fields.Float(string="Wage",  required=False, )
@@ -253,7 +258,7 @@ class AppraisalAppraisal(models.Model):
             self.estimate_salary = 0.0
             self.is_need_course = False
             self.notes = False
-            
+
     def get_questions(self):
         lines=[(5,0,0)]
         for rec in self.env['rate.scale'].search([('is_hr_question','=',False)]):

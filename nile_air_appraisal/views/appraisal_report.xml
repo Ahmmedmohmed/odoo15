@@ -50,6 +50,8 @@
                                     <strong>Appraisal Submission Date :</strong>
                                     <span t-esc="o.appraisal_date"/>
                                     <br/>
+                                    <strong>Total Performance :</strong>
+                                     <span t-field="o.total_performance_percentage" t-options='{"widget": "percentage"}'/>
                                 </div>
                                 <br/>
                                 <br/>
