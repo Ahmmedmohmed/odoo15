@@ -80,11 +80,17 @@
                         </group>
                     </page>
 
-                    <page name="training_courses" string="Training &amp; Courses">
-                        <group>
-                            <field name="course_names" placeholder="Add course names here (e.g., Odoo Technical, PMP, Soft Skills...)"/>
-                        </group>
-                    </page>
+                  <page name="training_courses" string="Training &amp; Courses">
+                    <field name="course_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="location"/>
+                            <field name="notes"/>
+                        </tree>
+                    </field>
+                </page>
 
                 </xpath>
 

@@ -2,6 +2,20 @@
 
 from odoo import models, fields, api, _
 
+class HrEmployeeCourse(models.Model):
+    _name = 'hr.employee.course'
+    _description = 'Employee Training Courses'
+
+    # ربط الكورس بالموظف
+    employee_id = fields.Many2one('hr.employee', string="الموظف")
+
+    # الحقول اللي طلبتها
+    name = fields.Char(string="اسم الكورس", required=True)
+    date_start = fields.Date(string="تاريخ البداية")
+    date_end = fields.Date(string="تاريخ النهاية")
+    location = fields.Char(string="المكان / الجهة")
+    notes = fields.Text(string="ملاحظات")
+
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
@@ -16,6 +30,11 @@ class HrEmployee(models.Model):
     comprehensive_wage = fields.Float(string='الأجر الشامل')
     actual_wage = fields.Float(string='الأجر الفعلى')
     birth_date = fields.Date(string='تاريخ الميلاد')
+    course_ids = fields.One2many(
+        'hr.employee.course',
+        'employee_id',
+        string="الدورات التدريبية"
+    )
 
     age = fields.Integer(
         compute='_compute_age',
