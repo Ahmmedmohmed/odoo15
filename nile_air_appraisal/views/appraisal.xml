@@ -20,7 +20,7 @@
                     <field name="last_performance_date"/>
                     <field name="appraisal_date"/>
 <!--                    <field name="total_performance"/>-->
-                    <field name="final_percentage" widget="percentage"/>
+                    <field name="total_performance_percentage" widget="percentage"/>
                     <field name="state"/>
                 </tree>
             </field>
