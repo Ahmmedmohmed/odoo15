@@ -62,7 +62,8 @@
                             <field name="manager_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                             <field name="employee_wage" attrs="{'readonly': [('state', '=', 'confirm')]}"
                                    groups="nile_air_appraisal.group_hr_manager_employee"/>
-                            <field name="rank" attrs="{'readonly': [('state', '=', 'confirm')]}" widget="percentage"/>
+                            <field name="rank" attrs="{'readonly': [('state', '=', 'confirm')]}" />
+                            <field name="appraisal_wage"/>
                             <field name="estimate_salary" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                             <field name="last_performance_date" readonly="1"/>
                             <field name="appraisal_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>

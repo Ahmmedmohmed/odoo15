@@ -4,6 +4,12 @@ class AppraisalAppraisal(models.Model):
     _rec_name = 'employee_id'
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
+    appraisal_wage = fields.Float(
+        string='الأجر الفعلي ',
+        related='employee_id.actual_wage',
+        store=True,
+        readonly=True
+    )
     employee_barcode = fields.Char(string="Employee ID", required=False, )
     title = fields.Char(string="Title", required=False, )
     hiring_date = fields.Date(string="Hiring Date", required=False, )
