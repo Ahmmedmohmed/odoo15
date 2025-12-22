@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 insurance_form_id,insurance_form_name,model_insurance_form,,1,1,1,1
 insurance_form_line_id,insurance_form_line_name,model_insurance_form_line,,1,1,1,1
 bank_bank_id,bank_bank_name,model_bank_bank,,1,1,1,1
+access_hr_employee_course,access_hr_employee_course,model_hr_employee_course,base.group_user,1,1,1,1
