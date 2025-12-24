@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="inherit_print_employee_profile_final_v6" inherit_id="hr.print_employee_badge">
+    <template id="inherit_print_employee_profile_final_v7" inherit_id="hr.print_employee_badge">
         <xpath expr="//div[hasclass('page')]" position="replace">
             <div class="page" dir="rtl" style="font-family: 'Cairo', 'Tajawal', sans-serif; color: #333; font-size: 13px;">
 
                 <style>
-                    /* تنسيق الجدول والخطوط كما طلبت سابقاً */
+                    /* تنسيق الجداول (للهيدر والبيانات) */
                     .table-custom { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
                     .table-custom td { padding: 8px 5px; vertical-align: middle; border-bottom: 1px solid #e0e0e0; }
+
+                    /* تنسيق الهيدر خصيصاً */
+                    .header-table { width: 100%; border-bottom: 3px solid #008f8c; margin-bottom: 20px; border-collapse: collapse; }
+                    .header-table td { border: none; padding: 0; vertical-align: top; } /* إلغاء الحدود للهيدر */
+
                     .label-cell { font-weight: bold; width: 15%; color: #5d3b6d; background-color: #fafafa; }
                     .value-cell { width: 35%; color: #000; }
+
                     .section-header {
                         background-color: #f9f9f9; color: #5d3b6d; font-weight: bold;
                         padding: 8px 10px; border-right: 5px solid #008f8c;
@@ -20,34 +26,34 @@
 
                 <t t-foreach="docs" t-as="employee">
 
-                    <div class="row" style="border-bottom: 3px solid #008f8c; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: flex-start;">
+                    <table class="header-table">
+                        <tr>
+                            <td style="width: 75%; text-align: right; padding-bottom: 15px;">
+                                <h1 style="color: #5d3b6d; font-weight: bold; margin: 0; font-size: 26px; line-height: 1.2;">
+                                    <span t-if="employee.arabic_name" t-field="employee.arabic_name"/>
+                                    <span t-else="" t-field="employee.name"/>
+                                </h1>
 
-                        <div class="col-9 text-right" style="padding-top: 0;">
-                            <h1 style="color: #5d3b6d; font-weight: bold; margin: 0; font-size: 26px; line-height: 1.2;">
-                                <span t-if="employee.arabic_name" t-field="employee.arabic_name"/>
-                                <span t-else="" t-field="employee.name"/>
-                            </h1>
+                                <h3 style="color: #008f8c; margin: 8px 0; font-weight: bold; font-size: 18px;">
+                                    <span t-if="employee.job_position_arabic" t-field="employee.job_position_arabic"/>
+                                    <span t-else="" t-field="employee.job_title"/>
+                                    <span style="font-size: 14px; color: #555; font-weight: normal;"> (<span t-field="employee.job_title"/>)</span>
+                                </h3>
 
-                            <h3 style="color: #008f8c; margin: 8px 0; font-weight: bold; font-size: 18px;">
-                                <span t-if="employee.job_position_arabic" t-field="employee.job_position_arabic"/>
-                                <span t-else="" t-field="employee.job_title"/>
-                                <span style="font-size: 14px; color: #555; font-weight: normal;"> (<span t-field="employee.job_title"/>)</span>
-                            </h3>
+                                <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                                    <strong>كود الموظف:</strong> <span t-field="employee.barcode" style="color: #000;"/>
+                                    <span style="margin: 0 10px; color: #ccc;">|</span>
+                                    <strong>الإدارة:</strong> <span t-field="employee.department_id.name" style="color: #000;"/>
+                                </p>
+                            </td>
 
-                            <p style="color: #666; font-size: 13px; margin-top: 10px;">
-                                <strong>كود الموظف:</strong> <span t-field="employee.barcode" style="color: #000;"/>
-                                <span style="margin: 0 10px; color: #ccc;">|</span>
-                                <strong>الإدارة:</strong> <span t-field="employee.department_id.name" style="color: #000;"/>
-                            </p>
-                        </div>
-
-                        <div class="col-3 text-left">
-                            <div style="width: 120px; height: 140px; border: 1px solid #333; padding: 2px; border-radius: 8px; overflow: hidden; display: inline-block; background: #fff;">
-                                <img t-if="employee.avatar_1920" t-att-src="image_data_uri(employee.avatar_1920)" style="width: 100%; height: 100%; object-fit: cover;"/>
-                            </div>
-                        </div>
-
-                    </div>
+                            <td style="width: 25%; text-align: left; vertical-align: top; padding-bottom: 15px;">
+                                <div style="width: 120px; height: 140px; border: 1px solid #333; padding: 2px; border-radius: 8px; overflow: hidden; display: inline-block; background: #fff;">
+                                    <img t-if="employee.avatar_1920" t-att-src="image_data_uri(employee.avatar_1920)" style="width: 100%; height: 100%; object-fit: cover;"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
 
                     <div class="section-header">بيانات العمل (Work Information)</div>
                     <table class="table-custom">
