@@ -9,11 +9,15 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='name']" position="after">
-                <field name="arabic_name" placeholder="الاسم باللغة العربية" style="font-size: 1.3rem; margin-top: 5px;"/>
+                <div style="display: block;">
+                    <field name="arabic_name" placeholder="Name in Arabic" style="font-size: 1.5rem; color: #666666;"/>
+                </div>
             </xpath>
 
             <xpath expr="//field[@name='job_title']" position="after">
-                <field name="job_position_arabic" placeholder="المسمى الوظيفي باللغة العربية"/>
+                <div style="display: block;">
+                    <field name="job_position_arabic" placeholder="Job Position in Arabic"/>
+                </div>
             </xpath>
 
         </field>
