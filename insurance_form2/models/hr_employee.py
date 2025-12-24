@@ -20,8 +20,8 @@ class HrEmployeeCourse(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    name = fields.Char(translate=True)
-    job_title = fields.Char(translate=True)
+    arabic_name = fields.Char(string="Name in Arabic")
+    job_position_arabic = fields.Char(string="Job Position in Arabic")
     # --- الحقول الأصلية من كودك ---
     employee_rank = fields.Char(string="Employee Rank")
     social_insurance_code = fields.Char(string="الكود التأميني")
