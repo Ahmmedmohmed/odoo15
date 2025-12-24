@@ -10,7 +10,7 @@
                         <div class="col-3">
                             <div style="border: 1px solid #333; border-radius: 5px; padding: 2px; width: 130px; height: 160px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                 <img t-if="employee.avatar_1920" t-att-src="image_data_uri(employee.avatar_1920)" style="max-height: 100%; max-width: 100%;"/>
-                                <span t-else="" style="color: #ccc;">صورة الموظف</span>
+                                <span t-else="" style="color: #ccc; font-weight: bold;">صورة الموظف</span>
                             </div>
                         </div>
 
@@ -39,24 +39,12 @@
                             </div>
                         </div>
                         <div class="row" style="font-size: 14px;">
-                            <div class="col-6 mb-2">
-                                <strong>موبايل العمل: </strong> <span t-field="employee.mobile_phone"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>المدير المباشر: </strong> <span t-field="employee.parent_id.name"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>تاريخ الدخول: </strong> <span t-field="employee.company_entry_date"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>تاريخ بدء العمل: </strong> <span t-field="employee.joining_date"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>رتبة الموظف: </strong> <span t-field="employee.employee_rank"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>رقم الحساب البنكي: </strong> <span t-field="employee.account_number_1"/>
-                            </div>
+                            <div class="col-6 mb-2"><strong>موبايل العمل: </strong> <span t-field="employee.mobile_phone"/></div>
+                            <div class="col-6 mb-2"><strong>المدير المباشر: </strong> <span t-field="employee.parent_id.name"/></div>
+                            <div class="col-6 mb-2"><strong>تاريخ الدخول: </strong> <span t-field="employee.company_entry_date"/></div>
+                            <div class="col-6 mb-2"><strong>تاريخ بدء العمل: </strong> <span t-field="employee.joining_date"/></div>
+                            <div class="col-6 mb-2"><strong>رتبة الموظف: </strong> <span t-field="employee.employee_rank"/></div>
+                            <div class="col-6 mb-2"><strong>رقم الحساب البنكي: </strong> <span t-field="employee.account_number_1"/></div>
                         </div>
                     </div>
 
@@ -69,29 +57,17 @@
                             </div>
                         </div>
                         <div class="row" style="font-size: 14px;">
-                            <div class="col-6 mb-2">
-                                <strong>الرقم القومي: </strong> <span t-field="employee.national_id"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>تاريخ الميلاد: </strong> <span t-field="employee.birth_date"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>الحالة الاجتماعية: </strong> <span t-field="employee.marital"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>المؤهل الدراسي: </strong> <span t-field="employee.certificate"/>
-                            </div>
+                            <div class="col-6 mb-2"><strong>الرقم القومي: </strong> <span t-field="employee.national_id"/></div>
+                            <div class="col-6 mb-2"><strong>تاريخ الميلاد: </strong> <span t-field="employee.birth_date"/></div>
+                            <div class="col-6 mb-2"><strong>الحالة الاجتماعية: </strong> <span t-field="employee.marital"/></div>
+                            <div class="col-6 mb-2"><strong>المؤهل الدراسي: </strong> <span t-field="employee.certificate"/></div>
                             <div class="col-12 mb-2">
                                 <strong>العنوان الحالي: </strong>
                                 <span t-if="employee.address_home_id" t-esc="employee.address_home_id.name"/>
                                 <span t-if="employee.address_home_id and employee.address_home_id.street">, <span t-esc="employee.address_home_id.street"/></span>
                             </div>
-                            <div class="col-6 mb-2">
-                                <strong>جهة الطوارئ: </strong> <span t-field="employee.emergency_contact"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>هاتف الطوارئ: </strong> <span t-field="employee.emergency_phone"/>
-                            </div>
+                            <div class="col-6 mb-2"><strong>جهة الطوارئ: </strong> <span t-field="employee.emergency_contact"/></div>
+                            <div class="col-6 mb-2"><strong>هاتف الطوارئ: </strong> <span t-field="employee.emergency_phone"/></div>
                         </div>
                     </div>
 
@@ -104,18 +80,10 @@
                             </div>
                         </div>
                         <div class="row" style="font-size: 14px;">
-                            <div class="col-6 mb-2">
-                                <strong>الرقم التأميني: </strong> <span t-field="employee.insurance_number"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>تاريخ دخول التأمينات: </strong> <span t-field="employee.insurance_entry_date"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>الكود التأميني: </strong> <span t-field="employee.social_insurance_code"/>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <strong>المسمى التأميني: </strong> <span t-field="employee.insurance_job_title"/>
-                            </div>
+                            <div class="col-6 mb-2"><strong>الرقم التأميني: </strong> <span t-field="employee.insurance_number"/></div>
+                            <div class="col-6 mb-2"><strong>تاريخ دخول التأمينات: </strong> <span t-field="employee.insurance_entry_date"/></div>
+                            <div class="col-6 mb-2"><strong>الكود التأميني: </strong> <span t-field="employee.social_insurance_code"/></div>
+                            <div class="col-6 mb-2"><strong>المسمى التأميني: </strong> <span t-field="employee.insurance_job_title"/></div>
                         </div>
                     </div>
 
