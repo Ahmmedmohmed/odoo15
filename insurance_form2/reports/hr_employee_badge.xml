@@ -1,200 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="inherit_print_employee_profile_final_v3" inherit_id="hr.print_employee_badge">
+    <template id="inherit_print_employee_profile_table_layout" inherit_id="hr.print_employee_badge">
         <xpath expr="//div[hasclass('page')]" position="replace">
-            <div class="page" dir="rtl" style="font-family: 'Cairo', 'Tajawal', sans-serif; color: #333; font-size: 14px;">
+            <div class="page" dir="rtl" style="font-family: 'Cairo', 'Tajawal', sans-serif; color: #333; font-size: 13px;">
+
+                <style>
+                    .table-custom td { padding: 5px; vertical-align: middle; }
+                    .label-cell { font-weight: bold; width: 15%; color: #333; }
+                    .value-cell { width: 35%; border-bottom: 1px solid #ccc; }
+                    .section-header {
+                        background-color: #f9f9f9;
+                        color: #5d3b6d;
+                        font-weight: bold;
+                        padding: 5px 10px;
+                        border-right: 5px solid #5d3b6d;
+                        margin-top: 15px;
+                        margin-bottom: 10px;
+                    }
+                </style>
 
                 <t t-foreach="docs" t-as="employee">
 
-                    <div class="row" style="border-bottom: 3px solid #5d3b6d; padding-bottom: 15px; margin-bottom: 25px;">
+                    <div class="row" style="border-bottom: 2px solid #5d3b6d; padding-bottom: 10px; margin-bottom: 10px;">
 
-                        <div class="col-9 text-right" style="padding-top: 5px;">
-                            <h1 style="color: #5d3b6d; font-weight: bold; margin: 0; padding-bottom: 5px; font-size: 26px;">
-                                <span t-field="employee.arabic_name"/>
+                        <div class="col-9 text-right" style="padding-top: 0px;">
+                            <h1 style="color: #5d3b6d; font-weight: bold; margin: 0; font-size: 24px;">
+                                <span t-if="employee.arabic_name" t-field="employee.arabic_name"/>
+                                <span t-else="" t-field="employee.name"/>
                             </h1>
-                            <h3 style="color: #008f8c; margin: 0; font-weight: bold; font-size: 18px;">
-                                <span t-field="employee.job_position_arabic"/>
+
+                            <h3 style="color: #008f8c; margin: 5px 0; font-weight: bold; font-size: 16px;">
+                                <span t-if="employee.job_position_arabic" t-field="employee.job_position_arabic"/>
+                                <span t-else="" t-field="employee.job_title"/>
                             </h3>
-                            <div style="font-size: 16px; color: #555; margin-top: 5px;">
+
+                            <div style="font-size: 14px; color: #555;">
                                 (<span t-field="employee.job_title"/>)
                             </div>
-                            <p style="color: #777; font-size: 13px; margin-top: 8px;">
-                                <strong>كود:</strong> <span t-field="employee.barcode"/>
+
+                            <p style="color: #777; font-size: 12px; margin-top: 5px;">
+                                <strong>كود الموظف:</strong> <span t-field="employee.barcode"/>
                                 <span style="margin: 0 10px;">|</span>
                                 <strong>الإدارة:</strong> <span t-field="employee.department_id.name"/>
                             </p>
                         </div>
 
                         <div class="col-3 text-left">
-                            <div style="width: 120px; height: 140px; border: 1px solid #000; padding: 2px; display: block; margin-right: auto;">
-                                <img t-if="employee.avatar_1920" t-att-src="image_data_uri(employee.avatar_1920)" style="max-height: 100%; max-width: 100%; display: block; margin: auto;"/>
+                            <div style="width: 110px; height: 130px; border: 1px solid #333; padding: 2px; float: left; display: flex; align-items: center; justify-content: center;">
+                                <img t-if="employee.avatar_1920" t-att-src="image_data_uri(employee.avatar_1920)" style="max-height: 100%; max-width: 100%;"/>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-12">
-                            <h4 style="background-color: #eee; color: #5d3b6d; font-weight: bold; padding: 5px 10px; border-right: 5px solid #5d3b6d; box-shadow: 2px 2px 4px #ccc;">
-                                بيانات العمل (Work Information)
-                            </h4>
-                        </div>
-                    </div>
+                    <div class="section-header">بيانات العمل (Work Information)</div>
 
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">موبايل العمل:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.mobile_phone"/>
-                        </div>
+                    <table class="table-custom" style="width: 100%; margin-bottom: 10px;">
+                        <tr>
+                            <td class="label-cell">موبايل العمل:</td>
+                            <td class="value-cell"><span t-field="employee.mobile_phone"/></td>
 
-                        <div class="col-2" style="font-weight: bold;">المدير المباشر:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.parent_id.name"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">المدير المباشر:</td>
+                            <td class="value-cell"><span t-field="employee.parent_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">تاريخ الدخول:</td>
+                            <td class="value-cell"><span t-field="employee.company_entry_date"/></td>
 
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">تاريخ الدخول:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.company_entry_date"/>
-                        </div>
+                            <td class="label-cell">تاريخ بدء العمل:</td>
+                            <td class="value-cell"><span t-field="employee.joining_date"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">رتبة الموظف:</td>
+                            <td class="value-cell"><span t-field="employee.employee_rank"/></td>
 
-                        <div class="col-2" style="font-weight: bold;">تاريخ العمل:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.joining_date"/>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 25px;">
-                        <div class="col-2" style="font-weight: bold;">رتبة الموظف:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.employee_rank"/>
-                        </div>
-
-                        <div class="col-2" style="font-weight: bold;">الحساب البنكي:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.account_number_1"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">الحساب البنكي:</td>
+                            <td class="value-cell"><span t-field="employee.account_number_1"/></td>
+                        </tr>
+                    </table>
 
 
-                    <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-12">
-                            <h4 style="background-color: #eee; color: #5d3b6d; font-weight: bold; padding: 5px 10px; border-right: 5px solid #5d3b6d; box-shadow: 2px 2px 4px #ccc;">
-                                البيانات الشخصية (Personal Information)
-                            </h4>
-                        </div>
-                    </div>
+                    <div class="section-header">البيانات الشخصية (Personal Information)</div>
 
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">الرقم القومي:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.national_id"/>
-                        </div>
+                    <table class="table-custom" style="width: 100%; margin-bottom: 10px;">
+                        <tr>
+                            <td class="label-cell">الرقم القومي:</td>
+                            <td class="value-cell"><span t-field="employee.national_id"/></td>
 
-                        <div class="col-2" style="font-weight: bold;">تاريخ الميلاد:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.birth_date"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">تاريخ الميلاد:</td>
+                            <td class="value-cell"><span t-field="employee.birth_date"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">الحالة الاجتماعية:</td>
+                            <td class="value-cell"><span t-field="employee.marital"/></td>
 
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">الحالة الاجتماعية:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.marital"/>
-                        </div>
+                            <td class="label-cell">المؤهل الدراسي:</td>
+                            <td class="value-cell"><span t-field="employee.certificate"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">العنوان الحالي:</td>
+                            <td class="value-cell" colspan="3">
+                                <span t-if="employee.address_home_id" t-esc="employee.address_home_id.name"/>
+                                <span t-if="employee.address_home_id and employee.address_home_id.street">, <span t-esc="employee.address_home_id.street"/></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">جهة الطوارئ:</td>
+                            <td class="value-cell"><span t-field="employee.emergency_contact"/></td>
 
-                        <div class="col-2" style="font-weight: bold;">المؤهل الدراسي:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.certificate"/>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">العنوان الحالي:</div>
-                        <div class="col-10" style="border-bottom: 1px solid #000;">
-                            <span t-if="employee.address_home_id" t-esc="employee.address_home_id.name"/>
-                            <span t-if="employee.address_home_id and employee.address_home_id.street">, <span t-esc="employee.address_home_id.street"/></span>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-bottom: 25px;">
-                        <div class="col-2" style="font-weight: bold;">جهة الطوارئ:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.emergency_contact"/>
-                        </div>
-
-                        <div class="col-2" style="font-weight: bold;">هاتف الطوارئ:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.emergency_phone"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">هاتف الطوارئ:</td>
+                            <td class="value-cell"><span t-field="employee.emergency_phone"/></td>
+                        </tr>
+                    </table>
 
 
-                    <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-12">
-                            <h4 style="background-color: #eee; color: #5d3b6d; font-weight: bold; padding: 5px 10px; border-right: 5px solid #5d3b6d; box-shadow: 2px 2px 4px #ccc;">
-                                البيانات التأمينية (Insurance Details)
-                            </h4>
-                        </div>
-                    </div>
+                    <div class="section-header">البيانات التأمينية (Insurance Details)</div>
 
-                    <div class="row" style="margin-bottom: 10px;">
-                        <div class="col-2" style="font-weight: bold;">الرقم التأميني:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.insurance_number"/>
-                        </div>
+                    <table class="table-custom" style="width: 100%; margin-bottom: 10px;">
+                        <tr>
+                            <td class="label-cell">الرقم التأميني:</td>
+                            <td class="value-cell"><span t-field="employee.insurance_number"/></td>
 
-                        <div class="col-2" style="font-weight: bold;">تاريخ الدخول:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.insurance_entry_date"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">تاريخ الدخول:</td>
+                            <td class="value-cell"><span t-field="employee.insurance_entry_date"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">الكود التأميني:</td>
+                            <td class="value-cell"><span t-field="employee.social_insurance_code"/></td>
 
-                    <div class="row" style="margin-bottom: 25px;">
-                        <div class="col-2" style="font-weight: bold;">الكود التأميني:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.social_insurance_code"/>
-                        </div>
-
-                        <div class="col-2" style="font-weight: bold;">المسمى التأميني:</div>
-                        <div class="col-4" style="border-bottom: 1px solid #000;">
-                            <span t-field="employee.insurance_job_title"/>
-                        </div>
-                    </div>
+                            <td class="label-cell">المسمى التأميني:</td>
+                            <td class="value-cell"><span t-field="employee.insurance_job_title"/></td>
+                        </tr>
+                    </table>
 
 
-                    <div class="section-container">
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-12">
-                                <h4 style="background-color: #eee; color: #5d3b6d; font-weight: bold; padding: 5px 10px; border-right: 5px solid #5d3b6d; box-shadow: 2px 2px 4px #ccc;">
-                                    السجل التدريبي والكورسات (Training Courses)
-                                </h4>
-                            </div>
-                        </div>
+                    <div class="section-header">السجل التدريبي والكورسات (Training Courses)</div>
 
-                        <table class="table table-bordered table-sm" style="width: 100%; text-align: center; border: 1px solid #ddd;">
-                            <thead style="background-color: #5d3b6d; color: white;">
+                    <table class="table table-bordered table-sm" style="width: 100%; text-align: center; border: 1px solid #ddd; font-size: 12px;">
+                        <thead style="background-color: #5d3b6d; color: white;">
+                            <tr>
+                                <th style="width: 30%;">اسم الكورس</th>
+                                <th style="width: 15%;">البداية</th>
+                                <th style="width: 15%;">النهاية</th>
+                                <th style="width: 20%;">الجهة</th>
+                                <th style="width: 20%;">ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="employee.course_ids" t-as="course">
                                 <tr>
-                                    <th style="width: 30%;">اسم الكورس</th>
-                                    <th style="width: 15%;">البداية</th>
-                                    <th style="width: 15%;">النهاية</th>
-                                    <th style="width: 20%;">الجهة</th>
-                                    <th style="width: 20%;">ملاحظات</th>
+                                    <td><span t-field="course.name"/></td>
+                                    <td><span t-field="course.date_start"/></td>
+                                    <td><span t-field="course.date_end"/></td>
+                                    <td><span t-field="course.location"/></td>
+                                    <td><span t-field="course.notes"/></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="employee.course_ids" t-as="course">
-                                    <tr>
-                                        <td><span t-field="course.name"/></td>
-                                        <td><span t-field="course.date_start"/></td>
-                                        <td><span t-field="course.date_end"/></td>
-                                        <td><span t-field="course.location"/></td>
-                                        <td><span t-field="course.notes"/></td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                    </div>
+                            </t>
+                        </tbody>
+                    </table>
 
                     <div class="page-break" style="page-break-after: always;"></div>
 
