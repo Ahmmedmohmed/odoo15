@@ -41,7 +41,7 @@
                                         <td>
                                             <div class="row" style="font-size:10pt; text-align: right; margin-right:5pt;" dir="rtl">
                                                 <strong>الإسم : </strong>
-                                                <span t-esc="employee.arabic_name"/>
+                                                <span t-esc="employee.with_context(lang='ar_001').name"/>
                                             </div>
                                         </td>
                                     </tr>
@@ -62,6 +62,7 @@
                                         </td>
                                     </tr>
                                     <tr>
+
                                         <td>
                                             <div class="row" style="font-size:10pt; text-align: left; margin-left:5pt;">
                                                 <strong>Title : </strong>
@@ -73,7 +74,7 @@
                                         <td>
                                             <div class="row" style="font-size:10pt; text-align: right; margin-right:5pt;" dir="rtl">
                                                 <strong>الوظيفة : </strong>
-                                                <span t-esc="employee.job_position_arabic"/>
+                                                <span t-esc="employee.with_context(lang='ar_001').job_title"/>
                                             </div>
                                         </td>
                                     </tr>
