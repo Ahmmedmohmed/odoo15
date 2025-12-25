@@ -38,7 +38,7 @@
 
     'assets': {
             'web.assets_backend': [
-                'اسم_المديول_بتاعك/static/src/css/side_chatter.css',
+               'nile_air_appraisal/static/src/css/side_chatter.css',
             ],
         },
     # only loaded in demonstration mode
