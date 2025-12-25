@@ -497,6 +497,7 @@ var ManualAction = StatementAction.extend({
 });
 
 core.action_registry.add('bank_statement_reconciliation_view', StatementAction);
+
 core.action_registry.add('manual_reconciliation_view', ManualAction);
 
 
