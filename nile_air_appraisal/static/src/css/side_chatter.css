@@ -1,47 +1,40 @@
 @media (min-width: 1200px) {
-
-    /* 1. الحاوية الرئيسية: رص العناصر جنب بعض */
+    /* تقسيم الشاشة لعمودين: العمود الأول ياخد الباقي، والثاني 350 بكسل ثابت */
     .o_form_view {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
+        display: grid !important;
+        grid-template-columns: 1fr 350px !important;
+        grid-template-rows: 100% !important;
+        overflow: hidden !important; /* منع سكرول الشاشة كلها */
         height: 100%;
-        max-height: 100%;
     }
 
-    /* 2. منطقة الورقة (الفورم): تاخد كل المساحة المتبقية */
+    /* 1. منطقة الفورم (الورقة) */
     .o_form_view .o_form_sheet_bg {
-        flex: 1 1 auto !important; /* تمدد لملء الفراغ */
-        width: auto !important;
-        max-width: 100% !important; /* إلغاء حدود العرض الافتراضية */
-        margin: 0 !important; /* إلغاء الهوامش الجانبية */
-        overflow-y: auto !important; /* سكرول رأسي */
+        grid-column: 1 / 2 !important; /* تتحط في العمود الأول */
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important; /* إلغاء التوسط */
+        overflow-y: auto !important; /* سكرول خاص بيها */
         height: 100% !important;
+        border-bottom: none !important;
     }
 
-    /* 3. منطقة الشاتر: عرض ثابت ومحدد */
+    /* 2. منطقة الشاتر */
     .o_form_view .oe_chatter {
-        flex: 0 0 350px !important; /* عرض ثابت 350 بكسل لا يزيد ولا ينقص */
-        width: 350px !important;
-        min-width: 350px !important;
-        max-width: 350px !important;
-        overflow-y: auto !important; /* سكرول خاص بالشاتر */
+        grid-column: 2 / 3 !important; /* تتحط في العمود الثاني */
+        width: 100% !important; /* تملأ الـ 350 بكسل بتوعها */
+        min-width: unset !important;
+        max-width: unset !important;
         height: 100% !important;
-        background-color: white;
-        border-left: 1px solid #dee2e6; /* خط فاصل */
-        z-index: 10; /* عشان يظهر فوق أي حاجة تانية لو حصل تداخل */
+        overflow-y: auto !important;
+        background: #fff;
+        border-left: 1px solid #dee2e6;
+        z-index: 99; /* عشان تظهر فوق */
     }
 
-    /* تعديل RTL (للعربي) */
+    /* تعديل للعربي (RTL) */
     html[dir="rtl"] .o_form_view .oe_chatter {
         border-left: none;
         border-right: 1px solid #dee2e6;
-    }
-
-    /* تظبيط الهيدر جوه الشاتر */
-    .o_form_view .oe_chatter .o_chatter_header_container {
-        padding-top: 10px;
-        padding-right: 10px;
-        padding-left: 10px;
     }
 }
