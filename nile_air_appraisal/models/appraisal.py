@@ -2,7 +2,7 @@ from odoo import models, fields, api
 class AppraisalAppraisal(models.Model):
     _name = 'appraisal.appraisal'
     _rec_name = 'employee_id'
-
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
     appraisal_wage = fields.Float(
         string='Actual wage',
@@ -42,20 +42,18 @@ class AppraisalAppraisal(models.Model):
         string="Rank",
         compute='_compute_rank',
         store=True,
-        readonly=False  # هذا يسمح لك بالتعديل اليدوي
+        readonly=False , # هذا يسمح لك بالتعديل اليدوي
+     tracking = True
     )
 
     # 2. دالة الحساب (تراقب تغيرات الموظف وتحدث الحقل)
     @api.depends('employee_id.employee_rank')
     def _compute_rank(self):
         for rec in self:
-            # لو الموظف عنده رتبة، هاتها
             if rec.employee_id.employee_rank:
                 rec.rank = rec.employee_id.employee_rank
-            # لو مفيش، سيب الحقل زي ما هو (عشان لو أنت كاتبه يدوياً)
             elif not rec.rank:
                 rec.rank = False
-
 
 
 
