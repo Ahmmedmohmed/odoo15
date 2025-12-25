@@ -2,20 +2,24 @@
 <odoo>
     <data>
 
-         <record id="view_employee_form_inherit_arabic" model="ir.ui.view">
-        <field name="name">hr.employee.form.inherit.arabic</field>
+        <record id="view_employee_form_inherit_arabic_final" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.arabic.final</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-<xpath expr="//div[hasclass('oe_title')]/h1" position="after">
-    <h1 style="margin-top: 5px;">
-        <field name="arabic_name" placeholder="الاسم باللغة العربية" style="font-family: 'Cairo'; color: #5d3b6d;"/>
-    </h1>
-</xpath>
-            <xpath expr="//field[@name='job_title']" position="after">
-                <div style="display: block;">
-                    <field name="job_position_arabic" placeholder="Job Position in Arabic"/>
-                </div>
+
+            <xpath expr="//field[@name='name']/.." position="after">
+                <div style="height: 5px;"></div>
+                <h1>
+                    <field name="arabic_name" placeholder="الاسم باللغة العربية" style="font-family: 'Cairo'; color: #5d3b6d; font-size: 1.5rem;"/>
+                </h1>
+            </xpath>
+
+            <xpath expr="//field[@name='job_title']/.." position="after">
+                <div style="height: 5px;"></div>
+                <h3>
+                    <field name="job_position_arabic" placeholder="المسمى الوظيفي بالعربي" style="color: #008f8c;"/>
+                </h3>
             </xpath>
 
         </field>
