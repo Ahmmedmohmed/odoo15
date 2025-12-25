@@ -1,42 +1,41 @@
-/* تطبيق التعديل فقط على الشاشات الكبيرة */
 @media (min-width: 1200px) {
 
-    /* الحاوية الرئيسية للفورم */
+    /* 1. الحاوية الرئيسية */
     .o_form_view {
         display: flex !important;
-        flex-flow: row nowrap; /* رص العناصر جنب بعض */
+        flex-flow: row nowrap;
         height: 100%;
-        max-height: 100%; /* عشان الاسكرول */
+        max-height: 100%;
     }
 
-    /* منطقة الورقة (Sheet) */
+    /* 2. منطقة الورقة (الفورم) - نديها مساحة أكبر */
     .o_form_view .o_form_sheet_bg {
-        flex: 1 1 auto; /* تاخد المساحة المتاحة */
-        width: 65%; /* عرض تقريبي */
-        max-width: 65%;
-        overflow: auto; /* سكرول خاص بيها */
+        flex: 1 1 auto !important; /* تاخد كل المساحة المتبقية */
+        width: 70% !important;     /* عرض مبدئي 70% */
+        max-width: 100% !important; /* نسمح لها تتمدد براحتها */
+        overflow: auto;
         height: 100%;
         border-bottom: none !important;
     }
 
-    /* منطقة الشاتر (Chatter) */
+    /* 3. منطقة الشاتر - نضيقها شوية */
     .o_form_view .oe_chatter {
-        flex: 0 0 35%; /* عرض ثابت */
-        width: 35%;
-        min-width: 350px; /* أقل عرض مسموح */
-        overflow: auto; /* سكرول خاص بالشاتر */
+        flex: 0 0 30% !important;  /* تثبيت العرض على 30% بس */
+        width: 30% !important;
+        min-width: 300px; /* أقل عرض عشان الكلام ميبوظش */
+        max-width: 400px; /* أقصى عرض عشان مياكلش الشاشة */
+        overflow: auto;
         height: 100%;
         background-color: white;
-        border-left: 1px solid #dee2e6; /* خط فاصل */
+        border-left: 1px solid #dee2e6;
     }
 
-    /* تعديل خاص للغة العربية (RTL) عشان الخط الفاصل يجي صح */
+    /* تعديل RTL للعربي */
     html[dir="rtl"] .o_form_view .oe_chatter {
         border-left: none;
         border-right: 1px solid #dee2e6;
     }
 
-    /* إخفاء الهوامش الزائدة في الشاتر عشان يبقى شكله شيك */
     .o_form_view .oe_chatter .o_chatter_header_container {
         padding-top: 10px;
     }
