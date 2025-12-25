@@ -1,0 +1,43 @@
+/* تطبيق التعديل فقط على الشاشات الكبيرة */
+@media (min-width: 1200px) {
+
+    /* الحاوية الرئيسية للفورم */
+    .o_form_view {
+        display: flex !important;
+        flex-flow: row nowrap; /* رص العناصر جنب بعض */
+        height: 100%;
+        max-height: 100%; /* عشان الاسكرول */
+    }
+
+    /* منطقة الورقة (Sheet) */
+    .o_form_view .o_form_sheet_bg {
+        flex: 1 1 auto; /* تاخد المساحة المتاحة */
+        width: 65%; /* عرض تقريبي */
+        max-width: 65%;
+        overflow: auto; /* سكرول خاص بيها */
+        height: 100%;
+        border-bottom: none !important;
+    }
+
+    /* منطقة الشاتر (Chatter) */
+    .o_form_view .oe_chatter {
+        flex: 0 0 35%; /* عرض ثابت */
+        width: 35%;
+        min-width: 350px; /* أقل عرض مسموح */
+        overflow: auto; /* سكرول خاص بالشاتر */
+        height: 100%;
+        background-color: white;
+        border-left: 1px solid #dee2e6; /* خط فاصل */
+    }
+
+    /* تعديل خاص للغة العربية (RTL) عشان الخط الفاصل يجي صح */
+    html[dir="rtl"] .o_form_view .oe_chatter {
+        border-left: none;
+        border-right: 1px solid #dee2e6;
+    }
+
+    /* إخفاء الهوامش الزائدة في الشاتر عشان يبقى شكله شيك */
+    .o_form_view .oe_chatter .o_chatter_header_container {
+        padding-top: 10px;
+    }
+}

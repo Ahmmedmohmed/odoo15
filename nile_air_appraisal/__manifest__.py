@@ -35,6 +35,12 @@
         'views/courses_screen.xml',
         'demo/demo.xml',
     ],
+
+    'assets': {
+            'web.assets_backend': [
+                'اسم_المديول_بتاعك/static/src/css/side_chatter.css',
+            ],
+        },
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
