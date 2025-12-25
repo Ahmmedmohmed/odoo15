@@ -7,13 +7,11 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='name']" position="after">
-                <div style="display: block;">
-                    <field name="arabic_name" placeholder="Name in Arabic" style="font-size: 1.5rem; color: #666666;"/>
-                </div>
-            </xpath>
-
+<xpath expr="//div[hasclass('oe_title')]/h1" position="after">
+    <h1 style="margin-top: 5px;">
+        <field name="arabic_name" placeholder="الاسم باللغة العربية" style="font-family: 'Cairo'; color: #5d3b6d;"/>
+    </h1>
+</xpath>
             <xpath expr="//field[@name='job_title']" position="after">
                 <div style="display: block;">
                     <field name="job_position_arabic" placeholder="Job Position in Arabic"/>
