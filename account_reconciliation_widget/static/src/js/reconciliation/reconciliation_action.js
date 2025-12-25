@@ -546,7 +546,7 @@ odoo.define("account.ReconciliationClientAction", function (require) {
         },
     });
 
-core.action_registry.add('custom_reconciliation_view', StatementAction);
+    core.action_registry.add('custom_reconciliation_view', StatementAction);
     core.action_registry.add("manual_reconciliation_view", ManualAction);
 
     return {
