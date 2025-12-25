@@ -6,7 +6,6 @@
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
-
         <record id="tree_view_appraisal_appraisal" model="ir.ui.view">
             <field name="name">name.appraisal.appraisal.tree</field>
             <field name="model">appraisal.appraisal</field>
@@ -19,7 +18,6 @@
                     <field name="employee_wage"/>
                     <field name="last_performance_date"/>
                     <field name="appraisal_date"/>
-<!--                    <field name="total_performance"/>-->
                     <field name="total_performance_percentage" widget="percentage"/>
                     <field name="state"/>
                 </tree>
@@ -32,55 +30,61 @@
             <field name="arch" type="xml">
                 <form string="Appraisal">
                     <header>
-
-                        <button name="button_confirm" type="object" string="Confirm" class="oe_highlight"
+                        <button name="action_manager_confirm" type="object" string="Manager Confirm" class="oe_highlight"
                                 groups="nile_air_appraisal.group_hr_manager_employee"
-                                attrs="{'invisible': [('state', '=', 'confirm')]}"
+                                states="draft"
                         />
-                        <button name="set_to_draft" type="object" string="Set To Draft" class="oe_highlight"
-                                groups="nile_air_appraisal.group_hr_manager_employee"
-                                attrs="{'invisible': [('state', '=', 'draft')]}"
 
+                        <button name="action_hr_confirm" type="object" string="HR Confirm" class="oe_highlight"
+                                groups="hr.group_hr_manager"
+                                states="manager_approve"
                         />
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+
+                        <button name="action_ceo_confirm" type="object" string="CEO Confirm" class="oe_highlight"
+                                groups="base.group_system"
+                                states="hr_approve"
+                        />
+
+                        <button name="set_to_draft" type="object" string="Set To Draft"
+                                groups="nile_air_appraisal.group_hr_manager_employee"
+                                states="manager_approve,hr_approve,done"
+                        />
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,hr_approve,done"/>
                     </header>
                     <sheet>
-
 
                         <div class="oe_title">
                             <label for="employee_id"/>
                             <h2>
-                                <field name="employee_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </h2>
                         </div>
 
                         <group col="4">
-                            <field name="employee_barcode" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="title" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="hiring_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="department_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="manager_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="employee_wage" attrs="{'readonly': [('state', '=', 'confirm')]}"
+                            <field name="employee_barcode" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="title" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="hiring_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="department_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="manager_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="employee_wage" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                    groups="nile_air_appraisal.group_hr_manager_employee"/>
-                            <field name="rank" attrs="{'readonly': [('state', '=', 'confirm')]}" />
+                            <field name="rank" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="appraisal_wage"/>
-                            <field name="estimate_salary" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="estimate_salary" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="last_performance_date" readonly="1"/>
-                            <field name="appraisal_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                            <field name="is_need_course"/>
+                            <field name="appraisal_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="is_need_course" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                         <group>
-
-
                         </group>
-
 
                         <notebook>
                             <page string="Guidance to Rating Scale">
                                 <group>
-                                    <button name="get_questions" type="object" string="Get Questions"/>
+                                    <button name="get_questions" type="object" string="Get Questions" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                                 </group>
-                                <field name="rating_scale_ids" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <field name="rating_scale_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                                     <tree editable="bottom">
                                         <field name="questions" width="80%"/>
                                         <field name="evaluation" widget="priority" width="20%"/>
@@ -88,9 +92,6 @@
                                 </field>
                                 <group>
                                     <div style="float:right">
-<!--                                        <group>-->
-<!--                                            <field name="total_performance" force_save="1"/>-->
-<!--                                        </group>-->
                                         <group>
                                             <field name="total_performance_percentage" widget="percentage" force_save="1"/>
                                         </group>
@@ -101,10 +102,10 @@
                             </page>
                             <page string="HR Guidance to Rating Scale">
                                 <group>
-                                    <button name="hr_get_questions" type="object" string="HR Get Questions"/>
+                                    <button name="hr_get_questions" type="object" string="HR Get Questions" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                                 </group>
 
-                                <field name="hr_rating_scale_ids">
+                                <field name="hr_rating_scale_ids" attrs="{'readonly': [('state', 'in', ['done'])]}">
                                     <tree editable="bottom">
                                         <field name="questions" width="80%"/>
                                         <field name="evaluation" widget="priority" width="20%"/>
@@ -121,10 +122,9 @@
                                 <br/>
                             </page>
 
-
                             <page string="Recommended Trainings or Courses"
                                   attrs="{'invisible': [('is_need_course', '=',False)]}">
-                                <field name="trainings_courses_ids" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <field name="trainings_courses_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                                     <tree editable="bottom">
                                         <field name="courses_id"/>
                                         <field name="suggested_provider"/>
@@ -136,10 +136,9 @@
 
                         </notebook>
 
-
                         <br/>
                         <label for="notes"/>
-                        <field name="notes"/>
+                        <field name="notes" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" groups="base.group_user"/>
@@ -150,16 +149,14 @@
             </field>
         </record>
 
-
         <record id="action_confirm_multi_appraisal" model="ir.actions.server">
-            <field name="name">Confirm Appraisal</field>
+            <field name="name">Confirm manager </field>
             <field name="model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
             <field name="type">ir.actions.server</field>
             <field name="binding_model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
             <field name="state">code</field>
             <field name="code">action = records.confirm_multi_appraisal()</field>
         </record>
-
 
         <record id="action_view_appraisal" model="ir.actions.act_window">
             <field name="name">Appraisal</field>
@@ -168,28 +165,15 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    <!-- Add Text Here -->
-                </p>
+                    </p>
                 <p>
-                    <!-- More details about what a user can do with this object will be OK -->
-                </p>
+                    </p>
             </field>
         </record>
-
-
-        <!--        <record id="action_id" model="ir.actions.server">-->
-        <!--                <field name="name">name</field>-->
-        <!--                <field name="model_id" ref="module_name.model_object_name" />-->
-        <!--                <field name="code">-->
-        <!--                    action = model.function_name()-->
-        <!--                </field>-->
-        <!--            </record>-->
-
 
         <menuitem id="appraisal_menu_form" name="Appraisal" sequence="5"/>
         <menuitem id="appraisal_category_menu" name="Appraisal" parent="appraisal_menu_form"
                   action="action_view_appraisal" sequence="1"/>
-
 
     </data>
 </odoo>
