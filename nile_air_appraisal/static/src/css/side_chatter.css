@@ -1,42 +1,47 @@
 @media (min-width: 1200px) {
 
-    /* 1. الحاوية الرئيسية */
+    /* 1. الحاوية الرئيسية: رص العناصر جنب بعض */
     .o_form_view {
         display: flex !important;
-        flex-flow: row nowrap;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
         height: 100%;
         max-height: 100%;
     }
 
-    /* 2. منطقة الورقة (الفورم) - نديها مساحة أكبر */
+    /* 2. منطقة الورقة (الفورم): تاخد كل المساحة المتبقية */
     .o_form_view .o_form_sheet_bg {
-        flex: 1 1 auto !important; /* تاخد كل المساحة المتبقية */
-        width: 70% !important;     /* عرض مبدئي 70% */
-        max-width: 100% !important; /* نسمح لها تتمدد براحتها */
-        overflow: auto;
-        height: 100%;
-        border-bottom: none !important;
+        flex: 1 1 auto !important; /* تمدد لملء الفراغ */
+        width: auto !important;
+        max-width: 100% !important; /* إلغاء حدود العرض الافتراضية */
+        margin: 0 !important; /* إلغاء الهوامش الجانبية */
+        overflow-y: auto !important; /* سكرول رأسي */
+        height: 100% !important;
     }
 
-    /* 3. منطقة الشاتر - نضيقها شوية */
+    /* 3. منطقة الشاتر: عرض ثابت ومحدد */
     .o_form_view .oe_chatter {
-        flex: 0 0 30% !important;  /* تثبيت العرض على 30% بس */
-        width: 30% !important;
-        min-width: 300px; /* أقل عرض عشان الكلام ميبوظش */
-        max-width: 400px; /* أقصى عرض عشان مياكلش الشاشة */
-        overflow: auto;
-        height: 100%;
+        flex: 0 0 350px !important; /* عرض ثابت 350 بكسل لا يزيد ولا ينقص */
+        width: 350px !important;
+        min-width: 350px !important;
+        max-width: 350px !important;
+        overflow-y: auto !important; /* سكرول خاص بالشاتر */
+        height: 100% !important;
         background-color: white;
-        border-left: 1px solid #dee2e6;
+        border-left: 1px solid #dee2e6; /* خط فاصل */
+        z-index: 10; /* عشان يظهر فوق أي حاجة تانية لو حصل تداخل */
     }
 
-    /* تعديل RTL للعربي */
+    /* تعديل RTL (للعربي) */
     html[dir="rtl"] .o_form_view .oe_chatter {
         border-left: none;
         border-right: 1px solid #dee2e6;
     }
 
+    /* تظبيط الهيدر جوه الشاتر */
     .o_form_view .oe_chatter .o_chatter_header_container {
         padding-top: 10px;
+        padding-right: 10px;
+        padding-left: 10px;
     }
 }
