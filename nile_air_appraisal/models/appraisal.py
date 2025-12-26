@@ -15,7 +15,11 @@ class AppraisalAppraisal(models.Model):
         store=True,
         readonly=True
     )
-
+    last_performance_percentage = fields.Float(
+        string="Last Performance",
+        readonly=True,
+        help="Shows the total performance percentage of the last confirmed appraisal."
+    )
     employee_barcode = fields.Char(string="Employee ID", required=False, )
     title = fields.Char(string="Title", required=False, )
     hiring_date = fields.Date(string="Hiring Date", required=False, )
@@ -203,32 +207,29 @@ class AppraisalAppraisal(models.Model):
 
     @api.onchange('employee_id')
     def get_employee_last_data(self):
-        # ... (نفس الكود القديم، فقط تأكدت أن الحالة النهائية هي done)
+        # تصفير البيانات لو مسحت الموظف
         if not self.employee_id:
             self.employee_barcode = False
             self.rank = False
             self.hiring_date = False
-            self.title = False
-            self.department_id = False
-            self.manager_id = False
-            self.employee_wage = 0.0
-            self.estimate_salary = 0.0
-            self.is_need_course = False
-            self.notes = False
-            self.last_performance_date = False
+            # ... تصفير باقي الحقول ...
+            self.last_performance_percentage = 0.0  # تصفير الحقل الجديد
             return
+
+        # جلب البيانات الأساسية
         self.employee_barcode = self.employee_id.barcode
         self.rank = getattr(self.employee_id, 'employee_rank', False)
         self.hiring_date = self.employee_id.first_contract_date or self.employee_id.create_date.date()
 
-        # بحثنا عن done بدلاً من confirm
+        # البحث عن آخر تقييم (تم الانتهاء منه)
         last_appraisal = self.search([
-            ('id', '!=', self._origin.id),
-            ('employee_id', '=', self.employee_id.id),
-            ('state', '=', 'done')
+            ('id', '!=', self._origin.id),  # مش التقييم الحالي
+            ('employee_id', '=', self.employee_id.id),  # لنفس الموظف
+            ('state', 'in', ['done', 'confirm'])  # حالته مؤكدة أو منتهية
         ], order='id desc', limit=1)
 
         if last_appraisal:
+            # نقل البيانات القديمة
             self.last_performance_date = last_appraisal.appraisal_date
             self.title = last_appraisal.title
             self.department_id = last_appraisal.department_id
@@ -237,16 +238,16 @@ class AppraisalAppraisal(models.Model):
             self.estimate_salary = last_appraisal.estimate_salary
             self.is_need_course = last_appraisal.is_need_course
             self.notes = last_appraisal.notes
-            self.hr_total_performance = last_appraisal.hr_total_performance
+
+            # --- هنا الزيتونة: جلب النسبة القديمة ---
+            self.last_performance_percentage = last_appraisal.total_performance_percentage
+
         else:
+            # لو مفيش تقييم سابق
             self.last_performance_date = False
             self.title = False
-            self.department_id = False
-            self.manager_id = False
-            self.employee_wage = 0.0
-            self.estimate_salary = 0.0
-            self.is_need_course = False
-            self.notes = False
+            # ... تصفير باقي الحقول ...
+            self.last_performance_percentage = 0.0
 
     def get_questions(self):
         lines = [(5, 0, 0)]

@@ -134,6 +134,17 @@
                                 </field>
                             </page>
 
+                            <page string="Last Performance">
+                                <group>
+                                    <group>
+                                        <field name="last_performance_percentage"
+                                               widget="percentage"
+                                               class="oe_inline"
+                                               style="font-size: 20px; font-weight: bold;"/>
+                                    </group>
+                                </group>
+                             </page>
+
                         </notebook>
 
                         <br/>
