@@ -57,14 +57,14 @@ class AppraisalAppraisal(models.Model):
 
     employee_wage = fields.Float(string="Wage", required=False, )
     is_need_course = fields.Boolean(string="Need Courses", )
-    estimate_salary = fields.Float(string="Estimate Salary")
+    estimate_salary = fields.Float(string="Estimate Salary" , tracking=True)
 
     rank = fields.Char(
         string="Rank",
         compute='_compute_rank',
         store=True,
         readonly=False,
-        tracking=True
+
     )
 
     @api.depends('employee_id.employee_rank')
