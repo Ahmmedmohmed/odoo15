@@ -13,7 +13,8 @@ class AppraisalAppraisal(models.Model):
         string='Actual wage',
         related='employee_id.actual_wage',
         store=True,
-        readonly=True
+        readonly=True ,
+        tracking=True
     )
     last_performance_percentage = fields.Float(
         string="Last Performance",
@@ -207,47 +208,70 @@ class AppraisalAppraisal(models.Model):
 
     @api.onchange('employee_id')
     def get_employee_last_data(self):
-        # تصفير البيانات لو مسحت الموظف
+        # 1. حالة مسح الموظف: تصفير كل الحقول
         if not self.employee_id:
             self.employee_barcode = False
             self.rank = False
             self.hiring_date = False
-            # ... تصفير باقي الحقول ...
-            self.last_performance_percentage = 0.0  # تصفير الحقل الجديد
+            self.title = False
+            self.department_id = False
+            self.manager_id = False
+            self.last_performance_date = False
+            self.employee_wage = 0.0
+            self.estimate_salary = 0.0
+            self.is_need_course = False
+            self.notes = False
+            self.last_performance_percentage = 0.0
             return
 
-        # جلب البيانات الأساسية
+        # ---------------------------------------------------------
+        # 2. البيانات الحالية (LIVE DATA)
+        # تأتي دائماً من كارت الموظف لضمان أنها محدثة
+        # ---------------------------------------------------------
         self.employee_barcode = self.employee_id.barcode
         self.rank = getattr(self.employee_id, 'employee_rank', False)
+        # تاريخ التعيين
         self.hiring_date = self.employee_id.first_contract_date or self.employee_id.create_date.date()
 
-        # البحث عن آخر تقييم (تم الانتهاء منه)
+        # المسمى الوظيفي (لو ملوش job_title هات الـ job_id)
+        self.title = self.employee_id.job_title or self.employee_id.job_id.name
+
+        # القسم الحالي
+        self.department_id = self.employee_id.department_id
+
+        # المدير المباشر الحالي
+        self.manager_id = self.employee_id.parent_id
+
+        # ---------------------------------------------------------
+        # 3. البيانات التاريخية (HISTORICAL DATA)
+        # البحث عن آخر تقييم لجلب الأرقام والنتائج السابقة
+        # ---------------------------------------------------------
         last_appraisal = self.search([
-            ('id', '!=', self._origin.id),  # مش التقييم الحالي
+            ('id', '!=', self._origin.id),  # استبعاد التقييم الحالي
             ('employee_id', '=', self.employee_id.id),  # لنفس الموظف
-            ('state', 'in', ['done', 'confirm'])  # حالته مؤكدة أو منتهية
+            ('state', 'in', ['done', 'confirm'])  # الحالات المنتهية
         ], order='id desc', limit=1)
 
         if last_appraisal:
-            # نقل البيانات القديمة
+            # (أ) وجدنا تقييم سابق: نملأ البيانات التاريخية منه
             self.last_performance_date = last_appraisal.appraisal_date
-            self.title = last_appraisal.title
-            self.department_id = last_appraisal.department_id
-            self.manager_id = last_appraisal.manager_id
+            self.last_performance_percentage = last_appraisal.total_performance_percentage
+
+            # ممكن تجيب الراتب القديم كمرجع
             self.employee_wage = last_appraisal.employee_wage
             self.estimate_salary = last_appraisal.estimate_salary
             self.is_need_course = last_appraisal.is_need_course
             self.notes = last_appraisal.notes
-
-            # --- هنا الزيتونة: جلب النسبة القديمة ---
-            self.last_performance_percentage = last_appraisal.total_performance_percentage
-
         else:
-            # لو مفيش تقييم سابق
+            # (ب) لا يوجد تقييم سابق: تصفير البيانات التاريخية فقط
             self.last_performance_date = False
-            self.title = False
-            # ... تصفير باقي الحقول ...
             self.last_performance_percentage = 0.0
+
+            # الراتب الحالي ممكن نجيبه من العقد لو مفيش تقييم سابق
+            self.employee_wage = self.employee_id.contract_id.wage or 0.0
+            self.estimate_salary = 0.0
+            self.is_need_course = False
+            self.notes = False
 
     def get_questions(self):
         lines = [(5, 0, 0)]
