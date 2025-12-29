@@ -33,7 +33,9 @@
         'views/appraisal_report.xml',
         'views/employee.xml',
         'views/courses_screen.xml',
+        'views/user.xml',
         'demo/demo.xml',
+
     ],
 
     'assets': {
