@@ -30,25 +30,45 @@
             <field name="arch" type="xml">
                 <form string="Appraisal" class="o_appraisal_custom_view">
                     <header>
+
+                        <field name="current_user_role" invisible="1"/>
+
                         <button name="action_manager_confirm" type="object" string="Manager Confirm" class="oe_highlight"
                                 groups="nile_air_appraisal.group_hr_manager_employee"
                                 states="draft"
+                                attrs="{'invisible': [('current_user_role', '!=', 'manager')]}"
                         />
 
                         <button name="action_hr_confirm" type="object" string="HR Confirm" class="oe_highlight"
                                 groups="hr.group_hr_manager"
                                 states="manager_approve"
+                                attrs="{'invisible': [('current_user_role', '!=', 'hr')]}"
                         />
 
                         <button name="action_ceo_confirm" type="object" string="CEO Confirm" class="oe_highlight"
                                 groups="base.group_system"
                                 states="hr_approve"
+                                attrs="{'invisible': [('current_user_role', '!=', 'co')]}"
                         />
 
-                        <button name="set_to_draft" type="object" string="Set To Draft"
-                                groups="base.group_system,hr.group_hr_manager"
-                                states="manager_approve,hr_approve,done"
+                        <button name="set_to_draft" type="object" string="Reset Manager"
+                                groups="nile_air_appraisal.group_hr_manager_employee"
+                                states="manager_approve"
+                                attrs="{'invisible': [('current_user_role', '!=', 'manager')]}"
                         />
+
+                        <button name="set_to_draft" type="object" string="Reset HR"
+                                groups="hr.group_hr_manager"
+                                states="hr_approve"
+                                attrs="{'invisible': [('current_user_role', '!=', 'hr')]}"
+                        />
+
+                        <button name="set_to_draft" type="object" string="Reset (CEO)"
+                                groups="base.group_system"
+                                states="manager_approve,hr_approve,done"
+                                attrs="{'invisible': [('current_user_role', '!=', 'co')]}"
+                        />
+
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,hr_approve,done"/>
                     </header>

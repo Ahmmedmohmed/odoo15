@@ -7,6 +7,15 @@ class AppraisalAppraisal(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
+    current_user_role = fields.Selection(
+        selection=[
+            ('user', 'User'),
+            ('manager', 'Manager'),
+            ('hr', 'HR'),
+            ('co', 'CO')
+        ],
+        compute='_compute_current_user_role'
+    )
 
     # هذا الحقل "مراية" لراتب الموظف، هيتحدث لوحده لما نحدث الموظف في آخر خطوة
     appraisal_wage = fields.Float(
@@ -313,9 +322,32 @@ class AppraisalAppraisal(models.Model):
                 })
             rec.state = 'done'
 
-    def set_to_draft(self):
-        self.state = 'draft'
+    @api.depends('state')  # ديبيند وهمي عشان يشتغل كل مرة
+    def _compute_current_user_role(self):
+        for rec in self:
+            rec.current_user_role = self.env.user.appraisal_role
 
+    # =========================================================
+    # دالة الإرجاع للمسودة بشروط صارمة
+    # =========================================================
+    def set_to_draft(self):
+        for rec in self:
+            user_role = self.env.user.appraisal_role
+
+            # 1. لو الحالة (Done) والفاعل ليس CEO -> ممنوع
+            if rec.state == 'done' and user_role != 'co':
+                raise UserError("عفواً، فقط الـ CEO يمكنه إعادة فتح التقييم بعد انتهائه.")
+
+            # 2. لو الحالة (Manager Approved) والفاعل HR -> ممنوع (حسب طلبك)
+            if rec.state == 'manager_approve' and user_role == 'hr':
+                raise UserError("عفواً، لا تملك صلاحية إلغاء موافقة المدير المباشر.")
+
+            # 3. لو الحالة (HR Approved) والفاعل Manager -> ممنوع
+            if rec.state == 'hr_approve' and user_role == 'manager':
+                raise UserError("عفواً، لا تملك صلاحية إلغاء موافقة الـ HR.")
+
+            # لو عدى من الشروط دي، يرجع درافت عادي
+            rec.state = 'draft'
     # تحديث دالة الأكشن سيرفر لتنفيذ أول خطوة
     def confirm_multi_appraisal(self):
         for rec in self:
