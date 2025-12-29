@@ -46,7 +46,7 @@
                         />
 
                         <button name="set_to_draft" type="object" string="Set To Draft"
-                                groups="nile_air_appraisal.group_hr_manager_employee"
+                                groups="base.group_system,hr.group_hr_manager"
                                 states="manager_approve,hr_approve,done"
                         />
 
@@ -67,16 +67,21 @@
                             <field name="hiring_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="department_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="manager_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
                             <field name="employee_wage" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                    groups="nile_air_appraisal.group_hr_manager_employee"/>
+
                             <field name="rank" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+
                             <field name="appraisal_wage"/>
-                            <field name="estimate_salary" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                            <field name="estimate_salary"
+                                   attrs="{'readonly': [('state', '=', 'done')]}"
+                                   force_save="1"/>
+
                             <field name="last_performance_date" readonly="1"/>
                             <field name="appraisal_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="is_need_course" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        </group>
-                        <group>
                         </group>
 
                         <notebook>
@@ -100,12 +105,13 @@
                                 <br/>
                                 <br/>
                             </page>
+
                             <page string="HR Guidance to Rating Scale">
                                 <group>
                                     <button name="hr_get_questions" type="object" string="HR Get Questions" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                                 </group>
 
-                                <field name="hr_rating_scale_ids" attrs="{'readonly': [('state', 'in', ['done'])]}">
+                                <field name="hr_rating_scale_ids" attrs="{'readonly': [('state', '=', 'done')]}">
                                     <tree editable="bottom">
                                         <field name="questions" width="80%"/>
                                         <field name="evaluation" widget="priority" width="20%"/>
@@ -161,12 +167,12 @@
         </record>
 
         <record id="action_confirm_multi_appraisal" model="ir.actions.server">
-            <field name="name">Confirm manager </field>
+            <field name="name">Confirm Manager</field>
             <field name="model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
             <field name="type">ir.actions.server</field>
             <field name="binding_model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
             <field name="state">code</field>
-            <field name="code">action = records.confirm_multi_appraisal()</field>
+            <field name="code">action = records.action_manager_confirm()</field>
         </record>
 
         <record id="action_view_appraisal" model="ir.actions.act_window">
@@ -176,9 +182,8 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    </p>
-                <p>
-                    </p>
+                    Create your first Appraisal
+                </p>
             </field>
         </record>
 

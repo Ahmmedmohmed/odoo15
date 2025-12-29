@@ -322,6 +322,31 @@ class AppraisalAppraisal(models.Model):
             if rec.state == 'draft':
                 rec.action_manager_confirm()
 
+
+    def write(self, vals):
+        # تنفيذ التعديل الأول
+        res = super(AppraisalAppraisal, self).write(vals)
+
+        # اللوجيك: لو تم تعديل حقل الراتب المتوقع (estimate_salary)
+        if 'estimate_salary' in vals:
+            for rec in self:
+                # لو التقييم كان خلصان أو في مرحلة متقدمة ورجعنا عدلنا
+                user_role = self.env.user.appraisal_role
+
+                if user_role == 'manager':
+                    # لو مدير عدل -> نرجعه لمرحلة موافقة المدير (عشان الـ HR والـ CEO يوافقوا تاني)
+                    rec.state = 'manager_approve'
+
+                elif user_role == 'hr':
+                    # لو HR عدل -> نرجعه لمرحلة موافقة HR (عشان الـ CEO يوافق تاني)
+                    rec.state = 'hr_approve'
+
+                elif user_role == 'co':
+                    # لو CEO عدل -> نعتبره وافق ونحدث الراتب فوراً
+                    rec.action_ceo_confirm()
+
+        return res
+
 class RateScale(models.Model):
     _name = 'rate.scale'
 
