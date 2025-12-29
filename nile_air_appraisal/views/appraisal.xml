@@ -28,7 +28,7 @@
             <field name="name">name.appraisal.appraisal.form</field>
             <field name="model">appraisal.appraisal</field>
             <field name="arch" type="xml">
-                <form string="Appraisal">
+                <form string="Appraisal" class="o_appraisal_custom_view">
                     <header>
                         <button name="action_manager_confirm" type="object" string="Manager Confirm" class="oe_highlight"
                                 groups="nile_air_appraisal.group_hr_manager_employee"
