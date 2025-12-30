@@ -7,16 +7,12 @@ class AppraisalAppraisal(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
-    current_user_role = fields.Selection(
-        selection=[
-            ('user', 'User'),
-            ('manager', 'Manager'),
-            ('hr', 'HR'),
-            ('co', 'CO')
-        ],
-        compute='_compute_current_user_role'
-    )
-
+    current_user_role = fields.Selection([
+        ('employee', 'Employee'),
+        ('manager', 'Manager'),
+        ('hr', 'HR'),
+        ('co', 'CEO')
+    ], string="Current User Role", compute='_compute_current_user_role')
     # هذا الحقل "مراية" لراتب الموظف، هيتحدث لوحده لما نحدث الموظف في آخر خطوة
     appraisal_wage = fields.Float(
         string='Actual wage',
@@ -322,28 +318,24 @@ class AppraisalAppraisal(models.Model):
                 })
             rec.state = 'done'
 
-    @api.depends('state', 'manager_id')
+    @api.depends('manager_id', 'state')
     def _compute_current_user_role(self):
         for rec in self:
             user = self.env.user
 
-            # 1. الأولوية القصوى للـ CEO (System Admin)
-            # الترتيب هنا هو الحل: لو المستخدم CEO، السيستم هيحط الرول 'co' ويخرج من الدالة فوراً
-            # وبالتالي لن يتم التحقق مما إذا كان مديراً أم لا
+            # 1. الترتيب مهم جداً: الـ CEO أولاً
             if user.has_group('base.group_system'):
                 rec.current_user_role = 'co'
 
-            # 2. الأولوية الثانية للـ HR
-            # يتم التحقق منها فقط إذا لم يكن المستخدم CEO
+            # 2. ثم الـ HR
             elif user.has_group('hr.group_hr_manager'):
                 rec.current_user_role = 'hr'
 
-            # 3. الأولوية الثالثة للمدير المباشر
-            # يتم التحقق منها فقط إذا لم يكن CEO ولم يكن HR
+            # 3. ثم المدير المباشر
             elif rec.manager_id.user_id == user:
                 rec.current_user_role = 'manager'
 
-            # 4. غير ذلك فهو موظف عادي
+            # 4. غير ذلك
             else:
                 rec.current_user_role = 'employee'
     # =========================================================

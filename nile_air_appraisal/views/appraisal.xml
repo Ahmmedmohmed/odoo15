@@ -65,7 +65,6 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,hr_approve,done"/>
                 </header>
                     <sheet>
-
                         <div class="oe_title">
                             <label for="employee_id"/>
                             <h2>
@@ -181,8 +180,8 @@
         <record id="action_confirm_multi_appraisal" model="ir.actions.server">
             <field name="name">Confirm Manager</field>
             <field name="model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
-            <field name="type">ir.actions.server</field>
             <field name="binding_model_id" ref="nile_air_appraisal.model_appraisal_appraisal"/>
+            <field name="groups_id" eval="[(4, ref('nile_air_appraisal.group_hr_manager_employee'))]"/>
             <field name="state">code</field>
             <field name="code">action = records.action_manager_confirm()</field>
         </record>
