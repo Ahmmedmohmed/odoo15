@@ -44,7 +44,7 @@
 
                         <button name="action_ceo_confirm" type="object" string="CEO Confirm" class="oe_highlight"
                                 groups="base.group_system"
-                                attrs="{'invisible': ['|', ('state', '!=', 'hr_approve'), ('current_user_role', '!=', 'co')]}"
+                                attrs="{'invisible': ['|', ('state', '=', 'done'), ('current_user_role', '!=', 'co')]}"
                         />
 
                         <button name="set_to_draft" type="object" string="Reset Manager"
@@ -59,11 +59,11 @@
 
                         <button name="set_to_draft" type="object" string="Reset (CEO)"
                                 groups="base.group_system"
-                                attrs="{'invisible': ['|', ('state', 'in', ['draft']), ('current_user_role', '!=', 'co')]}"
+                                attrs="{'invisible': ['|', ('state', '=', 'done'), ('current_user_role', '!=', 'co')]}"
                         />
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,hr_approve,done"/>
-                   </header>
+                </header>
                     <sheet>
 
                         <div class="oe_title">

@@ -325,7 +325,19 @@ class AppraisalAppraisal(models.Model):
     @api.depends('state')  # ديبيند وهمي عشان يشتغل كل مرة
     def _compute_current_user_role(self):
         for rec in self:
-            rec.current_user_role = self.env.user.appraisal_role
+            user = self.env.user
+            # 1. الأولوية الأولى للـ CEO (عشان يشوف زراير الـ CEO بس)
+            if user.has_group('base.group_system'):
+                rec.current_user_role = 'co'
+            # 2. الأولوية الثانية للـ HR
+            elif user.has_group('hr.group_hr_manager'):
+                rec.current_user_role = 'hr'
+            # 3. الأولوية الثالثة للمدير المباشر
+            elif rec.manager_id.user_id == user:
+                rec.current_user_role = 'manager'
+            # 4. غير ذلك فهو موظف عادي
+            else:
+                rec.current_user_role = 'employee'
 
     # =========================================================
     # دالة الإرجاع للمسودة بشروط صارمة
