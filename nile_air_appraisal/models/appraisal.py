@@ -322,23 +322,30 @@ class AppraisalAppraisal(models.Model):
                 })
             rec.state = 'done'
 
-    @api.depends('state')  # ديبيند وهمي عشان يشتغل كل مرة
+    @api.depends('state', 'manager_id')
     def _compute_current_user_role(self):
         for rec in self:
             user = self.env.user
-            # 1. الأولوية الأولى للـ CEO (عشان يشوف زراير الـ CEO بس)
+
+            # 1. الأولوية القصوى للـ CEO (System Admin)
+            # الترتيب هنا هو الحل: لو المستخدم CEO، السيستم هيحط الرول 'co' ويخرج من الدالة فوراً
+            # وبالتالي لن يتم التحقق مما إذا كان مديراً أم لا
             if user.has_group('base.group_system'):
                 rec.current_user_role = 'co'
+
             # 2. الأولوية الثانية للـ HR
+            # يتم التحقق منها فقط إذا لم يكن المستخدم CEO
             elif user.has_group('hr.group_hr_manager'):
                 rec.current_user_role = 'hr'
+
             # 3. الأولوية الثالثة للمدير المباشر
+            # يتم التحقق منها فقط إذا لم يكن CEO ولم يكن HR
             elif rec.manager_id.user_id == user:
                 rec.current_user_role = 'manager'
+
             # 4. غير ذلك فهو موظف عادي
             else:
                 rec.current_user_role = 'employee'
-
     # =========================================================
     # دالة الإرجاع للمسودة بشروط صارمة
     # =========================================================
