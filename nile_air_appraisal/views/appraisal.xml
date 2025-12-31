@@ -57,10 +57,10 @@
                                 attrs="{'invisible': ['|', ('state', '!=', 'hr_approve'), ('current_user_role', '!=', 'hr')]}"
                         />
 
-                        <button name="set_to_draft" type="object" string="Reset (CEO)"
-                                groups="base.group_system"
-                                attrs="{'invisible': ['|', ('state', '=', 'done'), ('current_user_role', '!=', 'co')]}"
-                        />
+                       <button name="set_to_draft" type="object" string="Reset (CEO)"
+                         groups="base.group_system"
+                         attrs="{'invisible': ['|', ('state', '=', 'draft'), ('current_user_role', '!=', 'co')]}"
+                       />
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,hr_approve,done"/>
                 </header>
