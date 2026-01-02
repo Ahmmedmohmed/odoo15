@@ -67,8 +67,14 @@
                             <field name="driving_license_issue_date"/>
                             <field name="driving_license_end_date"/>
                         </group>
+
                         <group>
                             <field name="age"/>
+                            <field name="equipment_license_number"/>
+                            <field name="equipment_license_type"/>
+                            <field name="equipment_license_issue_date"/>
+                            <field name="equipment_license_end_date"/>
+
                         </group>
                     </group>
                 </xpath>

@@ -75,7 +75,11 @@ class HrEmployee(models.Model):
     driving_license_number = fields.Char(string="رقم رخصة القيادة")
     driving_license_issue_date = fields.Date(string="تاريخ إصدار الرخصة")
     driving_license_end_date = fields.Date(string="تاريخ انتهاء الرخصة")
-
+    # --- Equipment License Fields (الجديدة: رخصة المعدة) ---
+    equipment_license_number = fields.Char(string="رقم رخصة المعدة")
+    equipment_license_type = fields.Char(string="نوع رخصة المعدة")  # ممكن نخليه Selection لو الأنواع ثابتة
+    equipment_license_issue_date = fields.Date(string="تاريخ إصدار رخصة المعدة")
+    equipment_license_end_date = fields.Date(string="تاريخ انتهاء رخصة المعدة")
     # 6. قيمة الاشتراك التأميني الطبي
     medical_insurance_fee = fields.Float(string="قيمة الاشتراك الطبي")
 
