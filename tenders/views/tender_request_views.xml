@@ -6,66 +6,50 @@
             <form string="Tender Request">
                 <header>
                     <button string="Submit" type="object" name="action_submit" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                    <button string="Approve (CEO)" type="object" name="action_approve_ceo" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'submitted')]}"
-                            groups="tenders.group_tenders_manager"/>
+                            attrs="{'invisible': [('state', 'not in', ['draft', 'edit'])]}"/>
+                    <button string="Approve (CFO)" type="object" name="action_approve_cfo" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
                     <button string="Reject" type="object" name="action_reject" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'submitted')]}"
-                            groups="tenders.group_tenders_manager"/>
-
-                    <button string="A Word" type="object" name="action_a_word" class="oe_highlight"
-                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
-                            groups="tenders.group_tenders_manager"/>
-                    <button string="Not a Word" type="object" name="action_not_a_word" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
-                            groups="tenders.group_tenders_manager"/>
+                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
+                    <button string="Edit" type="object" name="action_edit" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'under_review')]}"/>
                     <button string="Cancel" type="object" name="action_cancel" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
-                            groups="tenders.group_tenders_manager"/>
-                    <button string="Apologize" type="object" name="action_apologize" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'approve_ceo')]}"
-                            groups="tenders.group_tenders_manager"/>
-
-                    <field name="state" widget="statusbar" force_save="1"/>
-
+                            attrs="{'invisible': [('state', 'in', ['approve_accountant', 'draft', 'reject', 'cancel'])]}"/>
+                    <button string="Pay" type="object" name="action_pay" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'approve_cfo')]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,under_review,approve_cfo,approve_accountant"
+                           statusbar_colors='{"draft":"blue","under_review":"orange","approve_cfo":"green","reject":"red","edit":"gray","approve_accountant":"green"}'/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_show_contract" type="object" icon="fa-book" class="oe_stat_button"
-                                attrs="{'invisible': [('state', '!=', 'a_word')]}" string="Contract">
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', '!=', 'approve_accountant')]}">
+                        <button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-bars">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payment</span>
+                            </div>
                         </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
                             <field name="customer"/>
-                            <field name="tender_purpose"/>
+                            <field name="project_name"/>
                             <field name="date"/>
                             <field name="tender_number"/>
                             <field name="tender_amount"/>
                         </group>
                         <group>
+                            <field name="payment_number"/>
                             <field name="bid_from"/>
                             <field name="bid_to"/>
+                            <field name="attachment" filename="attachment_name"/>
+                            <field name="payment_receipt" filename="payment_receipt_name" readonly="1"/>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': [('state', '!=', 'not_a_word')]}">
-                        <page name="Reason of not a word" string="Reason of not a word">
-                            <field name="reason_of_not_a_word"
-                                   attrs="{'invisible': [('state', '!=', 'not_a_word')]}"/>
-                        </page>
-                    </notebook>
-                    <notebook attrs="{'invisible': [('state', '!=', 'cancel')]}">
-                        <page name="Reason of cancel" string="Reason of cancel">
-                            <field name="reason_of_cancel" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
-                        </page>
-                    </notebook>
-                    <notebook attrs="{'invisible': [('state', '!=', 'apologize')]}">
-                        <page name="Reason of apologize" string="Reason of apologize">
-                            <field name="reason_of_apologize"
-                                   attrs="{'invisible': [('state', '!=', 'apologize')]}"/>
-                        </page>
-                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -83,12 +67,10 @@
             <tree string="Tender Requests">
                 <field name="code"/>
                 <field name="customer"/>
-                <field name="tender_purpose"/>
+                <field name="project_name"/>
                 <field name="date"/>
                 <field name="tender_number"/>
                 <field name="tender_amount"/>
-                <field name="bid_from"/>
-                <field name="bid_to"/>
                 <field name="state"/>
             </tree>
         </field>
