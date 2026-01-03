@@ -318,24 +318,29 @@ class AppraisalAppraisal(models.Model):
                 })
             rec.state = 'done'
 
-    @api.depends('manager_id', 'state')
+    @api.depends('state', 'manager_id')
     def _compute_current_user_role(self):
         for rec in self:
             user = self.env.user
 
-            # 1. الترتيب مهم جداً: الـ CEO أولاً
+            # 1. الـ CEO دائماً له الأولوية العليا
             if user.has_group('base.group_system'):
                 rec.current_user_role = 'co'
 
-            # 2. ثم الـ HR
+            # 2. اللوجيك الذكي: لو الحالة Draft وأنا المدير المباشر.. يبقى دوري "مدير"
+            # (حتى لو كنت HR، أنا محتاج دلوقتي أتصرف كمدير عشان أعمل Confirm)
+            elif rec.state == 'draft' and rec.manager_id.user_id == user:
+                rec.current_user_role = 'manager'
+
+            # 3. لو الحالة مش Draft (مثلاً بقت manager_approve) وأنا HR.. يبقى دوري "HR"
             elif user.has_group('hr.group_hr_manager'):
                 rec.current_user_role = 'hr'
 
-            # 3. ثم المدير المباشر
+            # 4. حالة احتياطية: لو أنا مدير بس ومش HR والحالة اتغيرت
             elif rec.manager_id.user_id == user:
                 rec.current_user_role = 'manager'
 
-            # 4. غير ذلك
+            # 5. غير ذلك
             else:
                 rec.current_user_role = 'employee'
     # =========================================================
