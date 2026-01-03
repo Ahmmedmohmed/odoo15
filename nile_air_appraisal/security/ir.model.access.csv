@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_nile_air_appraisal_appraisal_appraisal,appraisal appraisal,model_appraisal_appraisal,,1,1,1,1
+access_nile_air_appraisal_rate_scale,rate scale,model_rate_scale,,1,1,1,1
+access_nile_air_appraisal_trainings_courses,trainings courses,model_trainings_courses,,1,1,1,1
+access_nile_air_appraisal_rate_scale_line,rate scale line,model_rate_scale_line,,1,1,1,1
+access_nile_air_appraisal_courses_screen,courses screen,model_courses_screen,,1,1,1,1

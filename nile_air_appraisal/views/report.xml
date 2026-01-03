@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_appraisal_xlsx" model="ir.actions.report">
+            <field name="name">Appraisal Excel Report</field>
+            <field name="model">appraisal.appraisal</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">report.nile_air_appraisal.appraisal_xlsx_report</field>
+            <field name="report_file">report.nile_air_appraisal.appraisal_xlsx_report</field>
+            <field name="binding_model_id" ref="model_appraisal_appraisal"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

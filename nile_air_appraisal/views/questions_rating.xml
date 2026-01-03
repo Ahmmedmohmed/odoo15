@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+
+        <record id="tree_view_rate_scale" model="ir.ui.view">
+            <field name="name">name.rate.scale.tree</field>
+            <field name="model">rate.scale</field>
+            <field name="arch" type="xml">
+                <tree string="Questions">
+                    <field name="questions"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="form_view_rate_scale" model="ir.ui.view">
+            <field name="name">name.rate.scale</field>
+            <field name="model">rate.scale</field>
+            <field name="arch" type="xml">
+                <form string="Questions">
+                    <sheet>
+                        <group>
+                            <field name="questions"/>
+                            <field name="is_hr_question"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_view_questions_rating" model="ir.actions.act_window">
+            <field name="name">Questions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rate.scale</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK -->
+              </p>
+            </field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="menu_questions_rating" name="Questions" parent="appraisal_menu_form" action="action_view_questions_rating" sequence="2"/>
+    </data>
+</odoo>

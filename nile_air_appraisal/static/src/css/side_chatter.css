@@ -1,0 +1,41 @@
+@media (min-width: 1200px) {
+
+    /* لاحظ: غيرنا الاسم هنا لاسم الكلاس اللي حطيناه في XML */
+    .o_appraisal_custom_view {
+        display: grid !important;
+        grid-template-columns: 1fr 350px !important;
+        grid-template-rows: 100% !important;
+        overflow: hidden !important;
+        height: 100%;
+    }
+
+    /* 1. منطقة الفورم (الورقة) داخل كلاسنا المخصص */
+    .o_appraisal_custom_view .o_form_sheet_bg {
+        grid-column: 1 / 2 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        overflow-y: auto !important;
+        height: 100% !important;
+        border-bottom: none !important;
+    }
+
+    /* 2. منطقة الشاتر داخل كلاسنا المخصص */
+    .o_appraisal_custom_view .oe_chatter {
+        grid-column: 2 / 3 !important;
+        width: 100% !important;
+        min-width: unset !important;
+        max-width: unset !important;
+        height: 100% !important;
+        overflow-y: auto !important;
+        background: #fff;
+        border-left: 1px solid #dee2e6;
+        z-index: 99;
+    }
+
+    /* تعديل للعربي (RTL) */
+    html[dir="rtl"] .o_appraisal_custom_view .oe_chatter {
+        border-left: none;
+        border-right: 1px solid #dee2e6;
+    }
+}

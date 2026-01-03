@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+
+        <record id="object0" model="rate.scale">
+            <field name="questions">Work Quality: accuracy and detailed oriented in work while following standards and procedures.</field>
+        </record>
+        <record id="object1" model="rate.scale">
+            <field name="questions">Creativity and Innovative: ability to think in non-conventional way. Creativity in finding solutions and in exploring new options/ideas.</field>
+        </record>
+        <record id="object2" model="rate.scale">
+            <field name="questions">Job Knowledge and technical expertise: having proper relevant technical know-how and expertise. Commitment to continue learning and application. High ability of technical writing, reporting and data collection.</field>
+        </record>
+        <record id="object3" model="rate.scale">
+            <field name="questions">Productivity and Result Orientation: Identify key indicators and expected results. Focus on achieving objectives and overcoming difficulties.</field>
+        </record>
+        <record id="object4" model="rate.scale">
+            <field name="questions">Critical and Analytical Thinking: ability to spot problems and use analysis for better understanding of causes and effects. Map out issues in a logical and consistent manner.</field>
+        </record>
+<!--        <record id="object5" model="rate.scale">-->
+<!--            <field name="questions">AAAAAAAAAAAA</field>-->
+<!--        </record>-->
+        <record id="object6" model="rate.scale">
+            <field name="questions">Communication: Organizes and expresses ideas and information clearly, using appropriate and efficient methods of conveying the information whether it is verbal or written.</field>
+        </record>
+        <record id="object7" model="rate.scale">
+            <field name="questions">Communication: Organizes and expresses ideas and information clearly, using appropriate and efficient methods of conveying the information whether it is verbal or written.</field>
+        </record>
+        <record id="object8" model="rate.scale">
+            <field name="questions">Customer Orientation: ability to identify who are the customers and understand customer requirements and satisfaction needs.</field>
+        </record>
+        <record id="object9" model="rate.scale">
+            <field name="questions">Initiative: Works independently to solve problems. Looks for opportunities to take on more responsibility.</field>
+        </record>
+        <record id="object10" model="rate.scale">
+            <field name="questions">Flexibility: ability to work through uncertainty. Flexibility to change direction and adopt new approaches. Motivated with changes and challenges. Open and willing to learn.</field>
+        </record>
+        <record id="object11" model="rate.scale">
+            <field name="questions">Team Work:  Works on projects as part of a team, exchanging ideas and contributing skills that complement those of the other team members. Fulfills commitments to team members.</field>
+        </record>
+        <record id="object12" model="rate.scale">
+            <field name="questions">Decision Making: ability to choose/decide on one option/solution and justification of the course of action decided upon.</field>
+        </record>
+        <record id="object13" model="rate.scale">
+            <field name="questions">Strategic Planning and Time Management: set clear objectives and priorities. Ability to develop plan and allocate resources as well as manage time.</field>
+        </record>
+        <record id="object13" model="rate.scale">
+            <field name="questions">Managing People: willingness to lead the way for others .Coach, evaluate and develop others. Ability to delegate, empower and support staff.</field>
+        </record>
+        <record id="object15" model="rate.scale">
+            <field name="questions">Safety Awareness: focusing on what have done to help prevent wrong incidents in the workplace. It also helps to understand the importance of safety.</field>
+        </record>
+        <record id="object16" model="rate.scale">
+            <field name="questions">Follow-up Action: Track individual goals and workflow with concerned departments and customers.</field>
+        </record>
+        <record id="object17" model="rate.scale">
+            <field name="questions">Attendance and Punctuality: Occurrence, emergency leaves, sick leave, arriving and leave on time.</field>
+        </record>
+        <record id="object18" model="rate.scale">
+            <field name="questions">Attitude: has a very positive and friendly manner which makes working with him a very pleasant experience and enjoying his consistent professionalism and positive attitude. </field>
+        </record>
+        <record id="object20" model="rate.scale">
+            <field name="questions">Appearance and Work Attire: Proper grooming and a professional appearance are important to gain respect in the workplace. Have to stick to dress code policy.</field>
+        </record>
+        <record id="object21" model="rate.scale">
+            <field name="questions">Companies Policies and Rules: following all the rules and policies which issued through the authorized departments.</field>
+        </record>
+        <record id="object22" model="rate.scale">
+            <field name="questions">Dependability: the quality that lets people know that you will do what you said and will do it to the best of your ability.</field>
+        </record>
+
+
+    </data>
+</odoo>

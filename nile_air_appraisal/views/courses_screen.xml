@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+
+
+        <record id="form_view_courses_screen" model="ir.ui.view">
+            <field name="name">name.courses.screen.form</field>
+            <field name="model">courses.screen</field>
+            <field name="arch" type="xml">
+                <form string="Courses">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_courses_screes" model="ir.actions.act_window">
+            <field name="name">Course</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">courses.screen</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK -->
+              </p>
+            </field>
+        </record>
+
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="courses_screen_menu" name="Courses" parent="appraisal_menu_form" action="action_courses_screes"
+                  sequence="4"/>
+    </data>
+</odoo>
