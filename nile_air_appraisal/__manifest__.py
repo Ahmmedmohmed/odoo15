@@ -35,6 +35,7 @@
         'views/courses_screen.xml',
         'views/user.xml',
         'demo/demo.xml',
+        'views/report.xml',
 
     ],
 
