@@ -12,26 +12,23 @@ class HrEmployee(models.Model):
 
     @api.constrains('device_id')
     def check_unique_deviceid(self):
-        for employee in self:
-            if employee.device_id:
-                records = self.env['hr.employee'].search([
-                    ('device_id', '=', employee.device_id),
-                    ('id', '!=', employee.id)
-                ])
-                if records:
-                    raise ValidationError(_('Another Employee with same Biometric Device ID (%s) already exists.') % employee.device_id)
+        records = self.env['hr.employee'].search(
+            [('device_id', '=', self.device_id), ('device_id', '!=', False), ('id', '!=', self.id)])
+        if records:
+            raise UserError(_('Another User with same Biometric Device ID already exists.'))
 
 
 class ZkMachineAttendance(models.Model):
+    # تم تغيير اسم الكلاس في البايثون لتجنب التعارض، لكن اسم الجدول في أودو كما هو
     _name = 'zk.machine.attendance'
     _description = 'Zk Attendance Log'
     _order = 'punching_time desc'
 
     device_id = fields.Char(string='Biometric Device ID')
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    punching_time = fields.Datetime(string='Punching Time', required=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee')
+    punching_time = fields.Datetime(string='Punching Time')
     address_id = fields.Many2one('res.partner', string='Working Address')
-    is_sent = fields.Boolean('Is Processed?', default=False, help="If True, this record has been used to create HR Attendance.")
+    is_sent = fields.Boolean('Is Sent?', default=False)
 
 
 class ReportZkDevice(models.Model):
@@ -44,21 +41,21 @@ class ReportZkDevice(models.Model):
     punching_day = fields.Date(string='Date')
     address_id = fields.Many2one('res.partner', string='Working Address')
     punching_time = fields.Datetime(string='Punching Time')
-    is_sent = fields.Boolean('Is Processed?')
+    is_sent = fields.Boolean('Is Sent?', default=False)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'zk_report_daily_attendance')
         self.env.cr.execute("""
-            CREATE OR REPLACE VIEW zk_report_daily_attendance AS (
-                SELECT
+            create or replace view zk_report_daily_attendance as (
+                select
                     min(z.id) as id,
                     z.employee_id as name,
                     z.punching_time::date as punching_day,
                     z.address_id as address_id,
                     z.punching_time as punching_time,
                     z.is_sent as is_sent
-                FROM zk_machine_attendance z
-                JOIN hr_employee e ON (z.employee_id = e.id)
+                from zk_machine_attendance z
+                    join hr_employee e on (z.employee_id=e.id)
                 GROUP BY
                     z.employee_id,
                     z.punching_time::date,

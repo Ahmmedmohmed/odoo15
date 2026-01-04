@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import pytz
-import logging
 from datetime import datetime, timedelta
-from odoo import fields, models, api, _
+import logging
+from odoo import fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -18,12 +18,14 @@ class ZkMachine(models.Model):
     _name = 'zk.machine'
     _description = 'ZK Biometric Device'
 
-    name = fields.Char(string='Machine IP', required=True, help="IP Address, e.g. 192.168.1.201")
+    name = fields.Char(string='Machine IP', required=True)
     port_no = fields.Integer(string='Port No', required=True, default=4370)
     address_id = fields.Many2one('res.partner', string='Working Address')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
-    zk_timeout = fields.Integer(string='ZK Timeout', required=True, default=10)
-    zk_after_date = fields.Date(string='Attend Start Date', help='Ignore records before this date.')
+    # الحقول التي كانت ناقصة
+    zk_timeout = fields.Integer(string='ZK Timeout', required=True, default=120)
+    zk_after_date = fields.Datetime(string='Attend Start Date',
+                                    help='If provided, Attendance module will ignore records before this date.')
 
     def device_connect(self, zkobj):
         try:
@@ -75,13 +77,8 @@ class ZkMachine(models.Model):
                     conn.enable_device()
                     clear_data = zk.get_attendance()
                     if clear_data:
-                        # تحذير: السطر التالي يمسح البيانات من الجهاز نفسه
-                        # conn.clear_attendance()
-
-                        # مسح البيانات من الجدول الوسيط في أودو فقط
-                        self.env.cr.execute("""DELETE FROM zk_machine_attendance WHERE address_id = %s""",
-                                            (info.address_id.id,))
-
+                        # تحذير: هذا يمسح البيانات من أودو فقط (الجدول الوسيط)
+                        self.env.cr.execute("""DELETE FROM zk_machine_attendance""")
                         conn.disconnect()
                         return {
                             'type': 'ir.actions.client',
@@ -90,13 +87,12 @@ class ZkMachine(models.Model):
                                 'type': 'warning',
                                 'title': _("Clear Logs"),
                                 'message': _('Attendance Records Deleted from Odoo buffer.'),
-                                'sticky': False,
                             }
                         }
                     else:
                         raise UserError(_('Unable to clear Attendance log. Are you sure attendance log is not empty.'))
                 else:
-                    raise UserError(_('Unable to connect to Device. Use Test Connection button to verify.'))
+                    raise UserError(_('Unable to connect to Attendance Device.'))
             except Exception as e:
                 raise ValidationError(f'Error: {str(e)}')
 
@@ -108,12 +104,10 @@ class ZkMachine(models.Model):
     def download_attendance(self):
         _logger.info("++++++++++++ Cron Executed: Download Attendance ++++++++++++++++++++++")
         zk_attendance = self.env['zk.machine.attendance']
-
         for info in self:
             machine_ip = info.name
             zk_port = info.port_no
             timeout = info.zk_timeout
-
             try:
                 zk = ZK(machine_ip, port=zk_port, timeout=timeout, password=0, force_udp=False, ommit_ping=True)
             except NameError:
@@ -122,11 +116,8 @@ class ZkMachine(models.Model):
             conn = self.device_connect(zk)
             if conn:
                 try:
-                    # users = conn.get_users()
-                    # تم تعطيل جلب المستخدمين لتسريع العملية، الاعتماد على device_id في الموظف
                     attendance = conn.get_attendance()
-                except Exception as e:
-                    _logger.error(f"Error fetching data: {e}")
+                except:
                     attendance = False
 
                 if attendance:
@@ -135,28 +126,24 @@ class ZkMachine(models.Model):
                         if isinstance(atten_time, str):
                             atten_time = datetime.strptime(atten_time, '%Y-%m-%d %H:%M:%S')
 
-                        # تحديد تاريخ البداية
                         if not info.zk_after_date:
-                            # تاريخ قديم افتراضي
-                            tmp_zk_after_date = datetime.strptime('2020-01-01', "%Y-%m-%d").date()
+                            tmp_zk_after_date = datetime.strptime('2020-01-01', "%Y-%m-%d")
                         else:
                             tmp_zk_after_date = info.zk_after_date
 
-                        if atten_time.date() >= tmp_zk_after_date:
-                            # Timezone conversion
+                        if atten_time and atten_time > tmp_zk_after_date:
                             local_tz = pytz.timezone(self.env.user.partner_id.tz or 'UTC')
                             local_dt = local_tz.localize(atten_time, is_dst=None)
                             utc_dt = local_dt.astimezone(pytz.utc)
                             final_atten_time = utc_dt.replace(tzinfo=None)
 
-                            # البحث عن الموظف باستخدام device_id
-                            # user_id في المكتبة هو رقم الموظف في البصمة
+                            # البحث عن الموظف
                             employee = self.env['hr.employee'].sudo().search(
                                 [('device_id', '=', each.user_id)], limit=1)
 
                             if employee:
                                 duplicate = zk_attendance.sudo().search([
-                                    ('employee_id', '=', employee.id),
+                                    ('device_id', '=', each.user_id),
                                     ('punching_time', '=', final_atten_time)
                                 ], limit=1)
 
@@ -170,11 +157,10 @@ class ZkMachine(models.Model):
                                     })
 
                 conn.disconnect()
-                # تشغيل دالة الحساب بعد التحميل
                 self._calculate_check_in_out()
                 return True
             else:
-                _logger.warning("Could not connect to device during download.")
+                _logger.warning("Could not connect to device.")
 
     def _get_all_dates(self, start_date, end_date):
         all_dates = []
@@ -184,147 +170,104 @@ class ZkMachine(models.Model):
         return all_dates
 
     def _calculate_check_in_out(self):
-        # البحث عن السجلات التي لم يتم معالجتها
-        domain = [('is_sent', '=', False)]
-        if self.env.context.get('recalc'):
-            domain = []  # إعادة حساب الكل
+        # البحث عن البيانات غير المعالجة
+        if not self.env.context.get('recalc'):
+            zk_att_obj = self.env['zk.machine.attendance'].sudo().search([('is_sent', '!=', True)])
+        else:
+            zk_att_obj = self.env['zk.machine.attendance'].sudo().search([('is_sent', '=', True)])
 
-        zk_att_records = self.env['zk.machine.attendance'].sudo().search(domain)
+        if zk_att_obj:
+            att_obj = self.env['hr.attendance']
+            employee_ids = zk_att_obj.mapped('employee_id')
 
-        if not zk_att_records:
-            return
+            # تحديد تواريخ العمل
+            dates = zk_att_obj.mapped('punching_time')
+            if not dates: return
 
-        att_obj = self.env['hr.attendance']
-        employee_ids = zk_att_records.mapped('employee_id')
+            start_date = min(dates).date() - timedelta(days=1)
+            end_date = max(dates).date()
+            get_dates = self._get_all_dates(start_date, end_date)
 
-        # تحديد نطاق التاريخ للحساب
-        dates = zk_att_records.mapped('punching_time')
-        if not dates:
-            return
+            for employee in employee_ids:
+                if not employee.resource_calendar_id: continue
 
-        start_date = min(dates).date() - timedelta(days=1)
-        end_date = max(dates).date() + timedelta(days=1)
-        get_dates = self._get_all_dates(start_date, end_date)
+                calendar_lines = employee.resource_calendar_id.attendance_ids
+                tz = pytz.timezone(employee.tz or 'UTC')
 
-        for employee in employee_ids:
-            if not employee.resource_calendar_id:
-                continue
+                for d in get_dates:
+                    check_in_list = []
+                    check_out_list = []
+                    day_num = d.weekday()
 
-            calendar_lines = employee.resource_calendar_id.attendance_ids
-            tz = pytz.timezone(employee.tz or 'UTC')
+                    for line in calendar_lines:
+                        if line.day_period == 'lunch': continue
 
-            for d in get_dates:
-                check_in_list = []
-                check_out_list = []
-                day_num = d.weekday()
+                        is_today = False
+                        if line.dayofweek == str(day_num):
+                            is_today = True
 
-                # جلب مواعيد العمل من الجدول
-                for line in calendar_lines:
-                    if line.day_period == 'lunch':
-                        continue
+                        if is_today:
+                            check_in_list.append(line.hour_from)
+                            check_out_list.append(line.hour_to)
 
-                    is_today = False
-                    if line.dayofweek == str(day_num):
-                        is_today = True
+                    if not check_in_list: continue
 
-                    if is_today:
-                        check_in_list.append(line.hour_from)
-                        check_out_list.append(line.hour_to)
-
-                if not check_in_list or not check_out_list:
-                    continue
-
-                # التعامل مع خاصية اليومين (2Days)
-                is_2days = getattr(employee.resource_calendar_id, 'is_2days', False)
-
-                if is_2days:
-                    next_d = d + timedelta(days=1)
-                    planned_in = datetime.combine(d, datetime.min.time()) + timedelta(hours=min(check_in_list))
-                    planned_out = datetime.combine(next_d, datetime.min.time()) + timedelta(hours=max(check_out_list))
-                else:
-                    planned_in = datetime.combine(d, datetime.min.time()) + timedelta(hours=min(check_in_list))
-                    planned_out = datetime.combine(d, datetime.min.time()) + timedelta(hours=max(check_out_list))
-
-                # تحويل التواريخ المخططة إلى UTC للمقارنة
-                local_dt_in = tz.localize(planned_in, is_dst=None)
-                local_dt_out = tz.localize(planned_out, is_dst=None)
-
-                planned_check_in_utc = local_dt_in.astimezone(pytz.utc).replace(tzinfo=None)
-                planned_check_out_utc = local_dt_out.astimezone(pytz.utc).replace(tzinfo=None)
-
-                in_punches = []
-                out_punches = []
-
-                # فلترة البصمات لهذا الموظف
-                employee_punches = zk_att_records.filtered(lambda r: r.employee_id == employee)
-
-                for rec in employee_punches:
-                    punch_time = rec.punching_time
-
-                    # حساب الفرق بالساعات
-                    diff_in = (punch_time - planned_check_in_utc).total_seconds() / 3600
-                    diff_out = (punch_time - planned_check_out_utc).total_seconds() / 3600
-
-                    # المنطق: نافذة +/- 4 ساعات للدخول و +10 ساعات للخروج
-                    if -4.0 <= diff_in <= 4.0:
-                        in_punches.append(punch_time)
-                        rec.is_sent = True  # تم استخدامه
-                    elif -4.0 <= diff_out <= 10.0:
-                        out_punches.append(punch_time)
-                        rec.is_sent = True  # تم استخدامه
-
-                check_in = min(in_punches) if in_punches else False
-                check_out = max(out_punches) if out_punches else False
-
-                # إنشاء أو تحديث الحضور في HR Attendance
-                if check_in:
-                    # البحث عن سجل موجود يبدأ في نفس يوم العمل
-                    # نستخدم نطاق واسع قليلاً لتغطية الورديات المتداخلة
-                    search_start = planned_check_in_utc - timedelta(hours=4)
-                    search_end = planned_check_in_utc + timedelta(hours=18)
-
-                    domain = [
-                        ('employee_id', '=', employee.id),
-                        ('check_in', '>=', search_start),
-                        ('check_in', '<=', search_end)
-                    ]
-
-                    existing_att = att_obj.search(domain, limit=1)
-
-                    if existing_att:
-                        # تحديث الدخول إذا كان الوقت الجديد أبكر
-                        if check_in < existing_att.check_in:
-                            existing_att.write({'check_in': check_in})
-
-                        # تحديث الخروج
-                        if check_out:
-                            # لو مفيش خروج أو الخروج الجديد متأخر عن الموجود
-                            if not existing_att.check_out or check_out > existing_att.check_out:
-                                # شرط منطقي: الخروج لازم يكون بعد الدخول
-                                if check_out > existing_att.check_in:
-                                    existing_att.write({'check_out': check_out})
+                    # منطق الورديات
+                    is_2days = getattr(employee.resource_calendar_id, 'is_2days', False)
+                    if is_2days:
+                        next_d = d + timedelta(days=1)
+                        planned_in = datetime.combine(d, datetime.min.time()) + timedelta(hours=min(check_in_list))
+                        planned_out = datetime.combine(next_d, datetime.min.time()) + timedelta(
+                            hours=max(check_out_list))
                     else:
-                        # إنشاء سجل جديد
-                        create_vals = {
-                            'employee_id': employee.id,
-                            'check_in': check_in,
-                            'check_out': check_out if (check_out and check_out > check_in) else False
-                        }
-                        att_obj.create(create_vals)
+                        planned_in = datetime.combine(d, datetime.min.time()) + timedelta(hours=min(check_in_list))
+                        planned_out = datetime.combine(d, datetime.min.time()) + timedelta(hours=max(check_out_list))
 
+                    local_dt_in = tz.localize(planned_in, is_dst=None)
+                    local_dt_out = tz.localize(planned_out, is_dst=None)
+                    planned_check_in = local_dt_in.astimezone(pytz.utc).replace(tzinfo=None)
+                    planned_check_out = local_dt_out.astimezone(pytz.utc).replace(tzinfo=None)
 
-# ---------------------------------------------------------
-# جدول البيانات المؤقتة (Buffer Table)
-# هذا الكلاس ضروري جداً لكي يعمل الكود أعلاه
-# ---------------------------------------------------------
+                    in_list = []
+                    out_list = []
 
-class ZkMachineAttendance(models.Model):
-    _name = 'zk.machine.attendance'
-    _description = 'ZK Attendance Log (Buffer)'
-    _order = 'punching_time desc'
+                    for rec in zk_att_obj:
+                        if rec.employee_id == employee:
+                            diff_in = (rec.punching_time - planned_check_in).total_seconds() / 3600
+                            diff_out = (rec.punching_time - planned_check_out).total_seconds() / 3600
 
-    device_id = fields.Char(string='Biometric ID')
-    punching_time = fields.Datetime(string='Punching Time')
-    employee_id = fields.Many2one('hr.employee', string='Employee')
-    address_id = fields.Many2one('res.partner', string='Working Address')
-    is_sent = fields.Boolean(string='Processed', default=False, help="True if moved to HR Attendance")
+                            if -3.0 <= diff_in <= 3.0:
+                                in_list.append(rec.punching_time)
+                                rec.is_sent = True
+                            elif -3.0 <= diff_out <= 9.0:
+                                out_list.append(rec.punching_time)
+                                rec.is_sent = True
+
+                    check_in = min(in_list) if in_list else False
+                    check_out = max(out_list) if out_list else False
+
+                    # إنشاء الحضور
+                    if check_in:
+                        # البحث عن سجلات موجودة لتجنب التكرار
+                        search_domain = [('employee_id', '=', employee.id),
+                                         ('check_in', '>=', planned_check_in - timedelta(hours=4)),
+                                         ('check_in', '<=', planned_check_in + timedelta(hours=18))]
+                        existing = att_obj.search(search_domain, limit=1)
+
+                        if existing:
+                            if check_in < existing.check_in:
+                                existing.write({'check_in': check_in})
+                            if check_out:
+                                if not existing.check_out or check_out > existing.check_out:
+                                    existing.write({'check_out': check_out})
+                        else:
+                            att_obj.create({
+                                'employee_id': employee.id,
+                                'check_in': check_in,
+                                'check_out': check_out if (check_out and check_out > check_in) else False
+                            })
+
+            # تعليم السجلات كمرسلة
+            if not self.env.context.get('recalc'):
+                for rec in zk_att_obj:
+                    rec.is_sent = True

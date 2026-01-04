@@ -8,22 +8,18 @@
                 <header>
                     <button name="try_connection" type="object" string="Test Connection"
                             class="oe_highlight" icon="fa-plug"/>
-
-                    <button name="download_attendance" type="object" string="Download Data"
-                            class="btn-primary" icon="fa-download"/>
-
-                    <button name="download_attendance" type="object" string="Re-Download Data"
-                            context="{'recalc': True}" icon="fa-refresh"/>
-
-                    <button name="clear_attendance" type="object" string="Clear Data"
-                            confirm="Are you sure you want to delete all data from the device?"
-                            icon="fa-trash" class="btn-danger"/>
+                    <button name="download_attendance" type="object" string="Download Data" class="oe_highlight"
+                            context="{'recalc': False}" icon="fa-download " confirm="Are you sure?"/>
+                    <button name="download_attendance" type="object" string="Re-Download Data" context="{'recalc': True}"
+                            icon="fa-refresh " confirm="Are you sure?"/>
+                    <button name="clear_attendance" type="object" string="Clear Data" class="btn-danger"
+                            icon="fa-trash " confirm="Are you sure you want to delete data?"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="Machine IP (e.g. 192.168.1.201)"/>
+                            <field name="name" placeholder="Machine IP"/>
                         </h1>
                     </div>
                     <group>
@@ -31,7 +27,7 @@
                             <field name="port_no"/>
                             <field name="zk_timeout"/>
                             <field name="zk_after_date"/>
-                            <field name="address_id" string="Working Address"/>
+                            <field name="address_id"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -46,8 +42,8 @@
         <field name="name">zk.machine.list</field>
         <field name="model">zk.machine</field>
         <field name="arch" type="xml">
-            <tree string="Biometric Machines">
-                <field name="name" string="IP Address"/>
+            <tree string="Biometric Machine">
+                <field name="name"/>
                 <field name="port_no"/>
                 <field name="address_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -56,8 +52,9 @@
     </record>
 
     <record id="zk_machine_action" model="ir.actions.act_window">
-        <field name="name">Biometric Devices</field>
+        <field name="name">Attendances</field>
         <field name="res_model">zk.machine</field>
+        <field name="binding_view_types">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -74,6 +71,6 @@
 
     <menuitem id="zk_machine_menu" parent="hr_attendance.menu_hr_attendance_root" sequence="50"
               name="Biometric Manager"/>
-    <menuitem id="zk_machine_sub_menu" parent="zk_machine_menu" name="Devices" action="zk_machine_action"
+    <menuitem id="zk_machine_sub_menu" parent="zk_machine_menu" name="Device Configuration" action="zk_machine_action"
               sequence="1"/>
 </odoo>
