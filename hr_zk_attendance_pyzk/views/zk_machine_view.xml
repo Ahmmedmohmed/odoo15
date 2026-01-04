@@ -41,12 +41,12 @@
         <field name="name">zk.machine.list</field>
         <field name="model">zk.machine</field>
         <field name="arch" type="xml">
-            <list string="Biometric Machine">
+            <tree string="Biometric Machine">
                 <field name="name"/>
                 <field name="port_no"/>
                 <field name="address_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -54,7 +54,7 @@
         <field name="name">Attendances</field>
         <field name="res_model">zk.machine</field>
         <field name="binding_view_types">form</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
     <record id="hr_employee_inherit_form_view" model="ir.ui.view">
@@ -62,7 +62,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='hr_birth_group']" position="inside">
+            <xpath expr="//field[@name='identification_id']" position="after">
                 <field name="device_id"/>
             </xpath>
         </field>
@@ -73,4 +73,3 @@
     <menuitem id="zk_machine_sub_menu" parent="zk_machine_menu" name="Device Configuration" action="zk_machine_action"
               sequence="1"/>
 </odoo>
-
