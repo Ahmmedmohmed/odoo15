@@ -12,6 +12,9 @@
                     <button name="download_attendance" type="object" string="Download Data"
                             class="btn-primary" icon="fa-download"/>
 
+                    <button name="download_attendance" type="object" string="Re-Download Data"
+                            context="{'recalc': True}" icon="fa-refresh"/>
+
                     <button name="clear_attendance" type="object" string="Clear Data"
                             confirm="Are you sure you want to delete all data from the device?"
                             icon="fa-trash" class="btn-danger"/>
@@ -26,6 +29,8 @@
                     <group>
                         <group>
                             <field name="port_no"/>
+                            <field name="zk_timeout"/>
+                            <field name="zk_after_date"/>
                             <field name="address_id" string="Working Address"/>
                         </group>
                         <group>
