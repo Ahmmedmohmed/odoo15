@@ -62,7 +62,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='hr_birth_group']" position="inside">
+            <xpath expr="//field[@name='identification_id']" position="after">
                 <field name="device_id"/>
             </xpath>
         </field>
@@ -73,4 +73,3 @@
     <menuitem id="zk_machine_sub_menu" parent="zk_machine_menu" name="Device Configuration" action="zk_machine_action"
               sequence="1"/>
 </odoo>
-
