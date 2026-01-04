@@ -30,9 +30,10 @@ Egypt Taxes Python Code Rules:
     # for the full list
     'category': 'Human Resources',
     'license': 'LGPL-3',
-    'version': '15.0.1.0.0',
+    'version': '19.0.1.0.0',
+
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr_attendance', 'hr', 'resource', 'hr_holidays', 'hr_contract'],
+    'depends': ['base', 'hr_attendance', 'hr', 'resource', 'hr_holidays'],
 
     # always loaded
     'data': [

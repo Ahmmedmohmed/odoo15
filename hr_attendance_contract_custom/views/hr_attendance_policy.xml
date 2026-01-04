@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="hr_late_rule_form_view" model="ir.ui.view">
         <field name="name">hr.late.rule.form.view</field>
         <field name="model">hr.late.rule</field>
@@ -10,9 +9,7 @@
                     <group>
                         <field name="name"/>
                     </group>
-                    <group string="Late In Periods"/>
-                     <notebook>
-                     <page>
+                    <group string="Late In Periods">
                      <field name="line_ids">
                         <tree editable="bottom">
                             <field name="time" widget="float_time"/>
@@ -24,9 +21,7 @@
                             <field name="sixth"/>
                         </tree>
                     </field>
-                    </page>
-                     </notebook>
-                    
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -41,21 +36,18 @@
                     <group>
                         <field name="name"/>
                     </group>
-                    <group string="Difference Time Periods"/>
-                      <notebook>
-                         <page>
-                            <field name="line_ids">
-                                <tree editable="bottom">
-                                    <field name="time" widget="float_time"/>
-                                    <field name="first"/>
-                                    <field name="second"/>
-                                    <field name="third"/>
-                                    <field name="fourth"/>
-                                    <field name="fifth"/>
-                                </tree>
-                            </field>
-                          </page>
-                     </notebook>
+                    <group string="Difference Time Periods">
+                        <field name="line_ids">
+                            <tree editable="bottom">
+                                <field name="time" widget="float_time"/>
+                                <field name="first"/>
+                                <field name="second"/>
+                                <field name="third"/>
+                                <field name="fourth"/>
+                                <field name="fifth"/>
+                            </tree>
+                        </field>
+                    </group>
                 </sheet>
             </form>
         </field>

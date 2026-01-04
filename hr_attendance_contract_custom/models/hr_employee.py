@@ -75,7 +75,7 @@ class HREmployee(models.Model):
 
     def _absence_penalties(self, date_from, date_to, payslip_id):
         for rec in self:
-            contract_id = self.env['hr.contract'].search([('employee_id', '=', rec.id)])
+            contract_id = self.env['hr.contract'].search([('employee_id', '=', rec.id), ('state', '=', 'open')], limit=1)
             policy_id = contract_id[-1].att_policy_id if contract_id else False
             absence_rule_id = policy_id.absence_rule_id if policy_id else False
 
@@ -102,7 +102,7 @@ class HREmployee(models.Model):
 
     def _tamper_penalties(self, date_from, date_to):
         for rec in self:
-            contract_id = self.env['hr.contract'].search([('employee_id', '=', rec.id)])
+            contract_id = self.env['hr.version'].search([('employee_id', '=', rec.id)])
             policy_id = contract_id[-1].att_policy_id if contract_id else False
             tamper_rule_id = policy_id.tamper_rule_id if policy_id else False
 
