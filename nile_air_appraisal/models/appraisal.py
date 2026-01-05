@@ -23,9 +23,23 @@ class AppraisalAppraisal(models.Model):
     )
     last_performance_percentage = fields.Float(
         string="Last Performance",
+        compute="_compute_last_performance",  # دالة الحساب
+        store=True,  # عشان تتحفظ في الداتابيز
         readonly=True,
         help="Shows the total performance percentage of the last confirmed appraisal."
     )
+
+    @api.depends('employee_id')  # أو أي حقل بتعتمد عليه
+    def _compute_last_performance(self):
+        for rec in self:
+            # هنا اكتب كود يجيب آخر تقييم
+            # مثال افتراضي:
+            last_appraisal = self.env['hr.appraisal'].search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('state', '=', 'done')
+            ], order='date_close desc', limit=1)
+
+            rec.last_performance_percentage = last_appraisal.total_score if last_appraisal else 0.0
     employee_barcode = fields.Char(string="Employee ID", required=False, )
     title = fields.Char(string="Title", required=False, )
     hiring_date = fields.Date(string="Hiring Date", required=False, )
