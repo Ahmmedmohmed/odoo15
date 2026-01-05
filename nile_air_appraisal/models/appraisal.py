@@ -40,7 +40,7 @@ class AppraisalAppraisal(models.Model):
             ], order='id desc', limit=1)
 
             # تأكد أيضاً أن حقل النتيجة اسمه total_score أو غيره حسب الموديول اللي شغال عليه
-            rec.last_performance_percentage = last_appraisal.otal_performance_percentage if last_appraisal else 0.0
+            rec.last_performance_percentage = last_appraisal.total_performance_percentage if last_appraisal else 0.0
     employee_barcode = fields.Char(string="Employee ID", required=False, )
     title = fields.Char(string="Title", required=False, )
     hiring_date = fields.Date(string="Hiring Date", required=False, )
