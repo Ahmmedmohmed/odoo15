@@ -34,7 +34,7 @@ class AppraisalAppraisal(models.Model):
         for rec in self:
             # هنا اكتب كود يجيب آخر تقييم
             # مثال افتراضي:
-            last_appraisal = self.env['hr.appraisal'].search([
+            last_appraisal = self.env['appraisal.appraisal'].search([
                 ('employee_id', '=', rec.employee_id.id),
                 ('state', '=', 'done')
             ], order='date_close desc', limit=1)
