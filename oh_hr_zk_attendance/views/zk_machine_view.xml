@@ -6,24 +6,31 @@
         <field name="arch" type="xml">
             <form string="Biometric Device">
                 <header>
-                    <button name="clear_attendance" type="object" string="Clear Data" class="oe_highlight"
-                                icon="fa-remove " confirm="Are you sure you want to do this?"/>
-                    <button name="download_attendance" type="object" string="Download Data" class="oe_highlight"
-                            icon="fa-download " confirm="Are you sure you want to do this?" />
+                    <button name="try_connection" type="object" string="Test Connection"
+                            class="oe_highlight" icon="fa-plug"/>
+
+                    <button name="clear_attendance" type="object" string="Clear Log"
+                            class="btn-danger" icon="fa-trash"
+                            confirm="Delete attendance log from Odoo buffer?"/>
+
+                    <button name="download_attendance" type="object" string="Download Data"
+                            class="btn-primary" icon="fa-download"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" />
+                        <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="Machine IP"/>
+                            <field name="name" placeholder="Machine IP (192.168.1.201)"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="port_no"/>
-                            <field name="address_id"/>
+                            <field name="zk_timeout"/>
+                            <field name="zk_after_date"/>
                         </group>
                         <group>
+                            <field name="address_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -65,4 +72,3 @@
     <menuitem id="zk_machine_menu" parent="hr_attendance.menu_hr_attendance_root" sequence="50" name="Biometric Manager" />
     <menuitem id="zk_machine_sub_menu" parent="zk_machine_menu"  name="Device Configuration" action="zk_machine_action" sequence="1"/>
 </odoo>
-
