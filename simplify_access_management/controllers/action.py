@@ -71,7 +71,7 @@ class Home(Home):
 
         # تنظيف الكاش لضمان تطبيق الصلاحيات الجديدة فوراً
         if request.session.uid:
-            request.env.registry.clear_all_caches()
+            request.env.registry.clear_caches()
 
         # التحقق من وجود مستخدم مسجل
         if request.session.uid:
