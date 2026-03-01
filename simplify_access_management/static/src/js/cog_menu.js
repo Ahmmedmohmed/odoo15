@@ -1,79 +1,46 @@
 /** @odoo-module **/
 
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { patch } from "@web/core/utils/patch";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
-import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+// في أودو 15، useState موجودة داخل owl مباشرة
+const { useState } = owl;
 
-import { onWillStart, useState } from "@odoo/owl";
-const cogMenuRegistry = registry.category("cogMenu");
 
-patch(CogMenu.prototype, {
-    setup() { 
-        super.setup(); 
-        var self = this;
-        this.access = useState({removeSpreadsheet: false}); 
-        if(this?.env?.config?.actionType == "ir.actions.act_window") {
-            this.orm.call(
-                "access.management",
-                "is_spread_sheet_available",
-                [1, this?.env?.config?.actionType, this?.env?.config?.actionId]
-            ).then(async function(res){
-                self.access.removeSpreadsheet = res;
-                self.registryItems = await self._registryItems();
-            }); 
-        } 
-    },
-    async _registryItems() {
-        const items = [];
-        for (const item of cogMenuRegistry.getAll()) {
-            if(item?.Component?.name === "SpreadsheetCogMenu" && this.access.removeSpreadsheet)
-                continue;
-            if ("isDisplayed" in item ? await item.isDisplayed(this.env) : true) {
-                items.push({
-                    Component: item.Component,
-                    groupNumber: item.groupNumber,
-                    key: item.Component.name,
-                });
-            }
-        }
-        return items;
-    }
-})/** @odoo-module **/
-
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
-const { patch } = require('web.utils');
-const { useState, onWillStart } = owl.hooks; // في 15 الـ hooks موجودة داخل owl.hooks
 
 patch(CogMenu.prototype, "simplify_access_management.CogMenuPatch", {
+    /**
+     * @override
+     */
     setup() {
         this._super(...arguments);
-        const self = this;
-        // تعريف الحالة لمراقبة الصلاحية
+        // استخدام خدمة rpc الرسمية في أودو 15
+        this.rpc = useService("rpc");
         this.access = useState({ removeSpreadsheet: false });
 
-        // التحقق من نوع الإجراء الحالي
-        if (this.env.config && this.env.config.actionType === "ir.actions.act_window") {
-            // استخدام rpc بدلاً من orm.call المباشر لضمان التوافق مع 15
-            this.env.services.rpc({
+        const config = this.env.config || {};
+        if (config.actionType === "ir.actions.act_window") {
+            // نتحقق من السيرفر إذا كان يجب إخفاء Spreadsheet
+            this.rpc({
                 model: "access.management",
                 method: "is_spread_sheet_available",
-                args: [1, this.env.config.actionType, this.env.config.actionId],
-            }).then(function (res) {
-                self.access.removeSpreadsheet = res;
-                // في أودو 15 قد تحتاج لإعادة تحميل العناصر أو تحديث الحالة لإعادة الرسم
+                args: [config.actionType, config.actionId],
+            }).then((res) => {
+                this.access.removeSpreadsheet = res;
             });
         }
     },
 
-    // إعادة تعريف جلب العناصر من الـ Registry مع الفلترة
-    _registryItems() {
+    /**
+     * @override
+     * في أودو 15، CogMenu بيعتمد على getter اسمه items لجلب العناصر
+     */
+    get items() {
         const items = this._super(...arguments);
-        // فلترة العناصر: إذا كان العنصر هو Spreadsheet ومطلوب حذفه، نقوم بإزالته من المصفوفة
-        return items.filter(item => {
-            if (item.Component && item.Component.name === "SpreadsheetCogMenu" && this.access.removeSpreadsheet) {
-                return false;
-            }
-            return true;
-        });
+        if (this.access.removeSpreadsheet) {
+            // تصفية العناصر لحذف مكون SpreadsheetCogMenu إذا لم يكن مسموحاً به
+            return items.filter(item => item.Component.name !== "SpreadsheetCogMenu");
+        }
+        return items;
     }
 });
