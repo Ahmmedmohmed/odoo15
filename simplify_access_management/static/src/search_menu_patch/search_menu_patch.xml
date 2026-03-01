@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="simplify_access_management.SearchBarMenu" t-inherit="web.SearchBarMenu" t-inherit-mode="extension">
+
+        <xpath expr="//div[hasclass('o_add_custom_filter')]" position="replace">
+            <t t-if="!access.removeCustomFilter">
+                <div class="o_menu_item o_add_custom_filter"
+                     t-on-click="onAddCustomFilterClick"
+                     role="menuitem"
+                     tabindex="0">
+                    Add Custom Filter
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_add_custom_group')]" position="replace">
+            <t t-if="!access.removeCustomGroup">
+                <div class="o_menu_item o_add_custom_group"
+                     t-on-click="onAddCustomGroupClick"
+                     role="menuitem"
+                     tabindex="0">
+                    Add Custom Group
+                </div>
+            </t>
+        </xpath>
+
+    </t>
+</templates>
