@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_web_domain_widget._DomainSelector" owl="1">
+        <div class="o_domain_node o_domain_tree o_domain_selector w-100" aria-atomic="true" t-att-class="className" t-ref="root">
+            <t t-if="tree">
+                <t t-set="node" t-value="tree"/>
+                <div class="o_domain_selector_header d-flex justify-content-between">
+                    <div>
+                        <t t-if="node.children.length === 0">
+                            <span>Match <strong>all records</strong></span>
+                        </t>
+                        <t t-else="">
+                            <span>Match </span>
+                            <t t-call="advanced_web_domain_widget._DomainSelector.connector.dropdown" />
+                            <span> of the following rules:</span>
+                        </t>
+                    </div>
+                    <div class="custom-control custom-switch" t-if="showArchivedCheckbox">
+                        <input type="checkbox" class="custom-control-input" t-att-id="'archived_' + node_index"
+                               t-att-checked="includeArchived" t-on-change="toggleIncludeArchived"
+                               t-att-disabled="props.readonly"/>
+                        <label class="custom-control-label" t-att-for="'archived_' + node_index">Include archived</label>
+                    </div>
+                </div>
+                <t t-if="node.children.length" t-call="advanced_web_domain_widget._DomainSelector.connector.children" />
+                <t t-if="!props.readonly">
+                    <button class="btn btn-link btn-sm ml-1" t-on-click="() => this.insertRootLeaf(node)">
+                        <i class="fa fa-plus-circle"/> New Rule
+                    </button>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="alert alert-warning">
+                    This domain is not supported.
+                    <t t-if="!props.readonly">
+                        <button class="btn btn-sm btn-primary ml-1" t-on-click="() => this.resetDomain()">Reset domain</button>
+                    </t>
+                </div>
+            </t>
+            <t t-if="props.isDebugMode and (!tree or !props.readonly)">
+                <div class="o_domain_debug_container mt-2">
+                    <span class="small text-muted"># Code editor</span>
+                    <textarea class="o_domain_debug_input form-control form-control-sm"
+                              t-att-readonly="props.readonly" spellcheck="false"
+                              t-att-value="props.domain"
+                              t-on-change="(ev) => this.onDebugValueChange(ev.target.value)" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="advanced_web_domain_widget._DomainSelector.connector.dropdown" owl="1">
+        <t t-set="title">
+            <t t-if="node.value === '|'">
+                <t t-if="node.negate">none</t>
+                <t t-else="">any</t>
+            </t>
+            <t t-else="">
+                <t t-if="node.negate">not all</t>
+                <t t-else="">all</t>
+            </t>
+        </t>
+        <t t-if="props.readonly">
+            <strong class="text-primary"><t t-esc="title"/></strong>
+        </t>
+        <t t-else="">
+            <select class="o_domain_connector_select custom-select custom-select-sm d-inline-block w-auto"
+                    t-on-change="(ev) => this.updateBranchConnector(node, ev.target.value)">
+                <option value="&amp;" t-att-selected="node.value === '&amp;'">all</option>
+                <option value="|" t-att-selected="node.value === '|'">any</option>
+            </select>
+        </t>
+    </t>
+
+    <t t-name="advanced_web_domain_widget._DomainSelector.controls" owl="1">
+        <div class="o_domain_node_control_panel btn-group" role="group">
+            <button class="btn btn-sm btn-light o_domain_add_node_button" title="Add New Rule"
+                    t-on-click="() => this.insertLeaf(parent, node)">
+                <i class="fa fa-plus text-success"/>
+            </button>
+            <button class="btn btn-sm btn-light o_domain_add_node_button" title="Add branch"
+                    t-on-click="() => this.insertBranch(parent, node)">
+                <i class="fa fa-sitemap text-primary"/>
+            </button>
+            <button class="btn btn-sm btn-light text-danger o_domain_delete_node_button" title="Delete node"
+                    t-on-click="() => this.delete(parent, node)">
+                <i class="fa fa-trash"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="advanced_web_domain_widget._DomainSelector.connector.children" owl="1">
+        <div class="o_domain_node_children_container ml-4 border-left">
+            <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
+                <t t-call="advanced_web_domain_widget._DomainSelector.{{ child.type }}">
+                    <t t-set="parent" t-value="node" />
+                    <t t-set="node" t-value="child" />
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="advanced_web_domain_widget._DomainSelector.condition" owl="1">
+        <div class="o_domain_node o_domain_leaf o_domain_selector_row d-flex align-items-center mb-1">
+            <t t-if="!props.readonly">
+                <t t-call="advanced_web_domain_widget._DomainSelector.controls" />
+            </t>
+            <div class="o_domain_leaf_edition d-flex align-items-center ml-2 flex-grow-1">
+                <t t-if="props.readonly">
+                     <t t-call="advanced_web_domain_widget._DomainSelector.condition:readonly" />
+                </t>
+                <t t-else="">
+                     <t t-call="advanced_web_domain_widget._DomainSelector.condition:editable" />
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="advanced_web_domain_widget._DomainSelector.condition:editable" owl="1">
+        <PathEditor path="node.path" resModel="props.resModel" readonly="false"
+                    update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)"
+                    isDebugMode="props.isDebugMode" />
+
+        <select class="o_domain_leaf_operator_select custom-select custom-select-sm mx-1 w-auto"
+                t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
+            <t t-foreach="getOperatorsInfo(node)" t-as="operatorInfo" t-key="operatorInfo.key">
+                <option t-att-value="operatorInfo.key"
+                        t-att-selected="node.operator === operatorInfo.operator and node.negate === operatorInfo.negate"
+                        t-esc="operatorInfo.label" />
+            </t>
+        </select>
+
+        <t t-if="getOperatorInfo(node).valueCount !== 0">
+            <div class="o_ds_value_cell flex-grow-1">
+                <Editor info="getEditorInfo(node)" value="node.value"
+                        update="(value) => this.updateLeafValue(node, value)"
+                        fieldDef="getFieldDef(node.path)"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

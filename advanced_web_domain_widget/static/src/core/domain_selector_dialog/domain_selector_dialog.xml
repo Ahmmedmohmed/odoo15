@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_web_domain_widget.DomainSelectorDialog" owl="1">
+        <Dialog title="dialogTitle" size="'medium'">
+            <div class="o_domain_selector_dialog_content">
+                <div t-if="props.text" class="mb-3 text-muted">
+                    <t t-out="props.text"/>
+                </div>
+
+                <DomainSelector t-props="domainSelectorProps" />
+            </div>
+
+            <t t-set="footer">
+                <t t-if="props.readonly">
+                    <button class="btn btn-secondary" t-on-click="() => props.close()">
+                        Close
+                    </button>
+                </t>
+                <t t-else="">
+                    <button class="btn btn-primary"
+                            t-att-disabled="disabled"
+                            t-on-click="onConfirm"
+                            t-ref="confirm">
+                        <t t-esc="confirmButtonText"/>
+                    </button>
+                    <button class="btn btn-secondary ml-1" t-on-click="onDiscard">
+                        <t t-esc="discardButtonText"/>
+                    </button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

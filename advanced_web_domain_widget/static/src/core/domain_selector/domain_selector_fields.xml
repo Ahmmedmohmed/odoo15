@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.Editor" owl="1">
+        <t t-if="props.info.isSupported(props.value)">
+            <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
+        </t>
+        <t t-else="">
+            <div class="o_ds_expr_value o_input d-flex align-items-center p-0">
+                <span class="ml-2" t-esc="stringifiedValue" />
+                <i role="alert" class="ml-auto fa fa-exclamation-triangle text-warning" title="Value not supported" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.update(props.info.defaultValue())">
+                    <i class="fa fa-times" />
+                </button>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.PathEditor" owl="1">
+        <t t-if="isSupportedPath">
+            <t t-component="component"
+               isDebugMode="props.isDebugMode"
+               readonly="props.readonly"
+               resModel="props.resModel"
+               path="props.path"
+               update="props.update"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex align-items-center p-0 border rounded bg-light">
+                <span class="ml-2 text-truncate" t-esc="stringifiedPath" />
+                <i role="alert" class="ml-auto fa fa-exclamation-triangle text-warning" title="Path not supported" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="onClear">
+                    <i class="fa fa-times" />
+                </button>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.Input" owl="1">
+        <input type="text"
+               class="o_input o_domain_leaf_value_input form-control form-control-sm"
+               t-att-value="props.value"
+               t-on-change="(ev) => props.update(ev.target.value)" />
+    </t>
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.Select" owl="1">
+        <select class="o_input o_domain_leaf_value_input custom-select custom-select-sm"
+                t-on-change="(ev) => props.update(deserialize(ev.target.value))">
+            <t t-foreach="props.options" t-as="option" t-key="option[0]">
+                <option t-att-value="serialize(option[0])"
+                        t-att-selected="option[0] === props.value"
+                        t-esc="option[1]" />
+            </t>
+        </select>
+    </t>
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.TagInput" owl="1">
+        <div class="d-flex flex-wrap border rounded p-1 bg-white">
+            <TagsList tags="tags"/>
+            <input class="o_input o_domain_leaf_value_input flex-grow-1 border-0"
+                   style="outline: none; min-width: 100px;"
+                   t-on-change="onChange"
+                   placeholder="..." />
+        </div>
+    </t>
+
+    <t t-name="advanced_web_domain_widget.DomainSelector.Range" owl="1">
+        <div class="d-flex align-items-center w-100">
+            <div class="flex-grow-1">
+                <Editor info="props.editorInfo" value="getValue(0)" update="getUpdater(0)" fieldDef="props.fieldDef" />
+            </div>
+            <i class="fa fa-long-arrow-right mx-2 text-muted" aria-label="Arrow icon" title="Arrow" />
+            <div class="flex-grow-1">
+                <Editor info="props.editorInfo" value="getValue(1)" update="getUpdater(1)" fieldDef="props.fieldDef" />
+            </div>
+        </div>
+    </t>
+
+</templates>

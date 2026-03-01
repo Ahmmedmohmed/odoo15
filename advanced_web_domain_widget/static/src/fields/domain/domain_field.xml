@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_web_domain_widget.DomainField" owl="1">
+        <div t-att-class="{ o_inline_mode: !props.editInDialog }">
+            <t t-set="resModel" t-value="getResModel()"/>
+            <t t-if="resModel">
+                <t t-if="props.isFoldable and state.folded">
+                    <div class="o_field_domain_folded d-flex align-items-center" t-on-click="() => state.folded = false">
+                        <i data-tooltip="Modify filter" class="fa fa-lg fa-caret-right pr-2 cursor-pointer"/>
+                        <div class="o_searchview d-flex flex-wrap align-items-center flex-grow-1">
+                            <t t-if="!state.facets.length">
+                                <span class="text-muted italic">Match <strong>all records</strong></span>
+                                <t t-if="!props.readonly">
+                                    <button class="btn btn-sm btn-primary ml-2" t-on-click.stop="() => this.addCondition()">
+                                        <i class="fa fa-plus"/> Add condition
+                                    </button>
+                                </t>
+                            </t>
+
+                            <t t-foreach="state.facets" t-as="facet" t-key="facet_index">
+                                <div class="o_searchview_facet d-inline-flex align-items-stretch text-nowrap mr-1 mb-1 bg-200 border rounded" role="listitem">
+                                    <div class="o_searchview_facet_label btn-primary px-2 rounded-left d-flex align-items-center">
+                                        <i class="small fa fa-filter"/>
+                                    </div>
+                                    <div class="o_facet_values px-2 d-flex align-items-center">
+                                        <small class="o_facet_value" t-esc="facet"/>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <t t-if="state.isValid">
+                                <button class="btn btn-sm btn-link o_domain_show_selection_button py-0" t-on-click.stop="onButtonClick">
+                                    <t t-esc="state.recordCount" /> record(s)
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="o_field_domain_expanded">
+                        <div class="d-flex align-items-start">
+                            <a t-if="props.isFoldable" t-on-click="fold" class="cursor-pointer">
+                                <i class="fa fa-lg fa-caret-down pr-2 text-primary"></i>
+                            </a>
+                            <DomainSelector
+                                resModel="resModel"
+                                domain="getDomain()"
+                                readonly="props.readonly or props.editInDialog"
+                                update.bind="update"
+                                isDebugMode="!!env.debug"
+                                className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+                            />
+                        </div>
+
+                        <div class="o_field_domain_panel d-flex align-items-center mt-1 border-top pt-1">
+                            <i class="fa fa-arrow-right text-muted small" role="img" />
+
+                            <t t-if="state.isValid === null and state.recordCount === null">
+                                <i class="fa fa-circle-o-notch fa-spin ml-2 text-muted" title="Loading..." />
+                            </t>
+                            <t t-else="">
+                                <t t-if="state.isValid">
+                                    <button class="btn btn-sm btn-link o_domain_show_selection_button p-0 ml-2" type="button" t-on-click.stop="onButtonClick">
+                                        <t t-esc="state.recordCount" /> record(s)
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger ml-2" role="alert">
+                                        <i class="fa fa-exclamation-triangle" /> Invalid domain
+                                    </span>
+                                </t>
+
+                                <t t-if="!!env.debug and !props.readonly">
+                                    <button class="btn btn-sm btn-icon fa fa-refresh text-muted ml-2"
+                                            title="Refresh Count"
+                                            t-on-click="() => this.checkProps()" />
+                                </t>
+
+                                <t t-if="props.editInDialog and !props.readonly">
+                                    <button class="btn btn-sm btn-outline-primary ml-auto"
+                                            t-on-click.prevent="onEditDialogBtnClick">
+                                        <i class="fa fa-external-link"/> Edit Domain
+                                    </button>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="alert alert-info p-1 mb-0">Select a model to add a filter.</div>
+            </t>
+        </div>
+    </t>
+
+</templates>
