@@ -35,7 +35,7 @@
             "advanced_web_domain_widget/static/src/dateSelectionBits/dateSelectionBits.js",
             "advanced_web_domain_widget/static/src/fields/domain/domain_field.js",
             # إضافة ملفات الـ SCSS الخاصة بالـ Domain Selector
-            "advanced_web_domain_widget/static/src/scss/domain_selector.scss",
+            # "advanced_web_domain_widget/static/src/scss/domain_selector.scss",
         ],
         # تعريف الـ QWeb Templates (مهم جداً في أودو 15)
         "web.assets_qweb": [
