@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="att_data_change_from_view" model="ir.ui.view">
+        <field name="name">attendance.sheet.line.change.form</field>
+        <field name="model">attendance.sheet.line.change</field>
+        <field name="arch" type="xml">
+            <form string="Change Attendance Data">
+                <sheet>
+                    <group>
+                        <group string="Adjusted Hours">
+                            <field name="overtime" widget="float_time"/>
+                            <field name="late_in" widget="float_time"/>
+                            <field name="diff_time" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group string="Reason for Change">
+                        <field name="note" nolabel="1" placeholder="Please provide a reason for manual adjustment..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="change_att_data" string="Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_att_data_change" model="ir.actions.act_window">
+        <field name="name">Manual Attendance Correction</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attendance.sheet.line.change</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="att_data_change_from_view"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

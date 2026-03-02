@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="employee_ramadan" model="hr.employee">
+            <field name="name">Ramadan Khalil</field>
+            <field name="department_id" ref="hr.dep_rd"/>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="work_location">Building 1, Second Floor</field>
+            <field name="parent_id" ref="hr.employee_al"/>
+            <field name="work_phone">+201143267087</field>
+            <field name="work_email">rkhalil1990@gmail.com</field>
+            <field name="image_1920" type="base64" file="rm_hr_attendance_sheet/static/img/rkh.jpg"/>
+            <field name="resource_calendar_id" ref="resource_calendar_attendance_sheet"/>
+        </record>
+
+        <record id="hr_att_sheet_att1" model="hr.attendance">
+            <field name="employee_id" ref="employee_ramadan"/>
+            <field name="check_in" eval="time.strftime('%Y-%m-01 06:10:00')"/>
+            <field name="check_out" eval="time.strftime('%Y-%m-01 14:15:00')"/>
+        </record>
+
+        <record id="hr_att_sheet_att2" model="hr.attendance">
+            <field name="employee_id" ref="employee_ramadan"/>
+            <field name="check_in" eval="time.strftime('%Y-%m-02 05:50:00')"/>
+            <field name="check_out" eval="time.strftime('%Y-%m-02 14:05:00')"/>
+        </record>
+
+        <record id="hr_public_holiday1" model="hr.public.holiday">
+            <field name="name">Public Holiday</field>
+            <field name="date_from" eval="time.strftime('%Y-%m-28')"/>
+            <field name="date_to" eval="time.strftime('%Y-%m-28')"/>
+            <field name="state">active</field>
+        </record>
+
+        <record id="att_policy_late_line_1" model="hr.late.rule.line">
+            <field name="type">rate</field>
+            <field name="time">0.25</field>
+            <field name="rate">1</field>
+        </record>
+
+        <record id="att_policy_late_in" model="hr.late.rule">
+            <field name="name">Late In Rule</field>
+            <field name="line_ids" eval="[(6, 0, [ref('att_policy_late_line_1')])]"/>
+        </record>
+
+        <record id="attendance_sheet_policy" model="hr.attendance.policy">
+            <field name="name">Attendance Sheet Policy</field>
+            <field name="late_rule_id" ref="att_policy_late_in"/>
+            </record>
+
+        <record id="hr_contract_Ramadan_khalil" model="hr.contract">
+            <field name="name">Contract For Ramadan Khalil</field>
+            <field name="employee_id" ref="employee_ramadan"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="wage">6000.0</field>
+            <field name="structure_type_id" ref="rm_hr_attendance_sheet.structure_type_attendance_sheet"/>
+            <field name="att_policy_id" ref="attendance_sheet_policy"/>
+            <field name="resource_calendar_id" ref="resource_calendar_attendance_sheet"/>
+        </record>
+    </data>
+</odoo>

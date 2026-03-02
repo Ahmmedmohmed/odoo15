@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_form_inherit_attendance" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='structure_type_id']" position="after">
+                <group string="Attendance Sheet Settings" colspan="2">
+                    <field name="att_policy_id" attrs="{'required': [('state', '=', 'open')]}"/>
+                    <field name="auto_attendance_sheet"/>
+                    <field name="attendance_sheet_based"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
