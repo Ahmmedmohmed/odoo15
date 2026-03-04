@@ -21,7 +21,7 @@
     'depends': [
         'base',
         'hr',
-        'hr_payroll',  # يعتمد على موديول الرواتب لنسخة 15
+        'om_hr_payroll',  # يعتمد على موديول الرواتب لنسخة 15
         'hr_holidays',
         'hr_attendance',
         'resource',  # إضافة موديول الموارد لضمان عمل التقويمات
