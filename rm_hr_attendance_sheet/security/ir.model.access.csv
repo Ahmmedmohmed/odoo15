@@ -11,4 +11,16 @@ access_hr_overtime_rule_user,access.hr.overtime.rule.user,model_hr_overtime_rule
 access_hr_overtime_rule_manager,access.hr.overtime.rule.manager,model_hr_overtime_rule,group_attendance_sheet_manager,1,1,1,1
 access_hr_attendance_policy_manager,access.hr.attendance.policy.manager,model_hr_attendance_policy,group_attendance_sheet_manager,1,1,1,1
 access_hr_attendance_policy_user,access.hr.attendance.policy.user,model_hr_attendance_policy,group_attendance_sheet_user,1,0,0,0
+access_hr_late_rule_manager,access.hr.late.rule.manager,model_hr_late_rule,group_attendance_sheet_manager,1,1,1,1
+access_hr_late_rule_user,access.hr.late.rule.user,model_hr_late_rule,group_attendance_sheet_user,1,0,0,0
+access_hr_late_rule_line_manager,access.hr.late.rule.line.manager,model_hr_late_rule_line,group_attendance_sheet_manager,1,1,1,1
+access_hr_late_rule_line_user,access.hr.late.rule.line.user,model_hr_late_rule_line,group_attendance_sheet_user,1,0,0,0
+access_hr_absence_rule_manager,access.hr.absence.rule.manager,model_hr_absence_rule,group_attendance_sheet_manager,1,1,1,1
+access_hr_absence_rule_user,access.hr.absence.rule.user,model_hr_absence_rule,group_attendance_sheet_user,1,0,0,0
+access_hr_absence_rule_line_manager,access.hr.absence.rule.line.manager,model_hr_absence_rule_line,group_attendance_sheet_manager,1,1,1,1
+access_hr_absence_rule_line_user,access.hr.absence.rule.line.user,model_hr_absence_rule_line,group_attendance_sheet_user,1,0,0,0
+access_hr_diff_rule_manager,access.hr.diff.rule.manager,model_hr_diff_rule,group_attendance_sheet_manager,1,1,1,1
+access_hr_diff_rule_user,access.hr.diff.rule.user,model_hr_diff_rule,group_attendance_sheet_user,1,0,0,0
+access_hr_diff_rule_line_manager,access.hr.diff.rule.line.manager,model_hr_diff_rule_line,group_attendance_sheet_manager,1,1,1,1
+access_hr_diff_rule_line_user,access.hr.diff.rule.line.user,model_hr_diff_rule_line,group_attendance_sheet_user,1,0,0,0
 access_attendance_sheet_line_change,access.attendance.sheet.line.change,model_attendance_sheet_line_change,group_attendance_sheet_manager,1,1,1,0
