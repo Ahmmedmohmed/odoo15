@@ -36,28 +36,21 @@
             <field name="is_leave">False</field>
         </record>
 
-        <record id="structure_attendance_sheet" model="hr.payroll.structure">
-            <field name="name">Attendance Sheet Salary Structure</field>
-            <field name="code">ATTSH</field>
-            <field name="parent_id" eval="False"/>
-        </record>
-
         <record id="hr_salary_rule_att_absence" model="hr.salary.rule">
-    <field name="code">ABS</field>
-    <field name="name">Absence</field>
-    <field name="category_id" ref="om_hr_payroll.DED"/>
-    <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
-    <field name="condition_select">python</field>
-    <field name="condition_python">result = payslip.absent_hours > 0</field>
-    <field name="amount_select">code</field>
-    <field name="amount_python_compute">result = -(payslip.absent_hours * (contract.wage/(9*26)))</field>
-    <field name="sequence" eval="60"/>
-</record>
+            <field name="code">ABS</field>
+            <field name="name">Absence</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.absent_hours > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -(payslip.absent_hours * (contract.wage/(9*26)))</field>
+            <field name="sequence" eval="60"/>
+        </record>
 
         <record id="hr_salary_rule_att_late" model="hr.salary.rule">
             <field name="code">LATE</field>
             <field name="name">Late In</field>
-            <field name="category_id" ref="om_hr_payroll.DED"/> <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.late_hours > 0</field>
             <field name="amount_select">code</field>
@@ -68,12 +61,23 @@
         <record id="hr_salary_rule_att_overtime" model="hr.salary.rule">
             <field name="code">OVT</field>
             <field name="name">Overtime</field>
-            <field name="category_id" ref="om_hr_payroll.ALW"/> <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.overtime_hours > 0</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = (payslip.overtime_hours * (contract.wage/(9*26)))</field>
             <field name="sequence" eval="30"/>
+        </record>
+
+        <record id="structure_attendance_sheet" model="hr.payroll.structure">
+            <field name="name">Attendance Sheet Salary Structure</field>
+            <field name="code">ATTSH</field>
+            <field name="parent_id" eval="False"/>
+            <field name="rule_ids" eval="[
+                (4, ref('hr_salary_rule_att_absence')),
+                (4, ref('hr_salary_rule_att_late')),
+                (4, ref('hr_salary_rule_att_overtime'))
+            ]"/>
         </record>
 
         <record id="resource_calendar_attendance_sheet" model="resource.calendar">
