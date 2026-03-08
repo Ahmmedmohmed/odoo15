@@ -6,8 +6,6 @@
             <field name="code">ATTSHOT</field>
             <field name="color">3</field>
             <field name="is_leave">False</field>
-            <field name="round_days">HALF</field>
-            <field name="round_days_type">DOWN</field>
         </record>
 
         <record id="work_entry_type_attendance_sheet_late_in" model="hr.work.entry.type">
@@ -15,8 +13,6 @@
             <field name="code">ATTSHLI</field>
             <field name="color">3</field>
             <field name="is_leave">False</field>
-            <field name="round_days">HALF</field>
-            <field name="round_days_type">DOWN</field>
         </record>
 
         <record id="work_entry_type_attendance_sheet_unpaid_leave" model="hr.work.entry.type">
@@ -24,8 +20,6 @@
             <field name="code">ATTSHUL</field>
             <field name="color">2</field>
             <field name="is_leave">False</field>
-            <field name="round_days">HALF</field>
-            <field name="round_days_type">DOWN</field>
         </record>
 
         <record id="work_entry_type_attendance_sheet_difftime" model="hr.work.entry.type">
@@ -33,8 +27,6 @@
             <field name="code">ATTSHDT</field>
             <field name="color">3</field>
             <field name="is_leave">False</field>
-            <field name="round_days">HALF</field>
-            <field name="round_days_type">DOWN</field>
         </record>
 
         <record id="work_entry_type_attendance_sheet_absence" model="hr.work.entry.type">
@@ -42,34 +34,18 @@
             <field name="code">ATTSHAB</field>
             <field name="color">3</field>
             <field name="is_leave">False</field>
-            <field name="round_days">HALF</field>
-            <field name="round_days_type">DOWN</field>
-        </record>
-
-        <record id="structure_type_attendance_sheet" model="hr.payroll.structure.type">
-            <field name="name">Attendance Sheet</field>
-            <field name="country_id" eval="False"/>
         </record>
 
         <record id="structure_attendance_sheet" model="hr.payroll.structure">
             <field name="name">Attendance Sheet Salary Structure</field>
-            <field name="type_id" ref="rm_hr_attendance_sheet.structure_type_attendance_sheet"/>
-            <field name="country_id" eval="False"/>
-            <field name="unpaid_work_entry_type_ids" eval="[
-                (4, ref('rm_hr_attendance_sheet.work_entry_type_attendance_sheet_late_in')),
-                (4, ref('rm_hr_attendance_sheet.work_entry_type_attendance_sheet_difftime')),
-                (4, ref('rm_hr_attendance_sheet.work_entry_type_attendance_sheet_absence'))]"/>
-        </record>
-
-        <record id="rm_hr_attendance_sheet.structure_type_attendance_sheet" model="hr.payroll.structure.type">
-            <field name="default_struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="code">ATTSH</field>
+            <field name="parent_id" eval="False"/>
         </record>
 
         <record id="hr_salary_rule_att_absence" model="hr.salary.rule">
             <field name="code">ABS</field>
             <field name="name">Absence</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="category_id" ref="om_hr_payroll.DED"/> <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.absent_hours > 0</field>
             <field name="amount_select">code</field>
@@ -80,8 +56,7 @@
         <record id="hr_salary_rule_att_late" model="hr.salary.rule">
             <field name="code">LATE</field>
             <field name="name">Late In</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="category_id" ref="om_hr_payroll.DED"/> <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.late_hours > 0</field>
             <field name="amount_select">code</field>
@@ -92,8 +67,7 @@
         <record id="hr_salary_rule_att_overtime" model="hr.salary.rule">
             <field name="code">OVT</field>
             <field name="name">Overtime</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
+            <field name="category_id" ref="om_hr_payroll.ALW"/> <field name="struct_id" ref="rm_hr_attendance_sheet.structure_attendance_sheet"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.overtime_hours > 0</field>
             <field name="amount_select">code</field>
