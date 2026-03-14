@@ -1,32 +1,42 @@
 /** @odoo-module **/
 
 import { FormController } from "@web/views/form/form_controller";
-const { patch } = require('web.utils');
-const { useState, onWillStart } = owl.hooks;
+import { patch } from "@web/core/utils/patch";
+import { useState, onWillStart } from "@odoo/owl";
 
 patch(FormController.prototype, "simplify_access_management.FormControllerPatch", {
     setup() {
         this._super(...arguments);
-        const self = this;
-        // تعريف الحالة لمراقبة صلاحية إخفاء الخصائص أو أي إجراء مشابه في 15
+
+        // تعريف الحالة لمراقبة الصلاحية
         this.access = useState({ removeProperty: false });
 
         onWillStart(async () => {
-            // استخدام rpc بدلاً من orm.call لضمان عملها على Odoo 15
-            const res = await this.env.services.rpc({
-                model: "access.management",
-                method: "is_add_property_available",
-                args: [this.props.resModel],
-            });
-            self.access.removeProperty = res;
+            try {
+                // التأكد من وجود خدمة الـ rpc قبل الاستدعاء
+                if (this.env.services.rpc) {
+                    const res = await this.env.services.rpc({
+                        model: "access.management",
+                        method: "is_add_property_available",
+                        args: [this.props.resModel],
+                    });
+                    this.access.removeProperty = res;
+                }
+            } catch (error) {
+                console.error("Access Management FormController Error:", error);
+            }
         });
     },
 
-    // في أودو 15، يتم الوصول لقائمة الإجراءات عبر actionMenuItems أيضاً في مكونات OWL
+    /**
+     * @override
+     * تصفية قائمة الإجراءات (Actions)
+     */
     get actionMenuItems() {
         const menuItems = this._super(...arguments);
-        if (menuItems && menuItems.action && this.access.removeProperty) {
-            // فلترة القائمة لاستبعاد خيار إضافة الخصائص (إن وجد في نسخة 15 المطورة)
+
+        // التحقق من وجود القائمة والحالة قبل الفلترة لمنع أخطاء الـ undefined
+        if (menuItems && menuItems.action && this.access && this.access.removeProperty) {
             menuItems.action = menuItems.action.filter(
                 ele => ele.key !== "addPropertyFieldValue"
             );

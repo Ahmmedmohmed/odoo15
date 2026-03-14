@@ -1,21 +1,38 @@
 /** @odoo-module **/
+
 import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
-const { patch } = require('web.utils');
+import { patch } from "@web/core/utils/patch";
+import { onWillStart } from "@odoo/owl";
 
 patch(PivotGroupByMenu.prototype, "simplify_access_management.PivotPatch", {
+    /**
+     * @override
+     */
     setup() {
         this._super(...arguments);
-        const self = this;
-        // في OWL 1 نستخدم hooks مختلفة أو نعتمد على الـ onWillStart المتاحة
-        this.env.services.rpc({
-            model: "access.management",
-            method: "get_hidden_field",
-            args: ["", this.env.searchModel.resModel],
-        }).then((res) => {
-            if (res && res.length > 0) {
-                self.fields = self.fields.filter((ele) => !res.includes(ele.name));
-                // إجبار المكون على إعادة الرسم في OWL 1
-                self.render();
+
+        onWillStart(async () => {
+            try {
+                // التأكد من وجود الموديل وخدمة الـ RPC
+                if (this.env.searchModel && this.env.services.rpc) {
+                    const hiddenFields = await this.env.services.rpc({
+                        model: "access.management",
+                        method: "get_hidden_field",
+                        args: ["", this.env.searchModel.resModel],
+                    });
+
+                    if (hiddenFields && hiddenFields.length > 0) {
+                        // فلترة الحقول المتاحة في الـ Pivot قبل العرض
+                        // في V15، الحقول غالباً تكون موجودة في this.fields
+                        if (this.fields) {
+                            this.fields = this.fields.filter(
+                                (field) => !hiddenFields.includes(field.name)
+                            );
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Pivot GroupBy Access Error:", error);
             }
         });
     },

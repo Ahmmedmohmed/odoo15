@@ -1,30 +1,42 @@
 /** @odoo-module **/
+
 import { ActionMenus } from "@web/search/action_menus/action_menus";
-const { patch } = require('web.utils'); // طريقة استدعاء الـ patch في 15
+import { patch } from "@web/core/utils/patch"; // الطريقة الصحيحة للاستيراد في Odoo 15 للمكونات الجديدة
 
 patch(ActionMenus.prototype, "simplify_access_management.ActionMenusPatch", {
-    // في 15 الدالة اسمها غالباً _getActionItems أو يتم التعامل معها في الـ setup
-    async getActionItems() {
+    /**
+     * @override
+     * في أودو 15، الدالة المسؤولة عن تجميع العناصر هي getActionItems
+     */
+    async getActionItems(props) {
+        // استدعاء الدالة الأصلية
         const res = await this._super(...arguments);
-        if (res.length > 0) {
-            // استخدام rpc بدلاً من orm.call المباشر لضمان التوافق
-            const RestActions = await this.env.services.rpc({
-                model: "access.management",
-                method: "get_remove_options",
-                args: [this.props.resModel],
-            });
-            const isExportHidden = await this.env.services.rpc({
-                model: "access.management",
-                method: "is_export_hide",
-                args: [this.props.resModel],
-            });
 
-            if (isExportHidden) {
-                return res.filter(
-                    (ele) => !RestActions.includes(ele.key) && ele.key != "export"
-                );
+        if (res && res.length > 0) {
+            try {
+                // استخدام rpc من env مباشرة لضمان التوافق مع نظام OWL في 15
+                const RestActions = await this.env.services.rpc({
+                    model: "access.management",
+                    method: "get_remove_options",
+                    args: [this.props.resModel],
+                });
+
+                const isExportHidden = await this.env.services.rpc({
+                    model: "access.management",
+                    method: "is_export_hide",
+                    args: [this.props.resModel],
+                });
+
+                if (isExportHidden) {
+                    return res.filter(
+                        (ele) => !RestActions.includes(ele.key) && ele.key !== "export"
+                    );
+                }
+                return res.filter((ele) => !RestActions.includes(ele.key));
+            } catch (error) {
+                console.error("Access Management Error:", error);
+                return res; // في حالة الخطأ نرجع العناصر الأصلية عشان الشاشة ما تضربش
             }
-            return res.filter((ele) => !RestActions.includes(ele.key));
         }
         return res;
     },
